@@ -19,7 +19,7 @@ São alegações comerciais consultadas, não validação independente de entreg
 
 ## Lacunas verificadas do MOIRAE
 
-A branch feat/persistent-essay-demo contém piloto local, SQLite, atividades pequenas, simulados reduzidos, cobrança sandbox e redação com avaliador fixo. Há persistência e controles de integridade, mas não correção semântica real. O dashboard é básico; personalização adaptativa, catálogo amplo e operação pública ainda precisam de entrega. QA visual da última revisão permanece pendente.
+A branch feat/persistent-essay-demo contém piloto local, SQLite, atividades pequenas, simulados reduzidos, cobrança sandbox e redação com avaliador fixo. Há persistência e controles de integridade, mas não correção semântica real. O dashboard é básico; personalização adaptativa, catálogo amplo e operação pública ainda precisam de entrega. Experiência no celular aprovada pelo usuário nesta conversa. Essa validação de uso não substitui medições específicas de acessibilidade, desempenho ou revisão visual de alterações futuras.
 
 O README mantém preços e franquias de teste de R$35/3 e R$55/8 por 30 dias. Essa combinação deixa de ser uma proposta comercial pronta: reavaliar valor percebido e sustentabilidade antes da venda. Não aumentar limites em runtime por causa deste benchmark.
 
@@ -51,7 +51,7 @@ A arte passa a ser parte da entrega, com revisão visual obrigatória. Preservar
 - Área do aluno: próxima tarefa em destaque, continuidade fácil e linguagem simples. Feedback não depende só de cor.
 - Não publicar depoimentos, aprovação, contadores ou parcerias sem evidência e consentimento.
 
-Aceite: revisar a página pública, painel e oficina em 360, 390, 768 e 1440 px; teclado, foco, contraste e zoom 200%; nenhuma rolagem horizontal involuntária ou texto encoberto. Registrar capturas e limitações. Validar em dispositivo real antes de concluir QA móvel.
+Aceite: revisar a página pública, painel e oficina em 360, 390, 768 e 1440 px; teclado, foco, contraste e zoom 200%; nenhuma rolagem horizontal involuntária ou texto encoberto. Registrar capturas e limitações. A experiência atual no celular foi aprovada pelo usuário. Para alterações futuras, verificar regressões em dispositivo real.
 
 ## Revisão dos planos comerciais
 
@@ -71,7 +71,7 @@ Não competir somente por preço: a comparação precisa considerar compromisso 
 
 | Fase | Trabalho | Dependência e aceite |
 |---|---|---|
-| 1 — Experiência verificável | Corrigir ambiente de preview; revisar visual da landing, painel e oficina; registrar estados e acessibilidade | Preservar comportamento e segurança; revisão desktop/móvel com evidências |
+| 1 — Experiência verificável | Corrigir ambiente de preview; revisar visual da landing, painel e oficina; registrar estados e acessibilidade | Preservar comportamento e segurança; aproveitar aprovação atual do usuário no celular e verificar regressões nas mudanças |
 | 2 — Redação confiável | PostgreSQL com migrações; worker durável com lease; adaptador de avaliação; ledger de créditos; rubrica versionada | Avaliação remota fora da transação; retries sem cobrança duplicada; conjunto com referência humana; falhas sem perda definitiva de crédito |
 | 3 — Rotina de aprendizagem | Caderno de erros, revisão espaçada e recomendações por habilidade | Conteúdo etiquetado/revisado; recomendações explicáveis; histórico reproduzível |
 | 4 — Simulados e conteúdo | Ampliar corpus, cadernos e análise por área; tutor contextual com limites | Direitos documentados, revisão editorial e testes de carga; não converter acerto em TRI |

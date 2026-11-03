@@ -1,7 +1,7 @@
 # MOIRAE
 ### Sua preparação para o ENEM começa aqui.
 
-> **Plano revisado em 03/11/2026:** [estratégia competitiva e próximas entregas](docs/competitive-plan.md). Priorizar direção de arte, prática orientada e evolução em redação. Oferta planejada: Essencial R$40/30 dias com 10 correções IA e Avançado R$100/30 dias com 30. Sem videoaulas. O catálogo executável do sandbox ainda usa os valores anteriores, conforme seção de teste. Experiência atual no celular aprovada pelo usuário; verificar regressões nas próximas mudanças.
+> **Plano revisado em 03/11/2026:** [estratégia competitiva e próximas entregas](docs/competitive-plan.md). Priorizar direção de arte, prática orientada e evolução em redação. Oferta planejada: Essencial R$40/30 dias com 10 correções IA e Avançado R$100/30 dias com 30. Sem videoaulas. O catálogo sandbox versão 2 usa os novos valores para novos pedidos; condições anteriores são preservadas. Experiência atual no celular aprovada pelo usuário; verificar regressões nas próximas mudanças.
 
 
 Plataforma web de estudos com questões comentadas, simulados e prática de redação. O ENEM é o foco inicial; concursos são uma possibilidade futura, fora do escopo do primeiro lançamento.
@@ -124,7 +124,7 @@ A etapa 3 pode usar direitos de acesso de teste; não vender assinaturas antes d
 
 - Stack web e quanto reaproveitar do backend anterior.
 - Seleção e avaliação do modelo OpenAI; custo, prazo e rubrica versionada.
-- Implementar catálogo versionado R$40/10 e R$100/30, preservar pedidos anteriores e validar custos por aluno.
+- Catálogo versionado implementado no sandbox; validar custos por aluno antes da venda.
 - Tamanho dos simulados e regras para interrupção e repetição.
 - Provedor de cobrança e regras para mudanças de plano.
 - Política de privacidade, retenção e operação com menores.
@@ -169,7 +169,7 @@ Os links são gravados na caixa de saída local privada, sem envio de e-mail pel
 
 ## Planos e Mercado Pago em teste
 
-Catálogo anterior ainda executado no sandbox (pendente migrar para a oferta planejada acima): Essencial **R$ 35,00 / 30 dias / 3 créditos previstos** e Avançado **R$ 55,00 / 30 dias / 8 créditos previstos**. Sem renovação automática. `/planos` consulta pedidos próprios e inicia checkout sandbox somente se configurado; `/painel` apresenta acompanhamento básico para acesso pago ativo.
+Catálogo sandbox versão 2: Essencial **R$ 40,00 / 30 dias / 10 créditos previstos** e Avançado **R$ 100,00 / 30 dias / 30 créditos previstos**. Pedidos antigos reconhecidos mantêm preço e franquia anteriores. Sem renovação automática. `/planos` consulta pedidos próprios e inicia checkout sandbox somente se configurado; `/painel` apresenta acompanhamento básico para acesso pago ativo.
 
 O webhook autentica a assinatura e consulta o provedor para conferir valor, moeda, vendedor, pedido e ambiente antes de conceder acesso uma única vez. Uso pago não debita a cota Free; expiração/revogação volta ao Free. O processamento é restrito a testes e não foi validado com uma compra real de sandbox.
 

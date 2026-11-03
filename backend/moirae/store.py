@@ -30,6 +30,9 @@ CREATE TABLE IF NOT EXISTS user_profiles(user_id TEXT PRIMARY KEY REFERENCES use
 CREATE TABLE IF NOT EXISTS account_tokens(token_hash TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),purpose TEXT NOT NULL CHECK(purpose IN ('verify','reset')),expires_at INTEGER NOT NULL,created_at INTEGER NOT NULL);
 CREATE INDEX IF NOT EXISTS account_token_owner ON account_tokens(user_id,purpose);
 INSERT OR IGNORE INTO schema_version VALUES(3);
+CREATE TABLE IF NOT EXISTS billing_orders(id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),plan_id TEXT NOT NULL,amount_cents INTEGER NOT NULL,status TEXT NOT NULL,created_at INTEGER NOT NULL,request_key TEXT NOT NULL,preference_id TEXT,checkout_url TEXT,payment_id TEXT UNIQUE,provider_version REAL,refund_requested_at INTEGER,UNIQUE(user_id,request_key));
+CREATE UNIQUE INDEX IF NOT EXISTS one_pending_order ON billing_orders(user_id) WHERE status IN ('preparing','pending','in_process','authorized');
+CREATE TABLE IF NOT EXISTS access_grants(order_id TEXT PRIMARY KEY REFERENCES billing_orders(id),user_id TEXT NOT NULL REFERENCES users(id),plan_id TEXT NOT NULL,starts_at INTEGER NOT NULL,ends_at INTEGER NOT NULL,status TEXT NOT NULL,essay_credits INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS idempotency(user_id TEXT NOT NULL REFERENCES users(id),key TEXT NOT NULL,payload TEXT NOT NULL,response TEXT NOT NULL,PRIMARY KEY(user_id,key));
 '''
 
@@ -41,6 +44,9 @@ class Store:
         with self.connect() as db:
             db.execute('PRAGMA journal_mode=WAL')
             db.executescript(SCHEMA)
+            if 'free_charge' not in {r[1] for r in db.execute('PRAGMA table_info(attempts)')}:
+                db.execute('ALTER TABLE attempts ADD COLUMN free_charge INTEGER NOT NULL DEFAULT 1')
+            db.execute('INSERT OR IGNORE INTO schema_version VALUES(4)')
 
     @contextmanager
     def connect(self, write=False):

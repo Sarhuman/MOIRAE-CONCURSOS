@@ -19,6 +19,10 @@ from .middleware import BodyLimit
 from .exams import Exams
 from .accounts import Accounts
 from .mail import LocalMail, MailUnavailable
+from .billing import Billing
+from .mercadopago import MercadoPagoSandbox, verify_signature
+from .plans import entitlement
+from .catalog import BY_ID
 
 ROOT=Path(__file__).resolve().parents[2]
 
@@ -73,6 +77,12 @@ class AcceptPolicy(Reauthenticate):
     adult_pilot: Literal[True]
 
 
+class CheckoutInput(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    plan: Literal['essencial','avancado']
+    key: uuid.UUID
+
+
 class Answer(BaseModel):
     model_config=ConfigDict(extra='forbid')
     session_id: uuid.UUID
@@ -101,7 +111,7 @@ class EssayDraft(BaseModel):
     revision: int=Field(ge=0)
 
 
-def create_app(db_path=None,origin=None,secure=None,mailer=None):
+def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider=None,billing_collector=None,billing_secret=None):
     origin=origin or os.getenv('MOIRAE_ORIGIN','http://127.0.0.1:8000')
     secure=(os.getenv('MOIRAE_SECURE_COOKIE','true').lower()=='true') if secure is None else secure
     if not origin.startswith(('http://127.0.0.1:','http://localhost:','http://terminal.local:','https://')):
@@ -111,6 +121,14 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None):
     store=Store(db_path or os.getenv('MOIRAE_DB',str(ROOT/'var'/'moirae.sqlite3')))
     mailer=mailer or (LocalMail(Path(store.path).parent/'mail-outbox') if not secure else MailUnavailable())
     accounts=Accounts(store,mailer,origin)
+    if os.getenv('MOIRAE_MP_SANDBOX','false').lower()=='true' and billing_provider is None:
+        token=os.getenv('MOIRAE_MP_ACCESS_TOKEN','')
+        billing_collector=os.getenv('MOIRAE_MP_COLLECTOR_ID','')
+        billing_secret=os.getenv('MOIRAE_MP_WEBHOOK_SECRET','')
+        if not token or not billing_collector.isdigit() or len(billing_secret)<32 or not origin.startswith('https://'):
+            raise ValueError('Configuração sandbox incompleta; verifique credenciais e origem HTTPS.')
+        billing_provider=MercadoPagoSandbox(token)
+    billing=Billing(store,billing_provider,billing_collector,billing_secret,origin)
     practice=Practice(store)
     exams=Exams(store)
     app=FastAPI(title='MOIRAE — piloto',docs_url=None,redoc_url=None,openapi_url=None)
@@ -119,6 +137,7 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None):
     app.state.exams=exams
     app.state.accounts=accounts
     app.state.mailer=mailer
+    app.state.billing=billing
     cookie='__Host-moirae' if secure else 'moirae_local'
 
     @app.exception_handler(sqlite3.OperationalError)
@@ -133,11 +152,12 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None):
     async def guard(request:Request,call_next):
         # Navegador e API são servidos pela mesma origem; sem CORS permissivo.
         if request.method in ('POST','PUT','PATCH','DELETE'):
-            if request.headers.get('origin')!=origin:
+            webhook=request.url.path=='/api/billing/webhook'
+            if not webhook and request.headers.get('origin')!=origin:
                 from fastapi.responses import JSONResponse
                 return JSONResponse({'detail':'Origem não autorizada.'},status_code=403)
             size=request.headers.get('content-length','')
-            if not size.isdigit() or int(size)>16384:
+            if (not size.isdigit() and not (webhook and not size)) or (size.isdigit() and int(size)>16384):
                 from fastapi.responses import JSONResponse
                 return JSONResponse({'detail':'Envio inválido ou grande demais.'},status_code=413)
         response=await call_next(request)
@@ -214,7 +234,8 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None):
 
     @app.get('/api/auth/me')
     def me(auth=Depends(user)):
-        return dict(plan='free',csrf=auth['csrf'],**accounts.profile(auth['user_id']))
+        with store.connect() as db:access=entitlement(db,auth['user_id'])
+        return dict(plan=access['plan'],csrf=auth['csrf'],**accounts.profile(auth['user_id']))
 
     @app.post('/api/auth/logout')
     def logout(response:Response,request:Request,auth=Depends(user)):
@@ -290,9 +311,59 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None):
     def exam_finish(exam_id:uuid.UUID,auth=Depends(student)):
         return exams.finish(auth['user_id'],str(exam_id))
 
+    @app.get('/api/billing/plans')
+    def plans():return billing.catalog()
+
+    @app.get('/api/billing/current')
+    def billing_current(auth=Depends(user)):return billing.current(auth['user_id'])
+
+    @app.post('/api/billing/checkout')
+    def checkout(body:CheckoutInput,request:Request,auth=Depends(student)):
+        rate(request,'checkout:'+auth['user_id'])
+        return billing.start(auth['user_id'],body.plan,str(body.key))
+
+    @app.post('/api/billing/orders/{order_id}/refund-request')
+    def refund_request(order_id:uuid.UUID,body:Reauthenticate,request:Request,auth=Depends(user)):
+        rate(request,'account:'+auth['user_id'])
+        with store.connect() as db:accounts.reauthenticate(db,auth['user_id'],body.password)
+        return billing.request_refund(auth['user_id'],str(order_id))
+
+    @app.post('/api/billing/webhook')
+    async def webhook(request:Request):
+        if not billing.ready():raise HTTPException(503,'Integração indisponível.')
+        ids=request.query_params.getlist('data.id')
+        if len(ids)!=1:raise HTTPException(400,'Identificador de pagamento inválido.')
+        payment_id=ids[0]
+        verify_signature(payment_id,request.headers.get('x-request-id',''),request.headers.get('x-signature',''),billing.secret,billing.clock())
+        try:body=await request.json()
+        except ValueError:raise HTTPException(400,'Notificação inválida.')
+        if not isinstance(body,dict):raise HTTPException(400,'Notificação inválida.')
+        if body.get('type')!='payment':return {'ok':True,'ignored':'unsupported_type'}
+        if not isinstance(body.get('data'),dict) or str(body['data'].get('id'))!=payment_id:raise HTTPException(400,'Identificadores divergentes.')
+        # SDK HTTP síncrono em worker, sem bloquear o event loop do servidor.
+        from starlette.concurrency import run_in_threadpool
+        return await run_in_threadpool(billing.reconcile,payment_id)
+
     @app.get('/api/dashboard')
-    def dashboard(auth=Depends(user)):
-        raise HTTPException(403,'O painel de desempenho não faz parte do plano Free. Planos pagos ainda indisponíveis.')
+    def dashboard(auth=Depends(student)):
+        with store.connect(write=True) as db:
+            access=entitlement(db,auth['user_id'])
+            if not access['active']:raise HTTPException(403,'O painel de desempenho exige plano pago ativo. Checkout de produção ainda indisponível.')
+            exams.expire(db,auth['user_id'])
+            rows=db.execute('SELECT question_id,correct,day FROM attempts WHERE user_id=?',(auth['user_id'],)).fetchall()
+            areas={};correct=0
+            for row in rows:
+                area=BY_ID[row['question_id']].area if row['question_id'] in BY_ID else 'Não classificado'
+                areas.setdefault(area,{'answered':0,'correct':0});areas[area]['answered']+=1;areas[area]['correct']+=row['correct'];correct+=row['correct']
+            recent=[dict(r) for r in db.execute('SELECT question_id,choice,correct,day FROM attempts WHERE user_id=? ORDER BY created_at DESC,rowid DESC LIMIT 20',(auth['user_id'],))]
+            completed=db.execute("SELECT count(*) FROM mock_exams WHERE user_id=? AND status!='active'",(auth['user_id'],)).fetchone()[0]
+        return dict(access=access,answered=len(rows),correct=correct,accuracy=round(100*correct/len(rows),1) if rows else None,areas=areas,recent_attempts=recent,completed_mock_exams=completed,notice='Resultados do catálogo introdutório de teste; não equivalem a nota oficial ou TRI.')
+
+    @app.get('/planos')
+    def plans_page():return FileResponse(ROOT/'web'/'plans.html')
+
+    @app.get('/painel')
+    def dashboard_page():return FileResponse(ROOT/'web'/'dashboard.html')
 
     @app.get('/conta')
     @app.get('/verificar-email')

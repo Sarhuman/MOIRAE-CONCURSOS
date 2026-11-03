@@ -75,11 +75,15 @@ class Accounts:
             attempts=[dict(r) for r in db.execute('SELECT * FROM attempts WHERE user_id=?',(uid,))]
             exams=[dict(r) for r in db.execute('SELECT id,day,started_at,deadline,status,essay,charged_questions,quota_period FROM mock_exams WHERE user_id=?',(uid,))]
             for exam in exams:exam['responses']=[dict(r) for r in db.execute('SELECT question_id,position,choice,flagged FROM mock_items WHERE exam_id=?',(exam['id'],))]
-        return dict(exported_at=int(self.clock()),account=account,profile=dict(profile) if profile else None,practice_sessions=sessions,attempts=attempts,exams=exams)
+        with self.store.connect() as db:
+            orders=[dict(r) for r in db.execute('SELECT id,plan_id,amount_cents,status,created_at,refund_requested_at FROM billing_orders WHERE user_id=?',(uid,))]
+        return dict(orders=orders,exported_at=int(self.clock()),account=account,profile=dict(profile) if profile else None,practice_sessions=sessions,attempts=attempts,exams=exams)
 
     def erase(self,uid,password):
         with self.store.connect(write=True) as db:
             self.reauthenticate(db,uid,password)
+            if db.execute('SELECT 1 FROM billing_orders WHERE user_id=?',(uid,)).fetchone():
+                raise HTTPException(409,'Há registros de pedidos. A exclusão requer análise de retenção; o fluxo operacional ainda não está disponível neste piloto.')
             db.execute('DELETE FROM mock_items WHERE exam_id IN (SELECT id FROM mock_exams WHERE user_id=?)',(uid,))
             db.execute('DELETE FROM mock_exams WHERE user_id=?',(uid,))
             db.execute('DELETE FROM idempotency WHERE user_id=?',(uid,))

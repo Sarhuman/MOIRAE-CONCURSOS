@@ -48,3 +48,8 @@ Execute o backend para acessar /simulados. Detalhes de prazo, consumo compartilh
 ## Conta, e-mail e direitos no piloto
 
 Após criar uma conta de teste, use o link em var/mail-outbox no servidor para confirmar o e-mail. Os arquivos são privados e contêm tokens: não expor por HTTP ou Git. /conta permite recuperação, exportação e exclusão. Ver [docs/accounts-privacy.md](docs/accounts-privacy.md). Nenhuma entrega real de e-mail foi configurada.
+
+
+## Pagamentos e painel em teste
+
+Consulte [docs/billing-sandbox.md](docs/billing-sandbox.md). As novas páginas /planos e /painel dependem do backend. Nenhuma credencial de produção está configurada; testes usam provedor fake. Habilitar sandbox requer origem HTTPS e configuração secreta no servidor, nunca no navegador.

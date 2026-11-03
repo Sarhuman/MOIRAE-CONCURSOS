@@ -1,9 +1,10 @@
 'use strict';
 const $ = selector => document.querySelector(selector);
+let paid=false;
 let csrf='',exam=null,index=0,lastSaved='',queue=Promise.resolve(),selectedDay=1,startKey=null;
 let baseTime=performance.now(),serverTime=0,expiryRequested=false,warningShown=false;
 function say(text){$('#exam-status').textContent=text;}
-function quota(q){$('#exam-quota').textContent=`Você usou ${q.used} de ${q.limit} questões neste mês. Saldo: ${q.remaining}. Renova em ${new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',dateStyle:'short'}).format(new Date(q.resets_at))}.`;}
+function quota(q){paid=q.unlimited;if(paid){$('#exam-quota').textContent=`Plano ${q.plan}: este treino não consome a cota Free.`;return;}$('#exam-quota').textContent=`Você usou ${q.used} de ${q.limit} questões neste mês. Saldo: ${q.remaining}. Renova em ${new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',dateStyle:'short'}).format(new Date(q.resets_at))}.`;}
 async function api(path,body){
   const r=await fetch('/api'+path,{method:body===undefined?'GET':'POST',credentials:'same-origin',headers:body===undefined?{}:{'Content-Type':'application/json','X-CSRF-Token':csrf},...(body===undefined?{}:{body:JSON.stringify(body)})});
   const value=await r.json();
@@ -70,7 +71,7 @@ $('#exam-answer-form').addEventListener('submit',event=>{event.preventDefault();
 $('#exam-answer-form').addEventListener('change',()=>perform(saveItem));
 $('#open-essay').addEventListener('click',()=>$('#essay-panel').scrollIntoView({block:'start'}));
 $('#exam-refresh').addEventListener('click',()=>perform(async()=>{await saveEssay();await refresh();if(exam?.status==='active')renderQuestion();}));
-document.querySelectorAll('[data-day]').forEach(button=>button.addEventListener('click',()=>{selectedDay=Number(button.dataset.day);startKey=crypto.randomUUID();$('#start-description').textContent=selectedDay===1?'Primeiro dia: 6 questões e redação digitada em 30 minutos.':'Segundo dia: 6 questões em 15 minutos.';$('#start-confirm').showModal();}));
+document.querySelectorAll('[data-day]').forEach(button=>button.addEventListener('click',()=>{selectedDay=Number(button.dataset.day);startKey=crypto.randomUUID();$('#start-description').textContent=selectedDay===1?'Primeiro dia: 6 questões e redação digitada em 30 minutos.':'Segundo dia: 6 questões em 15 minutos.';$('#start-cost').textContent=paid?'Seu plano ativo não tem cota de questões.':'Este treino usa 6 questões da sua cota, inclusive se não terminar.';$('#start-confirm').showModal();}));
 $('#cancel-start').addEventListener('click',()=>$('#start-confirm').close());
 $('#confirm-start').addEventListener('click',()=>perform(async()=>{const value=await api('/exams/start',{day:selectedDay,key:startKey});$('#start-confirm').close();say('Simulado iniciado. O cronômetro continua mesmo se você sair.');apply(value);}));
 $('#finish-exam').addEventListener('click',()=>{const blanks=exam.items.filter(i=>!i.choice).length;$('#finish-description').textContent=`Você tem ${blanks} questão(ões) em branco. O rascunho da redação será salvo antes da entrega, se ainda houver tempo.`;$('#finish-confirm').showModal();});

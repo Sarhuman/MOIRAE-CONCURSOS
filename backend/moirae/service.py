@@ -28,7 +28,7 @@ class Practice:
             if row:
                 return self.snapshot(db,user,row)
             quota=self.quota(db,user)
-            if not quota['remaining']:
+            if not quota['unlimited'] and not quota['remaining']:
                 raise HTTPException(429,'Você usou suas 30 questões deste mês. Aguarde a renovação mensal.')
             sid=str(uuid.uuid4())
             # Cobrir áreas com seleção embaralhada de conteúdo introdutório.
@@ -36,7 +36,7 @@ class Practice:
             for area in ('Matemática','Linguagens','Natureza','Humanas'):
                 selected.append(secrets.choice([q for q in QUESTIONS if q.area==area]))
             selected.append(secrets.choice([q for q in QUESTIONS if q not in selected]))
-            selected=selected[:min(SESSION_SIZE,quota['remaining'])]
+            selected=selected[:SESSION_SIZE if quota['unlimited'] else min(SESSION_SIZE,quota['remaining'])]
             db.execute('INSERT INTO practice_sessions VALUES(?,?,?,?)',(sid,user,'active',int(time.time())))
             db.executemany('INSERT INTO session_questions VALUES(?,?,?)',[(sid,i,q.id) for i,q in enumerate(selected)])
             return self.snapshot(db,user,db.execute('SELECT * FROM practice_sessions WHERE id=?',(sid,)).fetchone())
@@ -66,13 +66,13 @@ class Practice:
             if not expected or expected[0]!=question_id:
                 raise HTTPException(409,'A questão mudou ou já foi respondida. Atualize a atividade.')
             quota=self.quota(db,user)
-            if not quota['remaining']:
+            if not quota['unlimited'] and not quota['remaining']:
                 raise HTTPException(429,'Limite mensal atingido. Sua atividade foi preservada para o próximo mês.')
             question=BY_ID[question_id]
             if choice not in [chr(97+i) for i in range(len(question.options))]:
                 raise HTTPException(422,'Alternativa inválida.')
             correct=choice==question.answer
-            db.execute('INSERT INTO attempts VALUES(?,?,?,?,?,?,?,?)',(str(uuid.uuid4()),user,sid,question_id,choice,int(correct),quota['day'],int(time.time())))
+            db.execute('INSERT INTO attempts(id,user_id,session_id,question_id,choice,correct,day,created_at,free_charge) VALUES(?,?,?,?,?,?,?,?,?)',(str(uuid.uuid4()),user,sid,question_id,choice,int(correct),quota['day'],int(time.time()),int(not quota['unlimited'])))
             total=db.execute('SELECT count(*) FROM session_questions WHERE session_id=?',(sid,)).fetchone()[0]
             if count+1==total:
                 db.execute("UPDATE practice_sessions SET status='completed' WHERE id=?",(sid,))

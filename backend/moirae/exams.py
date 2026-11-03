@@ -71,13 +71,13 @@ class Exams:
                 return self.snapshot(db,active)
             profile=PROFILES[day];selected=[q for q in QUESTIONS if q.area in profile['areas']]
             quota=monthly_quota(db,user,self.day_now())
-            if quota['remaining']<len(selected):raise HTTPException(429,f"Este simulado usa {len(selected)} questões. Seu saldo é {quota['remaining']}.")
+            if not quota['unlimited'] and quota['remaining']<len(selected):raise HTTPException(429,f"Este simulado usa {len(selected)} questões. Seu saldo é {quota['remaining']}.")
             random.SystemRandom().shuffle(selected)
             now=int(self.clock());eid=str(uuid.uuid4())
             # Debitar o caderno ao iniciar impede alternar entre simulados para contornar a cota.
             # A confirmação na interface informa o consumo, inclusive se houver abandono.
             db.execute('INSERT INTO mock_exams(id,user_id,day,started_at,deadline,status,charged_questions,quota_period,start_key) VALUES(?,?,?,?,?,?,?,?,?)',
-                       (eid,user,day,now,now+profile['duration'],'active',len(selected),quota['period'],key))
+                       (eid,user,day,now,now+profile['duration'],'active',0 if quota['unlimited'] else len(selected),quota['period'],key))
             db.executemany('INSERT INTO mock_items(exam_id,position,question_id) VALUES(?,?,?)',[(eid,i,q.id) for i,q in enumerate(selected)])
             return self.snapshot(db,self.own(db,user,eid))
 

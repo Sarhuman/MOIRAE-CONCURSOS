@@ -28,7 +28,7 @@ Tokens expiram logicamente e tokens antigos são removidos na emissão de novos.
 
 Antes de uso público: definir controlador e contato, canal de direitos e atendimento, bases legais por finalidade, prazos de retenção e rotinas verificáveis de eliminação, segurança de backups e prevenção de restauração de dados excluídos, resposta a incidentes e política para dados de menores. A autodeclaração de 18 anos restringe o piloto, mas não é verificação de idade robusta nem resolve o fluxo de menores do produto ENEM.
 
-Correção do e-mail cadastrado e atendimento aos demais direitos ainda precisam de fluxo próprio. A exclusão direta foi implementada para o piloto gratuito, sem registros financeiros: ao integrar Mercado Pago, avaliar retenções legais e não apagar registros necessários de obrigações/contestações sem análise. Não há pagamentos ou compartilhamento com OpenAI nesta entrega.
+Correção do e-mail cadastrado e atendimento aos demais direitos ainda precisam de fluxo próprio. A exclusão direta foi implementada para o piloto gratuito, sem registros financeiros: ao integrar Mercado Pago, avaliar retenções legais e não apagar registros necessários de obrigações/contestações sem análise. Há pedidos apenas no adaptador sandbox da próxima etapa, desabilitado por padrão. Contas com pedidos exigem análise de retenção e não são excluídas automaticamente; esse atendimento ainda precisa ser implementado. Não há compartilhamento de redações com OpenAI.
 
 ## Validação
 

@@ -45,7 +45,7 @@ store.py contém a baseline de prática 1 e extensões aditivas de simulados 2 e
 - Entrega real de e-mail e operação de atendimento. Verificação, recuperação, exportação e exclusão já existem no piloto local, conforme docs/accounts-privacy.md.
 - Política de privacidade e fluxo apropriado para dados de menores.
 - Revisão editorial independente e catálogo de conteúdo de produção.
-- Dashboard pago, pagamentos, upgrade e direitos premium.
+- Validação real do checkout sandbox, reembolsos operacionais, upgrade e recursos premium completos. O painel básico e direitos de acesso em teste estão em docs/billing-sandbox.md.
 - OpenAI, filas e créditos de redação; não há chamadas à API ou chave necessária.
 - Banco PostgreSQL, implantação de backend persistente, TLS operacional, backups e observabilidade.
 - QA manual no navegador do fluxo autenticado: a prévia gerenciada não conseguiu encontrar o runtime Python. Não contornar o ambiente; executar localmente para a verificação visual.

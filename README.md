@@ -22,7 +22,7 @@ O site deve funcionar bem no celular e no computador, com navegação por teclad
 
 ## Planos propostos
 
-Os valores abaixo são hipóteses para validação, não ofertas comerciais aprovadas. Os preços ainda não foram definidos.
+Os valores abaixo são hipóteses para validação, não ofertas comerciais aprovadas. Preços definidos: Essencial R$ 35,00 e Avançado R$ 55,00 por 30 dias, sem renovação automática. Compras reais ainda desabilitadas.
 
 | Recurso | Free | Essencial | Avançado |
 |---|---|---|---|
@@ -158,3 +158,12 @@ O piloto local inclui **/simulados**: primeiro dia com seis questões autorais e
 Verificação de e-mail, recuperação com token de uso único e revogação de sessões, exportação JSON e exclusão após confirmar a senha. Acesse **/conta**. O estudo fica bloqueado até aceitar os termos versionados e confirmar o e-mail. O piloto é restrito a maiores de 18 anos por autodeclaração; o fluxo de menores ainda não está implementado.
 
 Os links são gravados na caixa de saída local privada, sem envio de e-mail pela rede. Em HTTPS sem adaptador de entrega, o cadastro público é bloqueado. Avisos locais de privacidade/cookies/termos e limitações estão em [docs/accounts-privacy.md](docs/accounts-privacy.md). Isso não certifica conformidade integral com a LGPD nem habilita lançamento público.
+
+
+## Planos e Mercado Pago em teste
+
+Catálogo servidor: Essencial **R$ 35,00 / 30 dias / 3 créditos previstos** e Avançado **R$ 55,00 / 30 dias / 8 créditos previstos**. Sem renovação automática. `/planos` consulta pedidos próprios e inicia checkout sandbox somente se configurado; `/painel` apresenta acompanhamento básico para acesso pago ativo.
+
+O webhook autentica a assinatura e consulta o provedor para conferir valor, moeda, vendedor, pedido e ambiente antes de conceder acesso uma única vez. Uso pago não debita a cota Free; expiração/revogação volta ao Free. O processamento é restrito a testes e não foi validado com uma compra real de sandbox.
+
+Não há cobrança de produção nem estorno automático. Solicitações de cancelamento são registradas, mas exigem operação ainda pendente. Créditos de redação estão alocados, sem corretor OpenAI conectado. Veja [docs/billing-sandbox.md](docs/billing-sandbox.md) para limites, configuração de teste e requisitos antes de vender.

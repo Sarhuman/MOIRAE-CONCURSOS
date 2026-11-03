@@ -31,3 +31,10 @@ Fora desta entrega. Fluxo previsto: foto, transcrição, conferência/correção
 Conjunto de redações com direito de uso e avaliação humana de referência. Comparar notas por competência, erros pedagógicos, marcações e casos ambíguos; avaliar versões novas antes de promoção. Medir custo e latência por correção e reescrita. Testar isolamento de alunos, créditos concorrentes, retries, saída malformada, tentativas de instrução no texto e indisponibilidade do provedor.
 
 Sem GraphRAG, agentes múltiplos ou roteamento multi-provedor nesta fase. A evolução depende de problemas observados. Concursos exigirão rubricas e conteúdo próprios; não se resumem a trocar um parâmetro.
+
+## Recomendações incorporadas para a API
+
+- Usar Structured Outputs com JSON Schema estrito e validação local do resultado. O schema não garante correção pedagógica nem que offsets correspondam ao original; validar essas invariantes separadamente.
+- Tratar recusa, resposta incompleta, timeout e falha de validação como estados próprios: não renderizar resultado parcial como correção concluída e não descontar crédito duplicado em retries.
+- As fixtures autorais estão em web/essay-fixture.js, consumidas pela página e verificadas por tests/essay-fixture.test.cjs. Não precisam de chave nem rede. Na futura API, acrescentar fixtures de saída válida, recusa, resposta truncada, nota inválida e offsets incorretos.
+- OCR futuro: estados aguardando imagem, transcrevendo, revisão necessária, texto confirmado e falha de leitura. Em falha, permitir nova foto ou digitação. Não iniciar avaliação nem reservar crédito de correção antes de confirmar o texto; custo de transcrição deve ter controle próprio e ser informado.

@@ -31,3 +31,5 @@ A identidade usa azul-escuro e verde-lima. Seletor de 15/30/60 minutos muda apen
 Verificação adicional: selecionar as três durações; trocar C3/C4/C5; comparar reescrita; voltar ao comentário e conferir preservação; limpar; recarregar e conferir descarte. Texto HTML digitado deve aparecer literalmente. Espaços sozinhos não são uma reescrita válida.
 
 A integração OpenAI é futura e está especificada em docs/essay-workshop.md. Nenhuma variável de chave é necessária para executar esta demonstração.
+
+Fixtures: web/essay-fixture.js é compartilhado entre demonstração e testes. Execute `node --test tests/essay-fixture.test.cjs` na raiz do repositório. Os testes não acessam a OpenAI.

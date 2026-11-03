@@ -6,6 +6,7 @@ from fastapi import HTTPException
 from .catalog import BY_ID, QUESTIONS
 from .domain import SESSION_SIZE, study_day
 from .quota import monthly_quota
+from .planner import selection,record_answer
 
 
 class Practice:
@@ -19,11 +20,15 @@ class Practice:
         count = db.execute('SELECT count(*) FROM attempts WHERE session_id=?',(row['id'],)).fetchone()[0]
         total = db.execute('SELECT count(*) FROM session_questions WHERE session_id=?',(row['id'],)).fetchone()[0]
         next_row = db.execute('SELECT question_id FROM session_questions WHERE session_id=? AND position=?',(row['id'],count)).fetchone()
-        return dict(id=row['id'],status=row['status'],answered=count,total=total,
+        plan=db.execute('SELECT minutes,description FROM practice_plans WHERE session_id=?',(row['id'],)).fetchone()
+        return dict(plan=json.loads(plan['description']) if plan else None,id=row['id'],status=row['status'],answered=count,total=total,
                     question=BY_ID[next_row[0]].public() if next_row else None,quota=self.quota(db,user))
 
-    def start(self, user):
+    def start(self, user, minutes=None):
         with self.store.connect(write=True) as db:
+            planned=None
+            if minutes is not None:
+                selected,planned=selection(db,user,minutes,int(time.time()))
             row = db.execute("SELECT * FROM practice_sessions WHERE user_id=? AND status='active'",(user,)).fetchone()
             if row:
                 return self.snapshot(db,user,row)
@@ -32,12 +37,14 @@ class Practice:
                 raise HTTPException(429,'Você usou suas 30 questões deste mês. Aguarde a renovação mensal.')
             sid=str(uuid.uuid4())
             # Cobrir áreas com seleção embaralhada de conteúdo introdutório.
-            selected=[]
+            baseline=[]
             for area in ('Matemática','Linguagens','Natureza','Humanas'):
-                selected.append(secrets.choice([q for q in QUESTIONS if q.area==area]))
-            selected.append(secrets.choice([q for q in QUESTIONS if q not in selected]))
-            selected=selected[:SESSION_SIZE if quota['unlimited'] else min(SESSION_SIZE,quota['remaining'])]
+                baseline.append(secrets.choice([q for q in QUESTIONS if q.area==area]))
+            baseline.append(secrets.choice([q for q in QUESTIONS if q not in baseline]))
+            if minutes is None:selected=baseline[:SESSION_SIZE if quota['unlimited'] else min(SESSION_SIZE,quota['remaining'])]
+            if not selected:raise HTTPException(409,'Não há revisões vencidas ou questões elegíveis agora. Consulte o próximo agendamento no painel.')
             db.execute('INSERT INTO practice_sessions VALUES(?,?,?,?)',(sid,user,'active',int(time.time())))
+            if planned is not None:db.execute('INSERT INTO practice_plans VALUES(?,?,?)',(sid,minutes,json.dumps(planned)))
             db.executemany('INSERT INTO session_questions VALUES(?,?,?)',[(sid,i,q.id) for i,q in enumerate(selected)])
             return self.snapshot(db,user,db.execute('SELECT * FROM practice_sessions WHERE id=?',(sid,)).fetchone())
 
@@ -73,11 +80,13 @@ class Practice:
                 raise HTTPException(422,'Alternativa inválida.')
             correct=choice==question.answer
             db.execute('INSERT INTO attempts(id,user_id,session_id,question_id,choice,correct,day,created_at,free_charge) VALUES(?,?,?,?,?,?,?,?,?)',(str(uuid.uuid4()),user,sid,question_id,choice,int(correct),quota['day'],int(time.time()),int(not quota['unlimited'])))
+            record_answer(db,user,question_id,correct,int(time.time()))
             total=db.execute('SELECT count(*) FROM session_questions WHERE session_id=?',(sid,)).fetchone()[0]
             if count+1==total:
                 db.execute("UPDATE practice_sessions SET status='completed' WHERE id=?",(sid,))
             row=db.execute('SELECT * FROM practice_sessions WHERE id=?',(sid,)).fetchone()
-            result=dict(correct=correct,answer=question.answer,explanation=question.explanation,
+            scheduled=db.execute('SELECT stage,due_at FROM review_schedule WHERE user_id=? AND question_id=?',(user,question_id)).fetchone()
+            result=dict(review_schedule=dict(scheduled) if scheduled else None,correct=correct,answer=question.answer,explanation=question.explanation,
                         session=self.snapshot(db,user,row))
             # O resultado da atividade atual não é um dashboard histórico.
             if row['status']=='completed':

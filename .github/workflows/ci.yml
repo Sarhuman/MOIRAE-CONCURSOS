@@ -29,4 +29,4 @@ jobs:
       - run: node --check web/dashboard.js
       - run: node --check web/essays.js
       - run: node --check web/essay-view.js
-      - run: node --test tests/essay-fixture.test.cjs tests/essay-view.test.cjs
+      - run: node --test tests/essay-fixture.test.cjs tests/essay-view.test.cjs tests/learning-focus.test.cjs

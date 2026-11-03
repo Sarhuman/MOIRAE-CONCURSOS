@@ -179,3 +179,9 @@ Não há cobrança de produção nem estorno automático. Solicitações de canc
 
 O percurso `/redacoes` guarda textos, notas fixas ilustrativas, marcações e reescritas por conta. Habilitação local com `MOIRAE_ESSAY_DEMO=true`; desativado por padrão, sem OpenAI ou consumo de créditos reais. [Funcionamento e limites](docs/essay-demo.md).
 
+
+## Caderno de erros e favoritos — piloto local
+
+Acesse **/caderno** a partir do painel. Alunos com plano pago ativo podem revisar erros de prática, consultar resoluções e guardar favoritos persistentes. Um erro anterior permanece no caderno após acerto, identificado pelo resultado mais recente. Consulta não consome cota. Inclui isolamento, verificação de acesso na API e exportação dos favoritos. [Contrato e limites](docs/review-notebook.md).
+
+Não inclui questões de simulados, revisão espaçada automática ou planejamento adaptativo. O acabamento visual da página pública e painel foi atualizado; a conferência renderizada desta revisão permanece pendente por falha no download do navegador.

@@ -129,3 +129,24 @@ def test_wrong_answer_and_future_question(env):
     wrong='a' if BY_ID[s['question']['id']].answer!='a' else 'b'
     r=answer(c,s,choice=wrong);assert r.json()['correct'] is False and r.json()['explanation']
     assert r.json()['session']['answered']==1
+
+def test_five_questions_finish_without_restart(env):
+    app,c=env
+    register(c)
+    session=c.post('/api/practice/start',json={}).json()
+    original=session['id'];seen=[]
+    assert session['total']==5
+    for index in range(5):
+        seen.append(session['question']['id'])
+        response=answer(c,session)
+        assert response.status_code==200
+        result=response.json();session=result['session']
+        assert session['answered']==index+1
+    assert len(set(seen))==5
+    assert session['status']=='completed' and session['question'] is None
+    assert result['summary']['total']==5
+    for _ in range(2):
+        assert c.get('/api/practice/current').json()['session'] is None
+    with app.state.store.connect() as db:
+        assert db.execute('SELECT count(*) FROM practice_sessions').fetchone()[0]==1
+        assert db.execute('SELECT count(*) FROM attempts WHERE session_id=?',(original,)).fetchone()[0]==5

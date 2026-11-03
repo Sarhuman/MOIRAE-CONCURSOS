@@ -72,6 +72,8 @@ class Accounts:
             account=dict(db.execute('SELECT id,email,created_at FROM users WHERE id=?',(uid,)).fetchone())
             profile=db.execute('SELECT * FROM user_profiles WHERE user_id=?',(uid,)).fetchone()
             sessions=[dict(r) for r in db.execute('SELECT * FROM practice_sessions WHERE user_id=?',(uid,))]
+            reviews=[dict(r) for r in db.execute('SELECT question_id,stage,due_at,last_answered_at FROM review_schedule WHERE user_id=?',(uid,))]
+            planned_sessions=[dict(r) for r in db.execute('SELECT p.* FROM practice_plans p JOIN practice_sessions s ON s.id=p.session_id WHERE s.user_id=?',(uid,))]
             favorites=[dict(r) for r in db.execute('SELECT question_id FROM review_favorites WHERE user_id=?',(uid,))]
             attempts=[dict(r) for r in db.execute('SELECT * FROM attempts WHERE user_id=?',(uid,))]
             exams=[dict(r) for r in db.execute('SELECT id,day,started_at,deadline,status,essay,charged_questions,quota_period FROM mock_exams WHERE user_id=?',(uid,))]
@@ -82,7 +84,7 @@ class Accounts:
             essays=[dict(r) for r in db.execute('SELECT id,theme,text,status,created_at,result,error FROM essay_submissions WHERE user_id=?',(uid,))]
             for essay in essays:
                 essay['rewrites']=[dict(r) for r in db.execute('SELECT id,annotation_id,text,created_at FROM essay_rewrites WHERE essay_id=?',(essay['id'],))]
-        return dict(favorites=favorites,essays=essays,orders=orders,exported_at=int(self.clock()),account=account,profile=dict(profile) if profile else None,practice_sessions=sessions,attempts=attempts,exams=exams)
+        return dict(review_schedule=reviews,planned_sessions=planned_sessions,favorites=favorites,essays=essays,orders=orders,exported_at=int(self.clock()),account=account,profile=dict(profile) if profile else None,practice_sessions=sessions,attempts=attempts,exams=exams)
 
     def erase(self,uid,password):
         with self.store.connect(write=True) as db:

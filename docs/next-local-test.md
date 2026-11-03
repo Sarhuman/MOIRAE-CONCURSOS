@@ -47,3 +47,25 @@ Prepare redações com autorização de uso e notas humanas por competência, pr
 Execute `.venv/bin/python -m backend.moirae.essay_benchmark /caminho/privado/corpus.json` para imprimir métricas sem fazer chamadas externas. O comparador rejeita corpus vazio, IDs repetidos e dados sem declarações de revisão/autorização. Compara erro absoluto médio e concordância por competência, separando versões. Não avalia comentários nem decide aprovação; a saída permanece approved=false. Referências humanas sintéticas dos testes não constituem corpus validado.
 
 Só depois: definir modelo, limites de custo, privacidade e avaliação pedagógica, configurar credencial exclusivamente no worker e fazer um ensaio externo controlado. Não envie a chave pelo chat. As travas de correção real continuam false neste roteiro.
+
+## Windows / PowerShell
+
+Use Python 3.13 e uma pasta gravável em Documents, fora de System32. Cada janela tem suas próprias variáveis; o script abaixo as define juntas e usa caminho absoluto para o banco.
+
+```powershell
+py -3.13 -m venv .venv-win
+.\.venv-win\Scripts\python.exe -m pip install -r requirements-dev.lock
+powershell -ExecutionPolicy Bypass -File .\scripts\start-local.ps1
+```
+
+O script pede uma senha somente para criar um banco novo. Banco existente é preservado. Para selecionar uma cópia preservada: `powershell -ExecutionPolicy Bypass -File .\scripts\start-local.ps1 -Database 'C:\caminho\banco.sqlite3'`. Não copie um SQLite enquanto o servidor estiver rodando. Preserve também arquivos WAL/SHM, se presentes, e a pasta mail-outbox; recrie o venv no destino.
+
+Cadastro pela interface requer confirmação: em Minha conta, solicite novo e-mail; abra localmente o JSON mais recente em `mail-outbox`, ao lado do banco indicado no terminal. O link é privado, não o cole em relatórios. Links antigos expiram ou são substituídos. Use sempre 127.0.0.1:8000, inclusive ao abrir o link. A conta criada por local_playtest já é verificada; sua concessão vence após 30 dias. O script não altera confirmação, termos ou concessões de contas existentes.
+
+Diagnóstico sem alterar dados (execute na pasta do projeto):
+
+```powershell
+.\.venv-win\Scripts\python.exe -m backend.moirae.local_diagnose --database 'C:\Windows\System32\MOIRAE-PLAYTEST\MOIRAE-PLAYTEST\var\henrique-windows.sqlite3'
+```
+
+`local_test` no pedido identifica preparo administrativo; cadastro pela interface não cria esse pedido. Verificação isolada não prova como a conta foi criada. Se houver acesso negado em System32, execute o diagnóstico na janela que originalmente criou o banco e preserve uma cópia completa antes de mudar de pasta. Não altere ACLs recursivamente nem substitua o banco.

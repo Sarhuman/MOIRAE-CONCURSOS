@@ -1,4 +1,5 @@
 import json
+import os
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import urlparse
@@ -51,7 +52,8 @@ def test_tokens_are_hashed_and_not_returned_in_api(setup):
         assert row['token_hash']==digest(token) and token not in str(dict(row))
     assert token not in c.get('/api/auth/me').text
     path=list(app.state.mailer.directory.iterdir())[0]
-    assert path.stat().st_mode & 0o777 == 0o600
+    if os.name != "nt":  # Windows uses ACLs, not POSIX permission bits.
+        assert path.stat().st_mode & 0o777 == 0o600
     assert urlparse(app.state.mailer.messages[-1]['link']).query==''
 
 
@@ -141,3 +143,4 @@ def test_no_token_or_outbox_endpoint_and_export_requires_csrf(setup):
     assert c.post('/api/account/export',json={'password':PASSWORD},headers={'X-CSRF-Token':'wrong'}).status_code==403
     assert c.get('/var/mail-outbox').status_code==404
     assert c.get('/api/account/tokens').status_code==404
+

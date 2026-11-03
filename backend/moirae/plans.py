@@ -2,8 +2,8 @@
 import time
 
 PLANS={
- 'essencial':dict(id='essencial',name='Essencial',price_cents=4000,currency='BRL',days=30,essay_credits=10,catalog_version=2),
- 'avancado':dict(id='avancado',name='Avançado',price_cents=10000,currency='BRL',days=30,essay_credits=30,catalog_version=2),
+ 'essencial':dict(id='essencial',name='Essencial',price_cents=4400,currency='BRL',days=30,essay_credits=10,catalog_version=3),
+ 'avancado':dict(id='avancado',name='Avançado',price_cents=11000,currency='BRL',days=30,essay_credits=30,catalog_version=3),
 }
 
 

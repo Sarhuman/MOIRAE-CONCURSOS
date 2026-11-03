@@ -1,0 +1,58 @@
+/* Catalog-led template, isolated to public surfaces. */
+.public-page .campaign-strip{padding:11px 20px;background:#17243b;color:#fff;text-align:center;font-size:12px;letter-spacing:.5px}
+.public-page .campaign-strip a{text-decoration:underline;text-underline-offset:3px}
+.public-page .header{position:relative}
+.public-page .hero-copy .hero-paths{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.public-page .hero-paths a{padding:6px 12px;border-radius:30px;background:#e2e8ff;color:#203dbd;font-size:11px;font-weight:750}
+.public-page .catalog-section{padding-block:76px;background:#f0f3ff;border-block:1px solid #dce3ff}
+.public-page .catalog-heading{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:28px}
+.public-page .catalog-heading p{max-width:380px;color:#505d70}
+.public-page .catalog-heading h2{margin-bottom:8px}
+.public-page .catalog-filters{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+.public-page .catalog-filters button{padding:11px 18px;min-height:44px;background:#fff;border:1px solid #8a96b5;border-radius:30px;font:650 13px/1.4 system-ui;color:#17243b}
+.public-page .catalog-filters button[aria-pressed=true]{background:#2849df;border-color:#2849df;color:#fff}
+.public-page .catalog-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.public-page .catalog-card{padding:26px;background:white;border:1px solid #d8deed;border-radius:22px;display:flex;flex-direction:column;min-width:0}
+.public-page .catalog-card p{color:#505d70;font-size:14px;flex:1}
+.public-page .catalog-card h3{font-size:25px;margin-top:14px}
+.public-page .catalog-card .catalog-tag{align-self:start;border-radius:20px;background:#e1f4eb;color:#254d3c;padding:5px 10px;font-size:10px;font-weight:750;letter-spacing:.5px}
+.public-page .catalog-card:nth-child(3n+2) .catalog-tag{background:#ffe2d6;color:#85321d}
+.public-page .catalog-card:nth-child(3n) .catalog-tag{background:#e4e9ff;color:#213dba}
+.public-page .catalog-card .button{font-size:13px;gap:10px}
+.public-page .catalog-card .catalog-number{color:#2849df;font-size:12px;font-weight:750;margin-bottom:10px}
+.public-page .cycle-picker{margin-bottom:24px;padding:18px;border:1px solid #516078;border-radius:16px}
+.public-page .cycle-picker legend{font-size:14px;color:#fff;padding-inline:8px}
+.public-page .cycle-picker .catalog-filters{margin:0}
+.public-page .cycle-picker .catalog-filters button{background:transparent;color:#fff;border-color:#8c9ab1}
+.public-page .cycle-picker .catalog-filters button[aria-pressed=true]{background:#b8edd7;color:#17243b;border-color:#b8edd7}
+.public-page .offer-duration{font-size:12px;font-weight:650}
+.public-page .offer-installments{padding:10px 0;font-size:12px;line-height:1.6}
+.public-page .credit-stage{padding-block:76px;background:#fff7ec}
+.public-page .credit-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:30px}
+.public-page .credit-card{padding:26px;border:1px solid #d7d7d2;background:#fff;border-radius:22px}
+.public-page .credit-card strong{font-size:42px;line-height:1.1;color:#2849df}
+.public-page .credit-card h3{font-size:22px}
+.public-page .credit-card p{color:#505d70;font-size:14px}
+.public-page .credit-card .button{font-size:13px}
+.public-page .quote-panel{padding:26px;border:1px solid #2849df;border-radius:22px;background:#f0f3ff;margin-top:28px}
+.public-page .quote-panel label{display:block;border:0;padding:0;margin:12px 0;font-size:14px;font-weight:650}
+.public-page .quote-panel select{display:block;width:100%;min-height:46px;padding:10px;border:1px solid #7b88a9;border-radius:10px;font:inherit;background:white;color:#17243b}
+.public-page .quote-fields{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.public-page .quote-result{font-weight:700;margin-block:16px;white-space:pre-line}
+.public-page .notice-panel{padding:16px;border-left:4px solid #2849df;background:#edf1ff;color:#293a69;font-size:13px;line-height:1.7}
+.public-page .offer-note{font-size:12px;line-height:1.7;color:#d9e2ed}
+.public-page.library-page h1{font-size:clamp(38px,5vw,62px);letter-spacing:-2px;line-height:1.1}
+.public-page .library-layout{display:grid;grid-template-columns:280px minmax(0,1fr);gap:34px;margin-top:36px;align-items:start}
+.public-page .library-layout aside{padding:22px;border:1px solid #dcdde7;background:#fff;border-radius:20px}
+.public-page .library-layout aside h2{font-size:23px;letter-spacing:-.8px}
+.public-page #library-lessons{padding-left:20px;line-height:1.6}
+.public-page #library-lessons button{font:inherit;text-align:left;padding:8px 4px;background:none;border:0;color:#17243b;text-decoration:underline;text-underline-offset:4px}
+.public-page #library-lessons button[aria-current]{font-weight:800;color:#2849df}
+.public-page #library-reader{padding:32px;border:1px solid #dcdde7;border-radius:22px;background:#fff;min-width:0;overflow-wrap:anywhere}
+.public-page #library-reader h2{font-size:34px;letter-spacing:-1px}
+.public-page #library-reader h3{margin-top:30px}
+.public-page #library-reader p{line-height:1.9;color:#3a485b}
+.public-page #library-exercise{padding:24px;border-radius:16px;background:#f4f6ff;margin:26px 0}
+.public-page #library-feedback{background:#def2e7;border-left:4px solid #2f6b50;padding:14px}
+@media(max-width:1000px){.public-page .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.public-page .library-layout{grid-template-columns:230px minmax(0,1fr);gap:20px}.public-page #library-reader{padding:25px}}
+@media(max-width:680px){.public-page .catalog-heading{display:block}.public-page .catalog-grid,.public-page .credit-grid,.public-page .quote-fields,.public-page .library-layout{grid-template-columns:1fr}.public-page .catalog-section,.public-page .credit-stage{padding-block:48px}.public-page .quote-panel{padding:21px}.public-page #library-reader{padding:22px}.public-page #library-exercise{padding:16px}.public-page .campaign-strip{font-size:11px;line-height:1.6}.public-page .catalog-filters{gap:8px}.public-page .catalog-filters button{padding-inline:14px}}

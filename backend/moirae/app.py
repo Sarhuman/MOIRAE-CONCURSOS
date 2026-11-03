@@ -27,6 +27,7 @@ from .essays import Essays
 from .review import Review
 from .planner import Planner
 from .essay_jobs import EssayJobs
+from .commercial import catalog as commercial_catalog,quote as commercial_quote
 
 ROOT=Path(__file__).resolve().parents[2]
 
@@ -356,6 +357,15 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     @app.post('/api/exams/{exam_id}/finish')
     def exam_finish(exam_id:uuid.UUID,auth=Depends(student)):
         return exams.finish(auth['user_id'],str(exam_id))
+
+    @app.get('/api/commercial/catalog')
+    def commercial_products():return commercial_catalog()
+
+    @app.get('/api/commercial/quote')
+    def commercial_preview(product:str,cycles:int=1,installments:int=1):return commercial_quote(product,cycles,installments)
+
+    @app.get('/biblioteca')
+    def library_page():return FileResponse(ROOT/'web'/'biblioteca.html')
 
     @app.get('/api/billing/plans')
     def plans():return billing.catalog()

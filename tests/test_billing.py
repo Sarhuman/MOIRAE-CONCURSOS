@@ -37,7 +37,7 @@ def register(app,c,email='billing@example.test'):
 def checkout(c,plan='essencial',key=None):return c.post('/api/billing/checkout',json={'plan':plan,'key':key or str(uuid.uuid4())})
 
 def payment(fake,oid,clock,**updates):
-    value={'id':100,'external_reference':oid,'currency_id':'BRL','collector_id':123,'transaction_amount':40,'transaction_amount_refunded':0,'live_mode':False,'status':'approved','date_last_updated':datetime.fromtimestamp(clock[0],timezone.utc).isoformat()}
+    value={'id':100,'external_reference':oid,'currency_id':'BRL','collector_id':123,'transaction_amount':44,'transaction_amount_refunded':0,'live_mode':False,'status':'approved','date_last_updated':datetime.fromtimestamp(clock[0],timezone.utc).isoformat()}
     value.update(updates);fake.payments['100']=value
 
 
@@ -50,7 +50,7 @@ def notify(c,clock,signature=None,body_id=100):
 def test_catalog_and_disabled_checkout(tmp_path):
     app=create_app(str(tmp_path/'db'),origin=BASE,secure=False);c=TestClient(app,base_url=BASE,headers={'Origin':BASE});register(app,c)
     catalog=c.get('/api/billing/plans').json();assert catalog['checkout_enabled'] is False
-    assert [(p['price_cents'],p['essay_credits']) for p in catalog['plans']]==[(4000,10),(10000,30)]
+    assert [(p['price_cents'],p['essay_credits']) for p in catalog['plans']]==[(4400,10),(11000,30)]
     assert checkout(c).status_code==503 and c.get('/api/auth/me').json()['plan']=='free'
     with app.state.store.connect() as db:assert db.execute('SELECT count(*) FROM billing_orders').fetchone()[0]==0
 
@@ -100,7 +100,7 @@ def test_signature_and_id_validation(setup):
 
 def test_refund_revokes_and_old_events_cannot_regrant(setup):
     app,c,fake,clock=setup;oid=checkout(c).json()['order_id'];payment(fake,oid,clock);notify(c,clock)
-    initial=fake.payments['100'].copy();clock[0]+=10;payment(fake,oid,clock,status='refunded',transaction_amount_refunded=40)
+    initial=fake.payments['100'].copy();clock[0]+=10;payment(fake,oid,clock,status='refunded',transaction_amount_refunded=44)
     assert notify(c,clock).status_code==200 and c.get('/api/auth/me').json()['plan']=='free'
     fake.payments['100']=initial;assert notify(c,clock).status_code==200
     assert c.get('/api/auth/me').json()['plan']=='free'
@@ -126,7 +126,7 @@ def test_paid_questions_do_not_consume_free_quota_after_expiry(setup):
 
 
 def test_avancado_and_refund_request_is_not_refund(setup):
-    app,c,fake,clock=setup;oid=checkout(c,plan='avancado').json()['order_id'];payment(fake,oid,clock,transaction_amount=100);notify(c,clock)
+    app,c,fake,clock=setup;oid=checkout(c,plan='avancado').json()['order_id'];payment(fake,oid,clock,transaction_amount=110);notify(c,clock)
     assert c.get('/api/billing/current').json()['access']['essay_credits']==30
     r=c.post('/api/billing/orders/'+oid+'/refund-request',json={'password':PASSWORD});assert r.status_code==200 and r.json()['within_initial_window'] is True
     assert c.get('/api/auth/me').json()['plan']=='avancado'
@@ -191,7 +191,7 @@ def test_http_adapter_uses_server_price_and_sandbox_destination(monkeypatch):
     monkeypatch.setattr(mp.httpx,'Client',lambda **kwargs:real_client(transport=httpx.MockTransport(handle),**kwargs))
     result=mp.MercadoPagoSandbox('TEST-synthetic').preference({'id':'server-order'},PLANS['essencial'],'https://moirae.example.test')
     assert result['checkout_url'].startswith('https://sandbox.')
-    payload=json.loads(seen[0].content);assert payload['items'][0]['unit_price']==40 and payload['items'][0]['quantity']==1
+    payload=json.loads(seen[0].content);assert payload['items'][0]['unit_price']==44 and payload['items'][0]['quantity']==1
     assert payload['external_reference']=='server-order' and payload['notification_url'].startswith('https://moirae.example.test/api/billing/webhook')
     assert seen[0].headers['authorization']=='Bearer TEST-synthetic'
 
@@ -257,3 +257,13 @@ def test_schema_six_adds_contract_columns_to_existing_database(tmp_path):
         assert (row['catalog_version'],row['essay_credits'],row['access_days'])==(1,8,30)
         assert db.execute('SELECT essay_credits FROM access_grants').fetchone()[0]==8
     Store(path)
+
+
+@pytest.mark.parametrize('plan,old_amount,credits',[('essencial',4000,10),('avancado',10000,30)])
+def test_version_two_orders_keep_price_after_ten_percent_markup(setup,plan,old_amount,credits):
+    app,c,fake,clock=setup;oid=checkout(c,plan=plan).json()['order_id']
+    with app.state.store.connect(write=True) as db:
+        db.execute('UPDATE billing_orders SET amount_cents=?,catalog_version=2 WHERE id=?',(old_amount,oid))
+    payment(fake,oid,clock,transaction_amount=old_amount/100)
+    assert notify(c,clock).status_code==200
+    assert c.get('/api/billing/current').json()['access']['essay_credits']==credits

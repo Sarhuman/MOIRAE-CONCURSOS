@@ -40,6 +40,7 @@ class MercadoPagoSandbox:
 
     def preference(self,order,plan,origin):
         payload={'items':[{'id':plan['id'],'title':'MOIRAE '+plan['name']+' · 30 dias','quantity':1,'currency_id':'BRL','unit_price':plan['price_cents']/100}],
+                 'payment_methods':{'installments':1},
                  'external_reference':order['id'],'notification_url':origin+'/api/billing/webhook?source_news=webhooks',
                  'back_urls':{key:origin+'/planos' for key in ('success','failure','pending')}}
         result=self.call('POST','/checkout/preferences',payload)
@@ -47,3 +48,4 @@ class MercadoPagoSandbox:
         except (KeyError,TypeError,AttributeError):raise HTTPException(502,'Resposta de checkout incompleta.')
 
     def payment(self,payment_id):return self.call('GET','/v1/payments/'+payment_id)
+

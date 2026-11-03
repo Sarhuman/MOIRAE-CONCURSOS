@@ -1,4 +1,7 @@
 # MOIRAE
+
+> **Revisão comercial atual:** catálogo mensal sandbox v3 — Essencial R$44 e Avançado R$110 por 30 dias, preservando 10/30 correções. Acréscimo de 10% solicitado pelo usuário. Pacotes de 6/12 ciclos e avulsos são simulações, com juros pagos pelo comprador e confirmação final no Mercado Pago. [Portfólio, tarifas e limites](docs/portfolio-commerce-v4.md).
+
 ### Sua preparação para o ENEM começa aqui.
 
 > **Plano revisado em 03/11/2026:** [estratégia competitiva e próximas entregas](docs/competitive-plan.md). Priorizar direção de arte, prática orientada e evolução em redação. Oferta planejada: Essencial R$40/30 dias com 10 correções IA e Avançado R$100/30 dias com 30. Sem videoaulas. O catálogo sandbox versão 2 usa os novos valores para novos pedidos; condições anteriores são preservadas. Experiência atual no celular aprovada pelo usuário; verificar regressões nas próximas mudanças.
@@ -201,3 +204,9 @@ Oito questões autorais adicionais estão em `data/content-drafts/authorial-batc
 ## Testar agora
 
 [Guia para WSL/Linux com conta Avançado e banco isolado](docs/next-local-test.md). O comando local_playtest cria apenas banco novo, pede senha sem exibi-la e não executa compra ou chamadas externas. Inclui preflight sem exposição de segredos e comparação offline de notas humanas/preditas; nenhuma dessas ferramentas aprova automaticamente a correção por IA.
+
+## Biblioteca de amostras e propostas comerciais
+
+`/biblioteca` ou `/biblioteca.html`: seis trilhas escritas e 18 lições autorais introdutórias, em revisão editorial. Progresso apenas no navegador. Nova página pública com portfólio filtrável, comparação de ciclos e créditos avulsos propostos. Sem videoaulas.
+
+GET `/api/commercial/catalog` e `/api/commercial/quote` são somente leitura; estimativas não criam pedidos ou acesso. A tabela acima de propostas históricas deve ser interpretada conforme a revisão v3 e o documento de portfólio. Carteira avulsa, alocações de pacotes longos e cotação efetiva de parcelamento ainda não habilitadas.

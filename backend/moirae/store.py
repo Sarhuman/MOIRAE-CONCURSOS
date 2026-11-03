@@ -42,6 +42,9 @@ CREATE TABLE IF NOT EXISTS essay_rewrites(
  id TEXT PRIMARY KEY,essay_id TEXT NOT NULL REFERENCES essay_submissions(id),annotation_id TEXT NOT NULL,
  request_key TEXT NOT NULL,text TEXT NOT NULL,created_at INTEGER NOT NULL,UNIQUE(essay_id,request_key));
 INSERT OR IGNORE INTO schema_version VALUES(5);
+CREATE INDEX IF NOT EXISTS review_attempt_history ON attempts(user_id,question_id,created_at DESC);
+CREATE TABLE IF NOT EXISTS review_favorites(user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,question_id TEXT NOT NULL,PRIMARY KEY(user_id,question_id));
+INSERT OR IGNORE INTO schema_version VALUES(7);
 CREATE TABLE IF NOT EXISTS idempotency(user_id TEXT NOT NULL REFERENCES users(id),key TEXT NOT NULL,payload TEXT NOT NULL,response TEXT NOT NULL,PRIMARY KEY(user_id,key));
 '''
 

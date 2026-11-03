@@ -24,6 +24,7 @@ from .mercadopago import MercadoPagoSandbox, verify_signature
 from .plans import entitlement
 from .catalog import BY_ID
 from .essays import Essays
+from .review import Review
 
 ROOT=Path(__file__).resolve().parents[2]
 
@@ -126,6 +127,10 @@ class EssaySubmission(BaseModel):
         try:value.encode('utf-16-le')
         except UnicodeEncodeError:raise ValueError('Texto inválido.')
         return value
+
+class FavoriteInput(BaseModel):
+    model_config=ConfigDict(extra='forbid',strict=True)
+    enabled: bool
 
 class EssayRewrite(BaseModel):
     model_config=ConfigDict(extra='forbid')
@@ -368,6 +373,18 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
         # SDK HTTP síncrono em worker, sem bloquear o event loop do servidor.
         from starlette.concurrency import run_in_threadpool
         return await run_in_threadpool(billing.reconcile,payment_id)
+
+    @app.get('/api/review')
+    def review_list(view:Literal['errors','favorites','all']='errors',auth=Depends(student)):
+        return Review(store).listing(auth['user_id'],view)
+
+    @app.post('/api/review/{question_id}/favorite')
+    def review_favorite(question_id:str,body:FavoriteInput,request:Request,auth=Depends(student)):
+        rate(request,'review:'+auth['user_id'])
+        return Review(store).favorite(auth['user_id'],question_id,body.enabled)
+
+    @app.get('/caderno')
+    def review_page():return FileResponse(ROOT/'web'/'review.html')
 
     @app.get('/api/dashboard')
     def dashboard(auth=Depends(student)):

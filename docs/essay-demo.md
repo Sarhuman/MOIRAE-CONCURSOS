@@ -37,3 +37,7 @@ O avaliador local executa dentro de uma transação curta. **Nunca substituir po
 ## Validação
 
 Testes cobrem fluxo HTTP, retomada após reinício, exportação, restrições de conta, CSRF, isolamento, expiração, concorrência, idempotência, falha técnica/validação com liberação de reserva, Unicode/offsets, limite de versões e migração aditiva. QA visual de navegador e dispositivos reais permanece pendente.
+
+## Revisão de interface
+
+Marcações têm cores e rótulos C1–C5, seleção pelo teclado e lista de trechos. Segmentação por offsets preserva sobreposições sem descartar texto. Comparação mostra o trecho original associado à versão escolhida, lado a lado em tela ampla e empilhado no celular. Rascunhos de reescrita são mantidos em memória por redação e marcação, sem localStorage; falhas preservam texto e chave idempotente. Fechar/recarregar com alterações não enviadas aciona o aviso nativo do navegador quando permitido. Não é recuperação durável: a interface informa a perda ao fechar a aba. Durante envios, campos são bloqueados para evitar sobrescrever edições feitas enquanto a resposta chega. Nenhuma avaliação semântica foi acrescentada.

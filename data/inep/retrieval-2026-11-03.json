@@ -1,0 +1,27 @@
+{
+  "checked_on": "2026-11-03",
+  "source_page": "https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos/2025",
+  "source_page_http_status": 200,
+  "source_page_sha256": "676dbf426f9fe16d94f86712a56f0dca76611cb313a418a379f963788ad91bae",
+  "download_attempts": [
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D1_CD1.pdf",
+      "result": "HTTP 503 Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D1_CD1.pdf",
+      "result": "HTTP 503 Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "result": "HTTP 503 Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "result": "HTTP 503 Service Unavailable"
+    }
+  ],
+  "official_pdfs_downloaded": 0,
+  "official_questions_imported": 0,
+  "note": "Os links foram extraídos da página oficial. Sem PDFs originais, a extração real permanece pendente."
+}

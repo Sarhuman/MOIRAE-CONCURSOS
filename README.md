@@ -139,3 +139,8 @@ Execute conforme [DEVELOPMENT.md](DEVELOPMENT.md). A página apresenta a identid
 Free: 10 questões/dia, sem dashboard e sem correção de redação; proposta de até 3 ajudas de IA/dia vinculadas a questões. Essencial: 3 correções por ciclo e 1 rodada de reescrita de trecho por correção. Avançado: 8 correções por ciclo, 2 rodadas de reescrita e evolução por competência. Tutor pago com franquia mensal ainda a definir. Sem IA ilimitada. Essas propostas dependem de custo e validação antes da venda.
 
 Veja [o contrato da oficina](docs/essay-workshop.md) para separar os recursos demonstrativos da integração futura.
+
+
+## Conteúdo oficial do ENEM
+
+Importador offline preparado para ENEM 2025 regular, cadernos azuis dos dois dias. O Inep retornou HTTP 503 nos downloads em 03/11/2026; **nenhuma questão oficial foi importada ainda**. O catálogo do aluno permanece autoral. Consulte [docs/inep-import.md](docs/inep-import.md) para coleta, extração em rascunho e conferência editorial. O processo não publica questões automaticamente.

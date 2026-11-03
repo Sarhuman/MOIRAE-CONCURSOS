@@ -7,3 +7,6 @@ var/
 *.sqlite3-shm
 .env
 node_modules/
+
+# PDFs originais e saídas de revisão ficam fora do repositório público.
+imports/

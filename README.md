@@ -167,3 +167,8 @@ Catálogo servidor: Essencial **R$ 35,00 / 30 dias / 3 créditos previstos** e A
 O webhook autentica a assinatura e consulta o provedor para conferir valor, moeda, vendedor, pedido e ambiente antes de conceder acesso uma única vez. Uso pago não debita a cota Free; expiração/revogação volta ao Free. O processamento é restrito a testes e não foi validado com uma compra real de sandbox.
 
 Não há cobrança de produção nem estorno automático. Solicitações de cancelamento são registradas, mas exigem operação ainda pendente. Créditos de redação estão alocados, sem corretor OpenAI conectado. Veja [docs/billing-sandbox.md](docs/billing-sandbox.md) para limites, configuração de teste e requisitos antes de vender.
+
+## Oficina persistente de redação — demonstração
+
+O percurso `/redacoes` guarda textos, notas fixas ilustrativas, marcações e reescritas por conta. Habilitação local com `MOIRAE_ESSAY_DEMO=true`; desativado por padrão, sem OpenAI ou consumo de créditos reais. [Funcionamento e limites](docs/essay-demo.md).
+

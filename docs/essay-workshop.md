@@ -38,3 +38,8 @@ Sem GraphRAG, agentes múltiplos ou roteamento multi-provedor nesta fase. A evol
 - Tratar recusa, resposta incompleta, timeout e falha de validação como estados próprios: não renderizar resultado parcial como correção concluída e não descontar crédito duplicado em retries.
 - As fixtures autorais estão em web/essay-fixture.js, consumidas pela página e verificadas por tests/essay-fixture.test.cjs. Não precisam de chave nem rede. Na futura API, acrescentar fixtures de saída válida, recusa, resposta truncada, nota inválida e offsets incorretos.
 - OCR futuro: estados aguardando imagem, transcrevendo, revisão necessária, texto confirmado e falha de leitura. Em falha, permitir nova foto ou digitação. Não iniciar avaliação nem reservar crédito de correção antes de confirmar o texto; custo de transcrição deve ter controle próprio e ser informado.
+
+## Oficina persistente demonstrativa
+
+O percurso autenticado `/redacoes`, separado do exemplo da landing page, agora persiste envios, resultados fixos e reescritas. Veja [essay-demo.md](essay-demo.md). Esta entrega não integra OpenAI nem avalia semanticamente o texto.
+

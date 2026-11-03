@@ -23,6 +23,7 @@ from .billing import Billing
 from .mercadopago import MercadoPagoSandbox, verify_signature
 from .plans import entitlement
 from .catalog import BY_ID
+from .essays import Essays
 
 ROOT=Path(__file__).resolve().parents[2]
 
@@ -111,7 +112,29 @@ class EssayDraft(BaseModel):
     revision: int=Field(ge=0)
 
 
-def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider=None,billing_collector=None,billing_secret=None):
+class EssaySubmission(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    key: uuid.UUID
+    theme: str=Field(min_length=3,max_length=200)
+    text: str=Field(min_length=100,max_length=4000)
+
+    @field_validator('theme','text')
+    @classmethod
+    def meaningful(cls,value,info):
+        if len(value.strip()) < (100 if info.field_name=='text' else 3):
+            raise ValueError('Preencha o texto.')
+        try:value.encode('utf-16-le')
+        except UnicodeEncodeError:raise ValueError('Texto inválido.')
+        return value
+
+class EssayRewrite(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    key: uuid.UUID
+    annotation_id: str=Field(min_length=1,max_length=40)
+    text: str=Field(min_length=20,max_length=1200)
+
+
+def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider=None,billing_collector=None,billing_secret=None,essay_demo=None):
     origin=origin or os.getenv('MOIRAE_ORIGIN','http://127.0.0.1:8000')
     secure=(os.getenv('MOIRAE_SECURE_COOKIE','true').lower()=='true') if secure is None else secure
     if not origin.startswith(('http://127.0.0.1:','http://localhost:','http://terminal.local:','https://')):
@@ -129,6 +152,7 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
             raise ValueError('Configuração sandbox incompleta; verifique credenciais e origem HTTPS.')
         billing_provider=MercadoPagoSandbox(token)
     billing=Billing(store,billing_provider,billing_collector,billing_secret,origin)
+    essays=Essays(store, enabled=(os.getenv('MOIRAE_ESSAY_DEMO','false').lower()=='true') if essay_demo is None else essay_demo)
     practice=Practice(store)
     exams=Exams(store)
     app=FastAPI(title='MOIRAE — piloto',docs_url=None,redoc_url=None,openapi_url=None)
@@ -138,6 +162,7 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     app.state.accounts=accounts
     app.state.mailer=mailer
     app.state.billing=billing
+    app.state.essays=essays
     cookie='__Host-moirae' if secure else 'moirae_local'
 
     @app.exception_handler(sqlite3.OperationalError)
@@ -361,6 +386,31 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
 
     @app.get('/planos')
     def plans_page():return FileResponse(ROOT/'web'/'plans.html')
+
+    @app.get('/api/essays')
+    def essay_history(auth=Depends(student)):return essays.history(auth['user_id'])
+
+    @app.post('/api/essays',status_code=201)
+    def essay_submit(body:EssaySubmission,request:Request,auth=Depends(student)):
+        rate(request,'essay:'+auth['user_id'])
+        return essays.submit(auth['user_id'],str(body.key),body.theme,body.text)
+
+    @app.get('/api/essays/{essay_id}')
+    def essay_detail(essay_id:uuid.UUID,auth=Depends(student)):
+        return essays.detail(auth['user_id'],str(essay_id))
+
+    @app.post('/api/essays/{essay_id}/process')
+    def essay_process(essay_id:uuid.UUID,request:Request,auth=Depends(student)):
+        rate(request,'essay:'+auth['user_id'])
+        return essays.process(auth['user_id'],str(essay_id))
+
+    @app.post('/api/essays/{essay_id}/rewrites',status_code=201)
+    def essay_rewrite(essay_id:uuid.UUID,body:EssayRewrite,request:Request,auth=Depends(student)):
+        rate(request,'essay:'+auth['user_id'])
+        return essays.rewrite(auth['user_id'],str(essay_id),str(body.key),body.annotation_id,body.text)
+
+    @app.get('/redacoes')
+    def essays_page():return FileResponse(ROOT/'web'/'essays.html')
 
     @app.get('/painel')
     def dashboard_page():return FileResponse(ROOT/'web'/'dashboard.html')

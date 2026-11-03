@@ -171,5 +171,5 @@ def test_existing_baseline_is_preserved_on_extension(tmp_path):
     with store.connect() as db:
         assert practice.quota(db,'u')['used']==2
         assert practice.quota(db,'u')['remaining']==28
-        assert {r[0] for r in db.execute('SELECT version FROM schema_version')}=={1,2,3,4}
+        assert {r[0] for r in db.execute('SELECT version FROM schema_version')}=={1,2,3,4,5}
         assert db.execute('SELECT count(*) FROM attempts').fetchone()[0]==2

@@ -27,4 +27,5 @@ jobs:
       - run: node --check web/account.js
       - run: node --check web/plans.js
       - run: node --check web/dashboard.js
+      - run: node --check web/essays.js
       - run: node --test tests/essay-fixture.test.cjs

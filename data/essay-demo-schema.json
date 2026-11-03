@@ -1,0 +1,134 @@
+{
+  "$defs": {
+    "Annotation": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "competency": {
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Competency",
+          "type": "integer"
+        },
+        "start": {
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "exclusiveMinimum": 0,
+          "title": "End",
+          "type": "integer"
+        },
+        "quote": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        },
+        "guidance": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Guidance",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "competency",
+        "start",
+        "end",
+        "quote",
+        "guidance"
+      ],
+      "title": "Annotation",
+      "type": "object"
+    },
+    "Competency": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Id",
+          "type": "integer"
+        },
+        "score": {
+          "enum": [
+            0,
+            40,
+            80,
+            120,
+            160,
+            200
+          ],
+          "title": "Score",
+          "type": "integer"
+        },
+        "explanation": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "score",
+        "explanation"
+      ],
+      "title": "Competency",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "mode": {
+      "const": "demonstration",
+      "title": "Mode",
+      "type": "string"
+    },
+    "rubric_version": {
+      "const": "enem-demo-v1",
+      "title": "Rubric Version",
+      "type": "string"
+    },
+    "notice": {
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Notice",
+      "type": "string"
+    },
+    "competencies": {
+      "items": {
+        "$ref": "#/$defs/Competency"
+      },
+      "maxItems": 5,
+      "minItems": 5,
+      "title": "Competencies",
+      "type": "array"
+    },
+    "annotations": {
+      "items": {
+        "$ref": "#/$defs/Annotation"
+      },
+      "maxItems": 20,
+      "title": "Annotations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode",
+    "rubric_version",
+    "notice",
+    "competencies",
+    "annotations"
+  ],
+  "title": "Evaluation",
+  "type": "object"
+}

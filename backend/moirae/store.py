@@ -33,6 +33,15 @@ INSERT OR IGNORE INTO schema_version VALUES(3);
 CREATE TABLE IF NOT EXISTS billing_orders(id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),plan_id TEXT NOT NULL,amount_cents INTEGER NOT NULL,status TEXT NOT NULL,created_at INTEGER NOT NULL,request_key TEXT NOT NULL,preference_id TEXT,checkout_url TEXT,payment_id TEXT UNIQUE,provider_version REAL,refund_requested_at INTEGER,UNIQUE(user_id,request_key));
 CREATE UNIQUE INDEX IF NOT EXISTS one_pending_order ON billing_orders(user_id) WHERE status IN ('preparing','pending','in_process','authorized');
 CREATE TABLE IF NOT EXISTS access_grants(order_id TEXT PRIMARY KEY REFERENCES billing_orders(id),user_id TEXT NOT NULL REFERENCES users(id),plan_id TEXT NOT NULL,starts_at INTEGER NOT NULL,ends_at INTEGER NOT NULL,status TEXT NOT NULL,essay_credits INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS essay_submissions(
+ id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),grant_id TEXT NOT NULL REFERENCES access_grants(order_id),
+ request_key TEXT NOT NULL,theme TEXT NOT NULL,text TEXT NOT NULL,status TEXT NOT NULL CHECK(status IN ('received','processing','completed','failed')),
+ created_at INTEGER NOT NULL,result TEXT,error TEXT,UNIQUE(user_id,request_key));
+CREATE INDEX IF NOT EXISTS essay_owner ON essay_submissions(user_id,created_at);
+CREATE TABLE IF NOT EXISTS essay_rewrites(
+ id TEXT PRIMARY KEY,essay_id TEXT NOT NULL REFERENCES essay_submissions(id),annotation_id TEXT NOT NULL,
+ request_key TEXT NOT NULL,text TEXT NOT NULL,created_at INTEGER NOT NULL,UNIQUE(essay_id,request_key));
+INSERT OR IGNORE INTO schema_version VALUES(5);
 CREATE TABLE IF NOT EXISTS idempotency(user_id TEXT NOT NULL REFERENCES users(id),key TEXT NOT NULL,payload TEXT NOT NULL,response TEXT NOT NULL,PRIMARY KEY(user_id,key));
 '''
 

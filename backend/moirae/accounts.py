@@ -81,10 +81,12 @@ class Accounts:
         with self.store.connect() as db:
             orders=[dict(r) for r in db.execute('SELECT id,plan_id,amount_cents,status,created_at,refund_requested_at FROM billing_orders WHERE user_id=?',(uid,))]
         with self.store.connect() as db:
+            real_essays=[dict(r) for r in db.execute('SELECT id,theme,text,status,created_at,external_notice_version,model,rubric_version,prompt_version,result,error FROM real_essay_jobs WHERE user_id=?',(uid,))]
+            real_credit_events=[dict(r) for r in db.execute('SELECT e.* FROM essay_credit_events e JOIN real_essay_jobs j ON j.id=e.job_id WHERE j.user_id=?',(uid,))]
             essays=[dict(r) for r in db.execute('SELECT id,theme,text,status,created_at,result,error FROM essay_submissions WHERE user_id=?',(uid,))]
             for essay in essays:
                 essay['rewrites']=[dict(r) for r in db.execute('SELECT id,annotation_id,text,created_at FROM essay_rewrites WHERE essay_id=?',(essay['id'],))]
-        return dict(review_schedule=reviews,planned_sessions=planned_sessions,favorites=favorites,essays=essays,orders=orders,exported_at=int(self.clock()),account=account,profile=dict(profile) if profile else None,practice_sessions=sessions,attempts=attempts,exams=exams)
+        return dict(real_essays=real_essays,real_credit_events=real_credit_events,review_schedule=reviews,planned_sessions=planned_sessions,favorites=favorites,essays=essays,orders=orders,exported_at=int(self.clock()),account=account,profile=dict(profile) if profile else None,practice_sessions=sessions,attempts=attempts,exams=exams)
 
     def erase(self,uid,password):
         with self.store.connect(write=True) as db:

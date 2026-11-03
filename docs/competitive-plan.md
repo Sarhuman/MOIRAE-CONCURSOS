@@ -2,7 +2,7 @@
 
 ## Decisão e alcance
 
-Foco inicial: preparação ENEM com prática orientada e oficina de redação. Este documento atualiza as prioridades e hipóteses de produto do README; não altera catálogo, preços, créditos existentes ou contratos de alunos. Não habilita cobrança ou integração externa. O PR #8 permanece draft, dependente do #7, sem merge.
+Foco inicial: preparação ENEM com prática orientada e oficina de redação. Este documento atualiza as prioridades e hipóteses de produto do README; define preços e franquias planejados, mas não altera o catálogo executável, créditos existentes ou contratos de alunos. Não habilita cobrança ou integração externa. O PR #8 permanece draft, dependente do #7, sem merge.
 
 Objetivo: oferecer uma experiência coerente que identifique dificuldades, proponha uma ação executável e demonstre evolução. Superioridade é uma hipótese a comprovar com usuários e avaliação pedagógica.
 
@@ -21,7 +21,7 @@ São alegações comerciais consultadas, não validação independente de entreg
 
 A branch feat/persistent-essay-demo contém piloto local, SQLite, atividades pequenas, simulados reduzidos, cobrança sandbox e redação com avaliador fixo. Há persistência e controles de integridade, mas não correção semântica real. O dashboard é básico; personalização adaptativa, catálogo amplo e operação pública ainda precisam de entrega. Experiência no celular aprovada pelo usuário nesta conversa. Essa validação de uso não substitui medições específicas de acessibilidade, desempenho ou revisão visual de alterações futuras.
 
-O README mantém preços e franquias de teste de R$35/3 e R$55/8 por 30 dias. Essa combinação deixa de ser uma proposta comercial pronta: reavaliar valor percebido e sustentabilidade antes da venda. Não aumentar limites em runtime por causa deste benchmark.
+Decisão comercial do usuário: Essencial R$40/30 dias e Avançado R$100/30 dias, com 30 correções no Avançado. Para equilibrar a proposta, o Essencial passa a prever 10 correções e o conjunto de prática descrito abaixo. O sandbox ainda executa o catálogo anterior R$35/3 e R$55/8 até migração própria, com testes; não confundir configuração atual com a nova oferta planejada.
 
 ## Produto e diferenciação
 
@@ -37,7 +37,7 @@ O README mantém preços e franquias de teste de R$35/3 e R$55/8 por 30 dias. Es
 | Conteúdo | Catálogo editorial com origem e revisão | Publicação só após conferência; erros podem ser reportados |
 | Confiança | Demonstração funcional, limites claros e atendimento | Página corresponde ao que cada ambiente entrega |
 
-Não tentar igualar um catálogo audiovisual industrial no primeiro lançamento. Videoaulas próprias ou licenciadas e revisão humana são etapas posteriores, com orçamento, equipe e operação definidos. Cursos livres, graduação, pós, B2B e concursos ficam fora do lançamento ENEM.
+Decisão do usuário: não oferecer videoaulas em nenhum plano. O ensino será apoiado em prática, resoluções comentadas, materiais escritos e devolutivas de redação. Revisão humana não está incluída; sua eventual oferta exige equipe e operação próprias. Cursos livres, graduação, pós, B2B e concursos ficam fora do lançamento ENEM.
 
 ## Direção de arte e experiência
 
@@ -57,13 +57,27 @@ Aceite: revisar a página pública, painel e oficina em 360, 390, 768 e 1440 px;
 
 Manter pagamento avulso de 30 dias e renovação manual como decisão atual. Preservar Mercado Pago como integração em teste.
 
-| Plano | Papel proposto | Mudança a validar |
-|---|---|---|
-| Free | Experimentar valor antes de pagar | Rever a cota de 30 questões/mês; testar diagnóstico e resultado básico útil sem venda prematura |
-| Essencial | Rotina de prática e revisão | Questões, caderno de erros, planejamento e simulados; reavaliar franquia de redação |
-| Avançado | Acompanhamento de escrita e dificuldades | Evolução por competência, reescritas orientadas e franquia maior validada por custo |
+| Recurso planejado | Free | Essencial — R$40/30 dias | Avançado — R$100/30 dias |
+|---|---|---|---|
+| Questões comentadas nas quatro áreas | 30/mês | Sem limite diário comercial | Sem limite diário comercial |
+| Histórico e desempenho | Resultado da atividade | Histórico e evolução por área | Também análise por assunto/habilidade |
+| Caderno de erros e favoritos | Não | Sim | Sim |
+| Revisão espaçada e planejamento 15/30/60 min | Não | Sim | Sim, priorizado por dificuldades |
+| Simulados por área e completos | Demonstração reduzida | Sim, com resoluções e análise por área | Também diagnóstico detalhado por habilidade |
+| Correções de redação por IA | Não | 10 por ciclo de 30 dias | 30 por ciclo de 30 dias |
+| Devolutiva nas cinco competências e marcações | Não | Sim | Sim |
+| Reescrita orientada de trecho | Não | 1 rodada por correção | 2 rodadas por correção |
+| Histórico de redações | Não | Sim | Sim, com evolução por competência e comparação entre envios |
+| Materiais escritos revisados | Demonstração | Resumos e exercícios vinculados às dificuldades | Tudo do Essencial |
+| Videoaulas | Não | Não | Não |
 
-Preços R$35/R$55 e franquias 3/8 ficam como baseline técnico do sandbox, não nova promessa de mercado. Antes de fixar nova oferta: medir custo por correção/reescrita/tutor, distribuição de uso, suporte, infraestrutura, taxas e margem. Testar cenários de uso típico e uso no limite. Definir cotas, expiração, indisponibilidade e compensação em contrato. Não anunciar IA ilimitada.
+Os preços são decisão do usuário; 10 correções no Essencial e a distribuição dos recursos são o ajuste de produto desta revisão. O Avançado inclui tudo do Essencial. Os recursos desta tabela são escopo planejado, não declaração de disponibilidade atual.
+
+Cada ciclo pago dura 30 dias desde a liberação do acesso, com renovação manual e créditos sem acúmulo. Uma nova avaliação completa, inclusive de texto reescrito, consome outro crédito; rodada de trecho usa a franquia própria acima e não equivale a nova correção integral. Falha técnica definitiva libera a reserva. Controles contra abuso continuam aplicáveis.
+
+Preservar o histórico do aluno conforme retenção; ao expirar, aplicar os direitos Free. A mudança do catálogo deverá valer para novas compras, preservando condições de pedidos anteriores; versionar preço, franquias e direitos no pedido, sem recalcular concessões existentes pelo catálogo novo.
+
+Antes da venda, medir custo por correção/reescrita, uso no limite, suporte, infraestrutura, taxas e margem. Tutor IA continua fora da franquia comercial definida: não anunciar disponibilidade ilimitada ou quantidade não estabelecida. O preço maior não dispensa validação pedagógica.
 
 Não competir somente por preço: a comparação precisa considerar compromisso total, prazo de acesso, conteúdo e serviço incluído. Correção automatizada deve ser identificada como estimativa pedagógica.
 
@@ -93,4 +107,4 @@ Avaliar: conclusão da primeira sessão, retorno em sete dias, revisões realiza
 
 ## Estado desta revisão
 
-Entregue: benchmark público e mudança documentada de estratégia, prioridade visual e sequência de implementação. Não entregue por esta revisão: redesign em código, franquias novas, IA real, QA renderizado ou publicação. O próximo trabalho deve partir do HEAD atual e preservar os contratos de teste.
+Entregue: benchmark público e mudança documentada de estratégia, prioridade visual e sequência de implementação. Não entregue por esta revisão: redesign em código, alteração das franquias em código, IA real, QA renderizado ou publicação. O próximo trabalho deve partir do HEAD atual e preservar os contratos de teste.

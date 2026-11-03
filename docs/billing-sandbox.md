@@ -2,7 +2,7 @@
 
 ## Escopo entregue
 
-Catálogo no servidor: Essencial R$ 35,00 por 30 dias com 3 créditos previstos de redação; Avançado R$ 55,00 por 30 dias com 8 créditos. Pagamento avulso e renovação manual. Não há assinatura recorrente. O prazo começa quando a confirmação é processada e o acesso liberado. Créditos são uma alocação por período; ainda não há correção OpenAI ou consumo desses créditos.
+Catálogo no servidor: Essencial R$ 40,00 por 30 dias com 10 créditos previstos de redação; Avançado R$ 100,00 por 30 dias com 30 créditos. Pagamento avulso e renovação manual. Não há assinatura recorrente. O prazo começa quando a confirmação é processada e o acesso liberado. Créditos são uma alocação por período; ainda não há correção OpenAI ou consumo desses créditos.
 
 /planos mostra preços, pedidos próprios e botão de teste quando o adaptador estiver configurado. /painel entrega contagem de respostas/acertos, desempenho por área, últimas 20 tentativas e total de simulados encerrados para conta com acesso pago ativo. Este é um painel básico, não a análise avançada completa anunciada como proposta futura.
 
@@ -61,3 +61,8 @@ Ainda faltam: ensaio integrado com Mercado Pago e usuários de teste; conciliaç
 - https://www.mercadopago.com.br/developers/pt/docs/checkout-pro-preferences/payment-notifications
 - https://www.mercadopago.com.br/developers/pt/reference/online-payments/checkout-pro-preferences/create-preference/post
 - https://www.mercadopago.com.br/developers/pt/reference/online-payments/checkout-pro-preferences/get-payment/get
+
+
+## Catálogo versionado
+
+Novos pedidos usam versão 2: Essencial R$40/10 créditos e Avançado R$100/30 créditos, ambos por 30 dias, sem videoaulas. O pedido guarda preço, créditos, duração e versão antes de abrir checkout. Reconciliação usa esse contrato, nunca a franquia atual do catálogo. Schema 6 migra apenas pedidos legados reconhecidos R$35/3 e R$55/8 para versão 1; concessões existentes não mudam. Pedidos sem contrato reconhecido exigem revisão e não concedem acesso. A oficina segue demonstrativa, sem correção real.

@@ -43,3 +43,8 @@ Para usar cadastro, login, retomada e cota mensal Free real, siga [docs/mvp.md](
 ## Simulados cronometrados
 
 Execute o backend para acessar /simulados. Detalhes de prazo, consumo compartilhado e redação estão em [docs/timed-exams.md](docs/timed-exams.md). A página hospedada continua demonstrativa; somente os textos dos planos são atualizados nela.
+
+
+## Conta, e-mail e direitos no piloto
+
+Após criar uma conta de teste, use o link em var/mail-outbox no servidor para confirmar o e-mail. Os arquivos são privados e contêm tokens: não expor por HTTP ou Git. /conta permite recuperação, exportação e exclusão. Ver [docs/accounts-privacy.md](docs/accounts-privacy.md). Nenhuma entrega real de e-mail foi configurada.

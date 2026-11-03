@@ -38,11 +38,11 @@ A suíte verifica persistência, retomada, logout revogável, expiração, limit
 
 ## Estado do banco e migração
 
-store.py contém a baseline de prática 1 e extensão aditiva de simulados 2, criada para banco vazio. Não é um mecanismo completo de migrações de produção. SQLite atende a um piloto pequeno de instância única com volume persistente; não há promessa de escalabilidade horizontal nesta entrega. Antes de produção: PostgreSQL, migrações Alembic revisadas, repositório equivalente com transações e restrições, testes de concorrência no PostgreSQL, backups com restauração e monitoramento. O serviço Practice concentra regras; a persistência é isolada em Store, mas a migração ainda exige implementar as consultas para o novo banco.
+store.py contém a baseline de prática 1 e extensões aditivas de simulados 2 e contas 3, criada para banco vazio. Não é um mecanismo completo de migrações de produção. SQLite atende a um piloto pequeno de instância única com volume persistente; não há promessa de escalabilidade horizontal nesta entrega. Antes de produção: PostgreSQL, migrações Alembic revisadas, repositório equivalente com transações e restrições, testes de concorrência no PostgreSQL, backups com restauração e monitoramento. O serviço Practice concentra regras; a persistência é isolada em Store, mas a migração ainda exige implementar as consultas para o novo banco.
 
 ## Não entregue / bloqueios para lançamento público
 
-- Verificação de e-mail, recuperação de senha e exclusão de conta.
+- Entrega real de e-mail e operação de atendimento. Verificação, recuperação, exportação e exclusão já existem no piloto local, conforme docs/accounts-privacy.md.
 - Política de privacidade e fluxo apropriado para dados de menores.
 - Revisão editorial independente e catálogo de conteúdo de produção.
 - Dashboard pago, pagamentos, upgrade e direitos premium.

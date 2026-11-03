@@ -16,8 +16,10 @@ def setup(tmp_path):
     app.state.exams.clock=lambda:clock[0]
     app.state.practice.clock=app.state.exams.day_now
     c=TestClient(app,base_url=BASE,headers={'Origin':BASE})
-    login=c.post('/api/auth/register',json={'email':'exam@example.test','password':'senha-exclusiva-123'})
+    login=c.post('/api/auth/register',json={'email':'exam@example.test','password':'senha-exclusiva-123','accept_terms':True,'adult_pilot':True})
     c.headers['X-CSRF-Token']=login.json()['csrf']
+    token=app.state.mailer.messages[-1]['link'].split('#token=')[1]
+    assert c.post('/api/auth/verify-email',json={'token':token}).status_code==200
     return app,c,clock
 
 
@@ -112,7 +114,8 @@ def test_month_boundary_brasilia_and_old_exam_charge(setup):
 
 def test_account_isolation_csrf_and_input_validation(setup):
     app,c,_=setup;e=start(c).json();b=TestClient(app,base_url=BASE,headers={'Origin':BASE})
-    r=b.post('/api/auth/register',json={'email':'outro@example.test','password':'senha-exclusiva-123'});b.headers['X-CSRF-Token']=r.json()['csrf']
+    r=b.post('/api/auth/register',json={'email':'outro@example.test','password':'senha-exclusiva-123','accept_terms':True,'adult_pilot':True});b.headers['X-CSRF-Token']=r.json()['csrf']
+    assert b.post('/api/auth/verify-email',json={'token':app.state.mailer.messages[-1]['link'].split('#token=')[1]}).status_code==200
     assert b.get('/api/exams/current').json()['exam'] is None
     assert item(b,e).status_code==404 and essay(b,e).status_code==404 and finish(b,e).status_code==404
     assert c.post('/api/exams/start',json={'day':1,'key':str(uuid.uuid4()),'duration':9999}).status_code==422
@@ -168,5 +171,5 @@ def test_existing_baseline_is_preserved_on_extension(tmp_path):
     with store.connect() as db:
         assert practice.quota(db,'u')['used']==2
         assert practice.quota(db,'u')['remaining']==28
-        assert {r[0] for r in db.execute('SELECT version FROM schema_version')}=={1,2}
+        assert {r[0] for r in db.execute('SELECT version FROM schema_version')}=={1,2,3}
         assert db.execute('SELECT count(*) FROM attempts').fetchone()[0]==2

@@ -151,3 +151,10 @@ Importador offline preparado para ENEM 2025 regular, cadernos azuis dos dois dia
 Free: **30 questões por mês**, compartilhadas entre exercícios e simulados, com renovação no primeiro dia do mês em America/Sao_Paulo, sem acúmulo. Nos simulados, o caderno é descontado integralmente ao iniciar, com confirmação prévia; retomadas e alterações não descontam novamente.
 
 O piloto local inclui **/simulados**: primeiro dia com seis questões autorais e redação digitada em 30 minutos; segundo dia com seis questões em 15 minutos. Deadline no servidor, cartão-resposta, revisão, salvamento e encerramento. A redação fica salva, sem correção no Free. Não são provas oficiais completas. Consulte [docs/timed-exams.md](docs/timed-exams.md).
+
+
+## Contas e privacidade no piloto
+
+Verificação de e-mail, recuperação com token de uso único e revogação de sessões, exportação JSON e exclusão após confirmar a senha. Acesse **/conta**. O estudo fica bloqueado até aceitar os termos versionados e confirmar o e-mail. O piloto é restrito a maiores de 18 anos por autodeclaração; o fluxo de menores ainda não está implementado.
+
+Os links são gravados na caixa de saída local privada, sem envio de e-mail pela rede. Em HTTPS sem adaptador de entrega, o cadastro público é bloqueado. Avisos locais de privacidade/cookies/termos e limitações estão em [docs/accounts-privacy.md](docs/accounts-privacy.md). Isso não certifica conformidade integral com a LGPD nem habilita lançamento público.

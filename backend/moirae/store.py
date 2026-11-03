@@ -26,6 +26,10 @@ CREATE TABLE IF NOT EXISTS mock_items(
  choice TEXT,flagged INTEGER NOT NULL DEFAULT 0,revision INTEGER NOT NULL DEFAULT 0,
  PRIMARY KEY(exam_id,question_id),UNIQUE(exam_id,position));
 INSERT OR IGNORE INTO schema_version VALUES(2);
+CREATE TABLE IF NOT EXISTS user_profiles(user_id TEXT PRIMARY KEY REFERENCES users(id),email_verified INTEGER NOT NULL DEFAULT 0,policy_version TEXT,accepted_at INTEGER,adult_pilot INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE IF NOT EXISTS account_tokens(token_hash TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),purpose TEXT NOT NULL CHECK(purpose IN ('verify','reset')),expires_at INTEGER NOT NULL,created_at INTEGER NOT NULL);
+CREATE INDEX IF NOT EXISTS account_token_owner ON account_tokens(user_id,purpose);
+INSERT OR IGNORE INTO schema_version VALUES(3);
 CREATE TABLE IF NOT EXISTS idempotency(user_id TEXT NOT NULL REFERENCES users(id),key TEXT NOT NULL,payload TEXT NOT NULL,response TEXT NOT NULL,PRIMARY KEY(user_id,key));
 '''
 

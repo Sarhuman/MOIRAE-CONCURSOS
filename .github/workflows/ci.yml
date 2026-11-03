@@ -24,4 +24,5 @@ jobs:
           node-version: '24'
       - run: node --check web/study.js
       - run: node --check web/exam.js
+      - run: node --check web/account.js
       - run: node --test tests/essay-fixture.test.cjs

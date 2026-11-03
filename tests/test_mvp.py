@@ -13,9 +13,12 @@ def env(tmp_path):
     return app,TestClient(app,base_url='http://localhost:8000',headers={'Origin':'http://localhost:8000'})
 
 def register(c,email='aluno@example.test'):
-    r=c.post('/api/auth/register',json={'email':email,'password':'senha-exclusiva-123'})
+    r=c.post('/api/auth/register',json={'email':email,'password':'senha-exclusiva-123','accept_terms':True,'adult_pilot':True})
     assert r.status_code==201,r.text
-    c.headers['X-CSRF-Token']=r.json()['csrf'];return r
+    c.headers['X-CSRF-Token']=r.json()['csrf']
+    token=c.app.state.mailer.messages[-1]['link'].split('#token=')[1]
+    assert c.post('/api/auth/verify-email',json={'token':token}).status_code==200
+    return r
 
 def answer(c,s,key=None,choice=None):
     q=s['question'];return c.post('/api/practice/answer',json={'session_id':s['id'],'question_id':q['id'],'choice':choice or BY_ID[q['id']].answer,'key':key or str(uuid.uuid4())})
@@ -113,7 +116,8 @@ def test_last_quota_concurrency(env):
 
 
 def test_payload_limits_and_cookie_secure(tmp_path):
-    app=create_app(str(tmp_path/'secure.sqlite3'),origin='https://example.test',secure=True)
+    from backend.moirae.mail import LocalMail
+    app=create_app(str(tmp_path/'secure.sqlite3'),origin='https://example.test',secure=True,mailer=LocalMail(tmp_path/'outbox'))
     c=TestClient(app,base_url='https://example.test',headers={'Origin':'https://example.test'})
     r=register(c);assert '__Host-moirae=' in r.headers['set-cookie'] and 'Secure' in r.headers['set-cookie']
     assert c.post('/api/auth/login',content='x'*20000).status_code==413

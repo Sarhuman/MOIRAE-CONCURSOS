@@ -1,4 +1,5 @@
 import os
+import json
 import re
 import secrets
 import sqlite3
@@ -16,6 +17,8 @@ from .security import digest, hasher, verify
 from .service import Practice
 from .middleware import BodyLimit
 from .exams import Exams
+from .accounts import Accounts
+from .mail import LocalMail, MailUnavailable
 
 ROOT=Path(__file__).resolve().parents[2]
 
@@ -32,6 +35,42 @@ class Credentials(BaseModel):
         if not re.fullmatch(r'[^\s@]+@[^\s@]+\.[^\s@]+',value):
             raise ValueError('Informe um e-mail válido.')
         return value
+
+
+class Registration(Credentials):
+    accept_terms: Literal[True]
+    adult_pilot: Literal[True]
+
+
+class EmailOnly(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    email: str=Field(min_length=3,max_length=254)
+    @field_validator('email')
+    @classmethod
+    def normalize(cls,value):return Credentials.normalize_email(value)
+
+
+class TokenInput(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    token: str=Field(min_length=32,max_length=128)
+
+
+class ResetInput(TokenInput):
+    password: str=Field(min_length=12,max_length=128)
+
+
+class Reauthenticate(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    password: str=Field(min_length=12,max_length=128)
+
+
+class DeleteAccount(Reauthenticate):
+    confirmation: Literal['EXCLUIR']
+
+
+class AcceptPolicy(Reauthenticate):
+    accept_terms: Literal[True]
+    adult_pilot: Literal[True]
 
 
 class Answer(BaseModel):
@@ -62,7 +101,7 @@ class EssayDraft(BaseModel):
     revision: int=Field(ge=0)
 
 
-def create_app(db_path=None,origin=None,secure=None):
+def create_app(db_path=None,origin=None,secure=None,mailer=None):
     origin=origin or os.getenv('MOIRAE_ORIGIN','http://127.0.0.1:8000')
     secure=(os.getenv('MOIRAE_SECURE_COOKIE','true').lower()=='true') if secure is None else secure
     if not origin.startswith(('http://127.0.0.1:','http://localhost:','http://terminal.local:','https://')):
@@ -70,12 +109,16 @@ def create_app(db_path=None,origin=None,secure=None):
     if origin.startswith('https://') and not secure:
         raise ValueError('HTTPS exige cookie Secure.')
     store=Store(db_path or os.getenv('MOIRAE_DB',str(ROOT/'var'/'moirae.sqlite3')))
+    mailer=mailer or (LocalMail(Path(store.path).parent/'mail-outbox') if not secure else MailUnavailable())
+    accounts=Accounts(store,mailer,origin)
     practice=Practice(store)
     exams=Exams(store)
     app=FastAPI(title='MOIRAE — piloto',docs_url=None,redoc_url=None,openapi_url=None)
     app.state.store=store
     app.state.practice=practice
     app.state.exams=exams
+    app.state.accounts=accounts
+    app.state.mailer=mailer
     cookie='__Host-moirae' if secure else 'moirae_local'
 
     @app.exception_handler(sqlite3.OperationalError)
@@ -124,9 +167,13 @@ def create_app(db_path=None,origin=None,secure=None):
             session=db.execute('SELECT * FROM auth_sessions WHERE token_hash=? AND expires_at>?',(digest(raw),int(time.time()))).fetchone()
             if not session:
                 raise HTTPException(401,'Entre na sua conta para continuar.')
-            if request.method!='GET' and not secrets.compare_digest(request.headers.get('x-csrf-token',''),session['csrf']):
+            if request.method!='GET' and not secrets.compare_digest(request.headers.get('x-csrf-token','').encode(),session['csrf'].encode()):
                 raise HTTPException(403,'Reabra a página e tente novamente.')
             return dict(session)
+
+    def student(auth=Depends(user)):
+        accounts.require_student(auth['user_id'])
+        return auth
 
     def issue(response,user_id):
         raw=secrets.token_urlsafe(32);csrf=secrets.token_urlsafe(32)
@@ -142,8 +189,10 @@ def create_app(db_path=None,origin=None,secure=None):
         return {'status':'ok','stage':'local-pilot'}
 
     @app.post('/api/auth/register',status_code=201)
-    def register(body:Credentials,request:Request,response:Response):
+    def register(body:Registration,request:Request,response:Response):
         rate(request,body.email)
+        if isinstance(mailer,MailUnavailable):
+            raise HTTPException(503,'Cadastro público indisponível: entrega de e-mails não configurada.')
         encoded=hasher.hash(body.password)
         uid=str(uuid.uuid4())
         try:
@@ -151,6 +200,8 @@ def create_app(db_path=None,origin=None,secure=None):
                 db.execute('INSERT INTO users VALUES(?,?,?,?)',(uid,body.email,encoded,int(time.time())))
         except sqlite3.IntegrityError:
             raise HTTPException(409,'Não foi possível criar a conta com esses dados. Se já tem conta, tente entrar.')
+        accounts.accept(uid)
+        accounts.issue(uid,'verify')
         return issue(response,uid)
 
     @app.post('/api/auth/login')
@@ -163,7 +214,7 @@ def create_app(db_path=None,origin=None,secure=None):
 
     @app.get('/api/auth/me')
     def me(auth=Depends(user)):
-        return dict(plan='free',csrf=auth['csrf'])
+        return dict(plan='free',csrf=auth['csrf'],**accounts.profile(auth['user_id']))
 
     @app.post('/api/auth/logout')
     def logout(response:Response,request:Request,auth=Depends(user)):
@@ -171,38 +222,82 @@ def create_app(db_path=None,origin=None,secure=None):
         response.delete_cookie(cookie,path='/',secure=secure,httponly=True,samesite='strict')
         return {'ok':True}
 
+    @app.post('/api/auth/verify-email')
+    def verify_email(body:TokenInput):return accounts.consume(body.token,'verify')
+
+    @app.post('/api/auth/request-reset')
+    def request_reset(body:EmailOnly,request:Request):
+        rate(request,body.email)
+        return accounts.request_reset(body.email)
+
+    @app.post('/api/auth/reset-password')
+    def reset_password(body:ResetInput,request:Request):
+        rate(request,'reset:'+digest(body.token))
+        return accounts.consume(body.token,'reset',body.password)
+
+    @app.post('/api/account/resend-verification')
+    def resend(request:Request,auth=Depends(user)):
+        email=accounts.profile(auth['user_id'])['email'];rate(request,email)
+        accounts.issue(auth['user_id'],'verify')
+        return {'message':'Novo link preparado. No piloto local, consulte a caixa de saída do servidor.'}
+
+    @app.post('/api/account/accept-policy')
+    def accept_policy(body:AcceptPolicy,request:Request,auth=Depends(user)):
+        rate(request,'account:'+auth['user_id'])
+        with store.connect() as db:accounts.reauthenticate(db,auth['user_id'],body.password)
+        accounts.accept(auth['user_id'])
+        return {'ok':True}
+
+    @app.post('/api/account/export')
+    def export(body:Reauthenticate,request:Request,auth=Depends(user)):
+        rate(request,'account:'+auth['user_id'])
+        data=accounts.export(auth['user_id'],body.password)
+        return Response(json.dumps(data,ensure_ascii=False),media_type='application/json',headers={'Content-Disposition':'attachment; filename="moirae-dados.json"'})
+
+    @app.post('/api/account/delete')
+    def delete_account(body:DeleteAccount,request:Request,response:Response,auth=Depends(user)):
+        rate(request,'account:'+auth['user_id'])
+        result=accounts.erase(auth['user_id'],body.password)
+        response.delete_cookie(cookie,path='/',secure=secure,httponly=True,samesite='strict')
+        return result
+
     @app.get('/api/practice/current')
-    def current(auth=Depends(user)):return practice.current(auth['user_id'])
+    def current(auth=Depends(student)):return practice.current(auth['user_id'])
 
     @app.post('/api/practice/start')
-    def start(auth=Depends(user)):return practice.start(auth['user_id'])
+    def start(auth=Depends(student)):return practice.start(auth['user_id'])
 
     @app.post('/api/practice/answer')
-    def answer(body:Answer,auth=Depends(user)):
+    def answer(body:Answer,auth=Depends(student)):
         return practice.answer(auth['user_id'],str(body.session_id),body.question_id,body.choice,str(body.key))
 
     @app.get('/api/exams/current')
-    def exam_current(auth=Depends(user)):return exams.current(auth['user_id'])
+    def exam_current(auth=Depends(student)):return exams.current(auth['user_id'])
 
     @app.post('/api/exams/start')
-    def exam_start(body:ExamStart,auth=Depends(user)):
+    def exam_start(body:ExamStart,auth=Depends(student)):
         return exams.start(auth['user_id'],body.day,str(body.key))
 
     @app.post('/api/exams/{exam_id}/item')
-    def exam_item(exam_id:uuid.UUID,body:ExamItem,auth=Depends(user)):
+    def exam_item(exam_id:uuid.UUID,body:ExamItem,auth=Depends(student)):
         return exams.save_item(auth['user_id'],str(exam_id),body.question_id,body.choice,body.flagged,body.revision)
 
     @app.post('/api/exams/{exam_id}/essay')
-    def exam_essay(exam_id:uuid.UUID,body:EssayDraft,auth=Depends(user)):
+    def exam_essay(exam_id:uuid.UUID,body:EssayDraft,auth=Depends(student)):
         return exams.save_essay(auth['user_id'],str(exam_id),body.text,body.revision)
 
     @app.post('/api/exams/{exam_id}/finish')
-    def exam_finish(exam_id:uuid.UUID,auth=Depends(user)):
+    def exam_finish(exam_id:uuid.UUID,auth=Depends(student)):
         return exams.finish(auth['user_id'],str(exam_id))
 
     @app.get('/api/dashboard')
     def dashboard(auth=Depends(user)):
         raise HTTPException(403,'O painel de desempenho não faz parte do plano Free. Planos pagos ainda indisponíveis.')
+
+    @app.get('/conta')
+    @app.get('/verificar-email')
+    @app.get('/recuperar-senha')
+    def account_page():return FileResponse(ROOT/'web'/'account.html')
 
     @app.get('/simulados')
     def mocks():return FileResponse(ROOT/'web'/'exam.html')

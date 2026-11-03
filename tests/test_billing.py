@@ -37,7 +37,7 @@ def register(app,c,email='billing@example.test'):
 def checkout(c,plan='essencial',key=None):return c.post('/api/billing/checkout',json={'plan':plan,'key':key or str(uuid.uuid4())})
 
 def payment(fake,oid,clock,**updates):
-    value={'id':100,'external_reference':oid,'currency_id':'BRL','collector_id':123,'transaction_amount':35,'transaction_amount_refunded':0,'live_mode':False,'status':'approved','date_last_updated':datetime.fromtimestamp(clock[0],timezone.utc).isoformat()}
+    value={'id':100,'external_reference':oid,'currency_id':'BRL','collector_id':123,'transaction_amount':40,'transaction_amount_refunded':0,'live_mode':False,'status':'approved','date_last_updated':datetime.fromtimestamp(clock[0],timezone.utc).isoformat()}
     value.update(updates);fake.payments['100']=value
 
 
@@ -50,7 +50,7 @@ def notify(c,clock,signature=None,body_id=100):
 def test_catalog_and_disabled_checkout(tmp_path):
     app=create_app(str(tmp_path/'db'),origin=BASE,secure=False);c=TestClient(app,base_url=BASE,headers={'Origin':BASE});register(app,c)
     catalog=c.get('/api/billing/plans').json();assert catalog['checkout_enabled'] is False
-    assert [(p['price_cents'],p['essay_credits']) for p in catalog['plans']]==[(3500,3),(5500,8)]
+    assert [(p['price_cents'],p['essay_credits']) for p in catalog['plans']]==[(4000,10),(10000,30)]
     assert checkout(c).status_code==503 and c.get('/api/auth/me').json()['plan']=='free'
     with app.state.store.connect() as db:assert db.execute('SELECT count(*) FROM billing_orders').fetchone()[0]==0
 
@@ -69,7 +69,7 @@ def test_approved_grants_exactly_thirty_days_without_duplicate_credits(setup):
     app,c,fake,clock=setup;oid=checkout(c).json()['order_id'];payment(fake,oid,clock)
     assert notify(c,clock).status_code==200
     assert c.get('/api/auth/me').json()['plan']=='essencial'
-    first=c.get('/api/billing/current').json()['access'];assert first['ends_at']==clock[0]+30*86400 and first['essay_credits']==3
+    first=c.get('/api/billing/current').json()['access'];assert first['ends_at']==clock[0]+30*86400 and first['essay_credits']==10
     clock[0]+=60
     assert notify(c,clock).status_code==200
     assert c.get('/api/billing/current').json()['access']==first
@@ -100,7 +100,7 @@ def test_signature_and_id_validation(setup):
 
 def test_refund_revokes_and_old_events_cannot_regrant(setup):
     app,c,fake,clock=setup;oid=checkout(c).json()['order_id'];payment(fake,oid,clock);notify(c,clock)
-    initial=fake.payments['100'].copy();clock[0]+=10;payment(fake,oid,clock,status='refunded',transaction_amount_refunded=35)
+    initial=fake.payments['100'].copy();clock[0]+=10;payment(fake,oid,clock,status='refunded',transaction_amount_refunded=40)
     assert notify(c,clock).status_code==200 and c.get('/api/auth/me').json()['plan']=='free'
     fake.payments['100']=initial;assert notify(c,clock).status_code==200
     assert c.get('/api/auth/me').json()['plan']=='free'
@@ -126,8 +126,8 @@ def test_paid_questions_do_not_consume_free_quota_after_expiry(setup):
 
 
 def test_avancado_and_refund_request_is_not_refund(setup):
-    app,c,fake,clock=setup;oid=checkout(c,plan='avancado').json()['order_id'];payment(fake,oid,clock,transaction_amount=55);notify(c,clock)
-    assert c.get('/api/billing/current').json()['access']['essay_credits']==8
+    app,c,fake,clock=setup;oid=checkout(c,plan='avancado').json()['order_id'];payment(fake,oid,clock,transaction_amount=100);notify(c,clock)
+    assert c.get('/api/billing/current').json()['access']['essay_credits']==30
     r=c.post('/api/billing/orders/'+oid+'/refund-request',json={'password':PASSWORD});assert r.status_code==200 and r.json()['within_initial_window'] is True
     assert c.get('/api/auth/me').json()['plan']=='avancado'
     clock[0]+=8*86400
@@ -191,7 +191,7 @@ def test_http_adapter_uses_server_price_and_sandbox_destination(monkeypatch):
     monkeypatch.setattr(mp.httpx,'Client',lambda **kwargs:real_client(transport=httpx.MockTransport(handle),**kwargs))
     result=mp.MercadoPagoSandbox('TEST-synthetic').preference({'id':'server-order'},PLANS['essencial'],'https://moirae.example.test')
     assert result['checkout_url'].startswith('https://sandbox.')
-    payload=json.loads(seen[0].content);assert payload['items'][0]['unit_price']==35 and payload['items'][0]['quantity']==1
+    payload=json.loads(seen[0].content);assert payload['items'][0]['unit_price']==40 and payload['items'][0]['quantity']==1
     assert payload['external_reference']=='server-order' and payload['notification_url'].startswith('https://moirae.example.test/api/billing/webhook')
     assert seen[0].headers['authorization']=='Bearer TEST-synthetic'
 
@@ -202,3 +202,58 @@ def test_signature_supports_milliseconds_and_rejects_bad_mac():
     signature=hmac.new(SECRET.encode(),manifest.encode(),hashlib.sha256).hexdigest()
     verify_signature('100','test-request',f'ts={ts}, v1={signature}',SECRET,now)
     with pytest.raises(HTTPException):verify_signature('100','test-request',f'ts={ts},v1={"0"*64}',SECRET,now)
+
+
+
+def test_order_contract_survives_catalog_change(setup, monkeypatch):
+    from backend.moirae.plans import PLANS
+    app,c,fake,clock=setup
+    oid=checkout(c).json()['order_id']
+    monkeypatch.setitem(PLANS,'essencial',dict(PLANS['essencial'],essay_credits=99,days=90))
+    payment(fake,oid,clock)
+    assert notify(c,clock).status_code==200
+    access=c.get('/api/billing/current').json()['access']
+    assert access['essay_credits']==10 and access['ends_at']==clock[0]+30*86400
+
+
+@pytest.mark.parametrize('plan,amount,credits',[('essencial',3500,3),('avancado',5500,8)])
+def test_legacy_pending_order_migrates_without_changing_contract(setup,plan,amount,credits):
+    from backend.moirae.store import Store
+    app,c,fake,clock=setup
+    oid=checkout(c,plan=plan).json()['order_id']
+    with app.state.store.connect(write=True) as db:
+        db.execute('UPDATE billing_orders SET amount_cents=?,essay_credits=NULL,access_days=NULL,catalog_version=NULL WHERE id=?',(amount,oid))
+    Store(app.state.store.path)
+    payment(fake,oid,clock,transaction_amount=amount/100)
+    assert notify(c,clock).status_code==200
+    access=c.get('/api/billing/current').json()['access']
+    assert access['essay_credits']==credits
+    Store(app.state.store.path)
+    assert c.get('/api/billing/current').json()['access']==access
+
+
+def test_unknown_legacy_contract_cannot_grant_access(setup):
+    app,c,fake,clock=setup
+    oid=checkout(c).json()['order_id']
+    with app.state.store.connect(write=True) as db:
+        db.execute('UPDATE billing_orders SET catalog_version=NULL WHERE id=?',(oid,))
+    payment(fake,oid,clock)
+    assert notify(c,clock).status_code==409
+    assert c.get('/api/auth/me').json()['plan']=='free'
+
+
+def test_schema_six_adds_contract_columns_to_existing_database(tmp_path):
+    import sqlite3
+    from backend.moirae.store import SCHEMA,Store
+    path=str(tmp_path/'legacy.sqlite3')
+    with sqlite3.connect(path) as db:
+        db.executescript(SCHEMA)
+        db.execute("INSERT INTO users VALUES('u','legacy@example.test','not-a-real-hash',1)")
+        db.execute("INSERT INTO billing_orders(id,user_id,plan_id,amount_cents,status,created_at,request_key) VALUES('legacy','u','avancado',5500,'pending',1,'old')")
+        db.execute("INSERT INTO access_grants VALUES('legacy','u','avancado',1,9999999999,'active',8)")
+    migrated=Store(path)
+    with migrated.connect() as db:
+        row=db.execute("SELECT * FROM billing_orders WHERE id='legacy'").fetchone()
+        assert (row['catalog_version'],row['essay_credits'],row['access_days'])==(1,8,30)
+        assert db.execute('SELECT essay_credits FROM access_grants').fetchone()[0]==8
+    Store(path)

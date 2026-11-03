@@ -184,4 +184,10 @@ O percurso `/redacoes` guarda textos, notas fixas ilustrativas, marcações e re
 
 Acesse **/caderno** a partir do painel. Alunos com plano pago ativo podem revisar erros de prática, consultar resoluções e guardar favoritos persistentes. Um erro anterior permanece no caderno após acerto, identificado pelo resultado mais recente. Consulta não consome cota. Inclui isolamento, verificação de acesso na API e exportação dos favoritos. [Contrato e limites](docs/review-notebook.md).
 
-Não inclui questões de simulados, revisão espaçada automática ou planejamento adaptativo. O acabamento visual da página pública e painel foi atualizado; a conferência renderizada desta revisão permanece pendente por falha no download do navegador.
+O planejamento e a revisão espaçada de prática estão disponíveis no piloto, com regras determinísticas; simulados não integram essa agenda. O acabamento visual da página pública e painel foi atualizado; a conferência renderizada desta revisão permanece pendente por falha no download do navegador.
+
+## Próxima ação e revisão espaçada — piloto local
+
+O painel oferece sessões estimadas de **15/30/60 minutos**, com até **3/6/12 questões**, priorizando revisões vencidas, assuntos com erros e conteúdos ainda não praticados. O servidor escolhe as questões e preserva uma sessão em andamento. Erros agendam revisão em 1 dia; acertos posteriores ampliam os intervalos até 30 dias. Respostas repetidas com a mesma chave não duplicam agendamentos.
+
+Disponível a alunos com plano pago ativo; sem IA ou promessa de tempo exato. [Regras, migração e limites](docs/study-planner.md). Correção real de redação e QA visual desta atualização continuam pendentes.

@@ -5,7 +5,7 @@ Plataforma web de estudos com questões comentadas, simulados e prática de reda
 
 ## Estado atual
 
-Repositório em fase de definição do produto. Esta documentação descreve a proposta e o plano de execução; não há aplicação, autenticação, cobrança ou correção de redação implementadas.
+Página pública estática implementada na branch deste PR, com demonstrações locais de questão, seleção de duração de sessão e oficina de reescrita. Não há autenticação, cobrança, tutor ou correção real por IA implementados.
 
 O nome do repositório permanece **MOIRAE-CONCURSOS**. A marca apresentada ao aluno será **MOIRAE**, com comunicação inicial voltada ao ENEM.
 
@@ -50,7 +50,7 @@ As quatro áreas são Linguagens, Ciências Humanas, Ciências da Natureza e Mat
 
 ## Redação e simulados
 
-A correção poderá ser automatizada, humana ou híbrida. Essa decisão está pendente e determina custo, preço, prazo de entrega e capacidade operacional.
+Decisão: correção automatizada por IA usando a OpenAI, exclusivamente no backend. Não há revisão humana incluída. Modelo, custos, prazo e preços dependem de avaliação pedagógica e operacional.
 
 Não anunciar correção humana se ela não existir. Identificar claramente correções automatizadas e suas limitações. A rubrica e a devolutiva precisam de validação pedagógica antes da venda.
 
@@ -115,7 +115,7 @@ A etapa 3 pode usar direitos de acesso de teste; não vender assinaturas antes d
 ## Decisões pendentes
 
 - Stack web e quanto reaproveitar do backend anterior.
-- Correção por IA, professor ou modelo híbrido; prazo e rubrica.
+- Seleção e avaliação do modelo OpenAI; custo, prazo e rubrica versionada.
 - Preços, cotas definitivas e custos por aluno.
 - Tamanho dos simulados e regras para interrupção e repetição.
 - Provedor de cobrança e regras para mudanças de plano.
@@ -127,3 +127,14 @@ A etapa 3 pode usar direitos de acesso de teste; não vender assinaturas antes d
 Aplicativo nativo, comunidade, ranking público, marketplace, expansão para concursos e infraestrutura de microsserviços.
 
 O primeiro objetivo é validar se o aluno volta para praticar e percebe valor em acompanhar sua evolução e melhorar a redação.
+
+
+## Entrega atual: demonstrações web
+
+Execute conforme [DEVELOPMENT.md](DEVELOPMENT.md). A página apresenta a identidade azul-escuro/verde-lima e a oficina de redação com comentários fixos C3/C4/C5, comparação textual e rascunhos por marcação mantidos somente em memória durante a visita. Não há envio à OpenAI, nota ou persistência. Selecionar 15/30/60 minutos muda um exemplo fixo, não um plano adaptativo real.
+
+### Extensão proposta dos planos
+
+Free: 10 questões/dia, sem dashboard e sem correção de redação; proposta de até 3 ajudas de IA/dia vinculadas a questões. Essencial: 3 correções por ciclo e 1 rodada de reescrita de trecho por correção. Avançado: 8 correções por ciclo, 2 rodadas de reescrita e evolução por competência. Tutor pago com franquia mensal ainda a definir. Sem IA ilimitada. Essas propostas dependem de custo e validação antes da venda.
+
+Veja [o contrato da oficina](docs/essay-workshop.md) para separar os recursos demonstrativos da integração futura.

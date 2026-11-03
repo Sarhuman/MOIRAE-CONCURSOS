@@ -23,3 +23,11 @@ Executar `node --check web/app.js` para sintaxe. Conferir no navegador em 360, 7
 ## Próxima etapa
 
 Definir stack e contratos da API antes de adicionar autenticação e prática com cotas. Manter a página pública independente de dependências da área autenticada. Não liberar recursos premium por flags no navegador.
+
+## Atualização: oficina e sessões demonstrativas
+
+A identidade usa azul-escuro e verde-lima. Seletor de 15/30/60 minutos muda apenas exemplos fixos. A oficina inclui três marcações, comentários orientadores, rascunhos separados em memória e comparação textual segura. Não representa uma chamada à OpenAI.
+
+Verificação adicional: selecionar as três durações; trocar C3/C4/C5; comparar reescrita; voltar ao comentário e conferir preservação; limpar; recarregar e conferir descarte. Texto HTML digitado deve aparecer literalmente. Espaços sozinhos não são uma reescrita válida.
+
+A integração OpenAI é futura e está especificada em docs/essay-workshop.md. Nenhuma variável de chave é necessária para executar esta demonstração.

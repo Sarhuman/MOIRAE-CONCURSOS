@@ -48,6 +48,19 @@ INSERT OR IGNORE INTO schema_version VALUES(7);
 CREATE TABLE IF NOT EXISTS review_schedule(user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,question_id TEXT NOT NULL,stage INTEGER NOT NULL CHECK(stage BETWEEN 0 AND 4),due_at INTEGER NOT NULL,last_answered_at INTEGER NOT NULL,PRIMARY KEY(user_id,question_id));
 CREATE INDEX IF NOT EXISTS review_due ON review_schedule(user_id,due_at);
 CREATE TABLE IF NOT EXISTS practice_plans(session_id TEXT PRIMARY KEY REFERENCES practice_sessions(id) ON DELETE CASCADE,minutes INTEGER NOT NULL,description TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS real_essay_jobs(
+ id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,grant_id TEXT NOT NULL REFERENCES access_grants(order_id),request_key TEXT NOT NULL,
+ theme TEXT NOT NULL,text TEXT NOT NULL,external_notice_version TEXT NOT NULL DEFAULT 'openai-processing-v1',status TEXT NOT NULL CHECK(status IN ('pending','processing','completed','failed')),
+ created_at INTEGER NOT NULL,available_at INTEGER NOT NULL,attempts INTEGER NOT NULL DEFAULT 0,
+ lease_token TEXT,lease_until INTEGER,model TEXT NOT NULL,rubric_version TEXT NOT NULL,prompt_version TEXT NOT NULL,result TEXT,error TEXT,UNIQUE(user_id,request_key));
+CREATE INDEX IF NOT EXISTS real_essay_queue ON real_essay_jobs(status,available_at,lease_until);
+CREATE UNIQUE INDEX IF NOT EXISTS one_real_essay_pending ON real_essay_jobs(user_id) WHERE status IN ('pending','processing');
+CREATE INDEX IF NOT EXISTS real_essay_owner ON real_essay_jobs(user_id,created_at);
+CREATE TABLE IF NOT EXISTS essay_credit_events(job_id TEXT NOT NULL REFERENCES real_essay_jobs(id) ON DELETE CASCADE,grant_id TEXT NOT NULL REFERENCES access_grants(order_id),event TEXT NOT NULL CHECK(event IN ('reserve','consume','release')),delta INTEGER NOT NULL CHECK((event='reserve' AND delta=1) OR (event='release' AND delta=-1) OR (event='consume' AND delta=0)),created_at INTEGER NOT NULL,PRIMARY KEY(job_id,event));
+CREATE INDEX IF NOT EXISTS real_essay_credit_grant ON essay_credit_events(grant_id);
+CREATE TABLE IF NOT EXISTS essay_provider_calls(id INTEGER PRIMARY KEY AUTOINCREMENT,job_id TEXT NOT NULL REFERENCES real_essay_jobs(id) ON DELETE CASCADE,created_at INTEGER NOT NULL);
+CREATE INDEX IF NOT EXISTS essay_daily_calls ON essay_provider_calls(created_at);
+INSERT OR IGNORE INTO schema_version VALUES(9);
 CREATE TABLE IF NOT EXISTS idempotency(user_id TEXT NOT NULL REFERENCES users(id),key TEXT NOT NULL,payload TEXT NOT NULL,response TEXT NOT NULL,PRIMARY KEY(user_id,key));
 '''
 

@@ -5,7 +5,7 @@ Plataforma web de estudos com questões comentadas, simulados e prática de reda
 
 ## Estado atual
 
-Primeiro percurso funcional implementado para **piloto local**: cadastro/login/logout, atividades de até cinco questões, respostas persistentes, retomada e cota Free de 10 respostas por dia validada no servidor. Backend FastAPI com SQLite de instância única. A interface pública anterior permanece disponível.
+Primeiro percurso funcional implementado para **piloto local**: cadastro/login/logout, atividades de até cinco questões, respostas persistentes, retomada e cota Free de 30 questões por mês validada no servidor. Backend FastAPI com SQLite de instância única. A interface pública anterior permanece disponível.
 
 **Execute seguindo [docs/mvp.md](docs/mvp.md)**. Esta entrega não está pronta para lançamento público: falta autenticação de lançamento, validação editorial, operação em produção e integração OpenAI/cobrança. O site hospedado anterior continua sendo a demonstração estática; o backend deste PR é executado separadamente.
 
@@ -26,7 +26,7 @@ Os valores abaixo são hipóteses para validação, não ofertas comerciais apro
 
 | Recurso | Free | Essencial | Avançado |
 |---|---|---|---|
-| Questões comentadas | 10 por dia | Sem limite diário comercial | Sem limite diário comercial |
+| Questões comentadas | 30 por mês | Sem limite diário comercial | Sem limite diário comercial |
 | Quatro áreas do ENEM | Sim | Sim | Sim |
 | Resultado da atividade atual | Sim | Sim | Sim |
 | Dashboard e histórico consultável | Não | Evolução e acertos por área | Também análise por assunto/habilidade, quando houver dados suficientes |
@@ -38,7 +38,7 @@ As quatro áreas são Linguagens, Ciências Humanas, Ciências da Natureza e Mat
 
 ### Regras propostas de uso
 
-- Cota gratuita por conta, com renovação à meia-noite em America/Sao_Paulo.
+- Cota gratuita por conta, com renovação à meia-noite do primeiro dia do mês em America/Sao_Paulo.
 - Consumir uma unidade quando uma resposta for aceita pelo servidor. Repetir a mesma requisição não pode consumir outra unidade; uma nova tentativa intencional conta novamente.
 - Registrar respostas do Free para continuidade futura, sem liberar histórico ou dashboard ao aluno gratuito.
 - Exibir a resolução somente após a resposta aceita; não enviar gabaritos antecipadamente no payload da questão.
@@ -94,7 +94,7 @@ A stack deste repositório ainda não foi escolhida. O backend do MOIRAE anterio
 |---|---|---|
 | 0 — Decisões | Stack, correção, regras dos planos e origem do conteúdo | Decisões registradas; custos e responsabilidades compreendidos |
 | 1 — Web pública | Página inicial e comparação de planos | Navegação acessível em celular e desktop; nenhuma funcionalidade futura anunciada como disponível |
-| 2 — Prática Free | Cadastro, login, questões e cota diária | Responder e ver resolução; limite aplicado no servidor e sem consumo duplicado |
+| 2 — Prática Free | Cadastro, login, questões e cota mensal | Responder e ver resolução; limite aplicado no servidor e sem consumo duplicado |
 | 3 — Recursos pagos | Direitos de acesso, histórico e dashboard | Free bloqueado na API; aluno pago acessa apenas seus dados; métricas conferidas |
 | 4 — Redação e cobrança | Fluxo de correção e assinatura em ambiente de testes | Ciclo completo, falhas, cancelamento e eventos duplicados validados |
 | 5 — Piloto | Conteúdo revisado e operação observável | Fluxos principais testados; backups e suporte preparados |
@@ -136,7 +136,7 @@ Execute conforme [DEVELOPMENT.md](DEVELOPMENT.md). A página apresenta a identid
 
 ### Extensão proposta dos planos
 
-Free: 10 questões/dia, sem dashboard e sem correção de redação; proposta de até 3 ajudas de IA/dia vinculadas a questões. Essencial: 3 correções por ciclo e 1 rodada de reescrita de trecho por correção. Avançado: 8 correções por ciclo, 2 rodadas de reescrita e evolução por competência. Tutor pago com franquia mensal ainda a definir. Sem IA ilimitada. Essas propostas dependem de custo e validação antes da venda.
+Free: 30 questões/mês, sem dashboard e sem correção de redação; proposta de até 3 ajudas de IA/dia vinculadas a questões. Essencial: 3 correções por ciclo e 1 rodada de reescrita de trecho por correção. Avançado: 8 correções por ciclo, 2 rodadas de reescrita e evolução por competência. Tutor pago com franquia mensal ainda a definir. Sem IA ilimitada. Essas propostas dependem de custo e validação antes da venda.
 
 Veja [o contrato da oficina](docs/essay-workshop.md) para separar os recursos demonstrativos da integração futura.
 
@@ -144,3 +144,10 @@ Veja [o contrato da oficina](docs/essay-workshop.md) para separar os recursos de
 ## Conteúdo oficial do ENEM
 
 Importador offline preparado para ENEM 2025 regular, cadernos azuis dos dois dias. O Inep retornou HTTP 503 nos downloads em 03/11/2026; **nenhuma questão oficial foi importada ainda**. O catálogo do aluno permanece autoral. Consulte [docs/inep-import.md](docs/inep-import.md) para coleta, extração em rascunho e conferência editorial. O processo não publica questões automaticamente.
+
+
+## Cota mensal e simulado cronometrado
+
+Free: **30 questões por mês**, compartilhadas entre exercícios e simulados, com renovação no primeiro dia do mês em America/Sao_Paulo, sem acúmulo. Nos simulados, o caderno é descontado integralmente ao iniciar, com confirmação prévia; retomadas e alterações não descontam novamente.
+
+O piloto local inclui **/simulados**: primeiro dia com seis questões autorais e redação digitada em 30 minutos; segundo dia com seis questões em 15 minutos. Deadline no servidor, cartão-resposta, revisão, salvamento e encerramento. A redação fica salva, sem correção no Free. Não são provas oficiais completas. Consulte [docs/timed-exams.md](docs/timed-exams.md).

@@ -30,7 +30,7 @@ def test_flow_persistence_and_revocation(env):
     app,c=env;register(c);s=c.post('/api/practice/start',json={}).json()
     assert s==c.post('/api/practice/start',json={}).json()
     assert 'answer' not in s['question'] and 'explanation' not in s['question']
-    assert answer(c,s).json()['session']['quota']['remaining']==9
+    assert answer(c,s).json()['session']['quota']['remaining']==29
     old=dict(c.cookies);assert c.post('/api/auth/logout',json={}).status_code==200
     assert TestClient(app,base_url='http://localhost:8000',cookies=old).get('/api/auth/me').status_code==401
     r=c.post('/api/auth/login',json={'email':'ALUNO@example.test','password':'senha-exclusiva-123'});assert r.status_code==200
@@ -49,9 +49,12 @@ def test_idempotency_and_conflict(env):
 
 def test_limit_and_renewal(env):
     app,c=env;register(c);app.state.practice.clock=lambda:'2026-11-03'
-    complete(c);complete(c);assert c.post('/api/practice/start',json={}).status_code==429
+    for _ in range(6):complete(c)
+    assert c.post('/api/practice/start',json={}).status_code==429
     app.state.practice.clock=lambda:'2026-11-04'
-    assert c.get('/api/practice/current').json()['quota']['remaining']==10
+    assert c.get('/api/practice/current').json()['quota']['remaining']==0
+    app.state.practice.clock=lambda:'2026-12-01'
+    assert c.get('/api/practice/current').json()['quota']['remaining']==30
     assert c.post('/api/practice/start',json={}).status_code==200
 
 def test_isolation_and_premium(env):
@@ -97,7 +100,8 @@ def test_brasilia_midnight():
     assert study_day(datetime(2026,11,4,3,0,tzinfo=timezone.utc))=='2026-11-04'
 
 def test_last_quota_concurrency(env):
-    app,c=env;register(c);complete(c)
+    app,c=env;register(c)
+    for _ in range(5):complete(c)
     s=c.post('/api/practice/start',json={}).json()
     for _ in range(4):s=answer(c,s).json()['session']
     cookies=dict(c.cookies);headers=dict(c.headers)
@@ -105,7 +109,7 @@ def test_last_quota_concurrency(env):
         with TestClient(app,base_url='http://localhost:8000',headers=headers,cookies=cookies) as client:return answer(client,s)
     with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(send,range(2)))
     assert sorted(r.status_code for r in results)==[200,409]
-    assert c.get('/api/practice/current').json()['quota']['used']==10
+    assert c.get('/api/practice/current').json()['quota']['used']==30
 
 
 def test_payload_limits_and_cookie_secure(tmp_path):

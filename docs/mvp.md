@@ -8,7 +8,7 @@ Cadastro/login têm limitação persistente por conta e IP. O processo não conf
 
 A área /estudar permite criar conta de teste, entrar, sair, iniciar atividade, responder e consultar resolução. Atividades contêm até cinco questões e podem ser retomadas após recarregar, sair/entrar ou reiniciar o processo. A interface mostra o resultado da atividade atual, sem histórico agregado ou dashboard.
 
-Cota Free: 10 respostas aceitas por dia em America/Sao_Paulo. Cada nova tentativa intencional consome uma unidade. Repetições de requisição com a mesma chave retornam o resultado original. Reutilizar a chave com outro conteúdo gera conflito. Uma transação IMMEDIATE serializa validação, registro da resposta e idempotência. Nenhum gabarito é exposto antes de uma resposta aceita. Sessões e tentativas sempre usam o usuário autenticado, nunca um ID informado pelo cliente.
+Cota Free: 30 questões por mês em America/Sao_Paulo, compartilhadas com simulados. A renovação ocorre no primeiro dia do mês, sem acúmulo. Cada nova tentativa intencional consome uma unidade. Repetições de requisição com a mesma chave retornam o resultado original. Reutilizar a chave com outro conteúdo gera conflito. Uma transação IMMEDIATE serializa validação, registro da resposta e idempotência. Na prática, o gabarito aparece após responder; nos simulados, somente após o encerramento. Sessões e tentativas sempre usam o usuário autenticado, nunca um ID informado pelo cliente.
 
 12 questões autorais introdutórias em quatro áreas; não oficiais, não calibradas e ainda sem revisão editorial independente. Não equivalem a um banco de questões comercial ENEM.
 
@@ -34,11 +34,11 @@ node --check web/study.js
 node --test tests/essay-fixture.test.cjs
 ```
 
-A suíte verifica persistência, retomada, logout revogável, expiração, limites e renovação diária, respostas erradas, isolamento entre contas, bloqueio premium, origem/CSRF, corpo grande, armazenamento de senha e concorrência/idempotência. Há aviso de depreciação do TestClient do Starlette com httpx; os testes passam, mas a migração do cliente deve ser avaliada em atualização futura.
+A suíte verifica persistência, retomada, logout revogável, expiração, limites e renovação mensal, respostas erradas, isolamento entre contas, bloqueio premium, origem/CSRF, corpo grande, armazenamento de senha e concorrência/idempotência. Há aviso de depreciação do TestClient do Starlette com httpx; os testes passam, mas a migração do cliente deve ser avaliada em atualização futura.
 
 ## Estado do banco e migração
 
-store.py contém a baseline versionada 1, criada para banco vazio. Não é um mecanismo completo de migrações de produção. SQLite atende a um piloto pequeno de instância única com volume persistente; não há promessa de escalabilidade horizontal nesta entrega. Antes de produção: PostgreSQL, migrações Alembic revisadas, repositório equivalente com transações e restrições, testes de concorrência no PostgreSQL, backups com restauração e monitoramento. O serviço Practice concentra regras; a persistência é isolada em Store, mas a migração ainda exige implementar as consultas para o novo banco.
+store.py contém a baseline de prática 1 e extensão aditiva de simulados 2, criada para banco vazio. Não é um mecanismo completo de migrações de produção. SQLite atende a um piloto pequeno de instância única com volume persistente; não há promessa de escalabilidade horizontal nesta entrega. Antes de produção: PostgreSQL, migrações Alembic revisadas, repositório equivalente com transações e restrições, testes de concorrência no PostgreSQL, backups com restauração e monitoramento. O serviço Practice concentra regras; a persistência é isolada em Store, mas a migração ainda exige implementar as consultas para o novo banco.
 
 ## Não entregue / bloqueios para lançamento público
 
@@ -55,3 +55,8 @@ A página hospedada existente continua demonstrativa. Este backend Python não r
 ## Próxima entrega
 
 Verificar o fluxo manualmente no navegador, concluir autenticação de lançamento e preparar PostgreSQL. Depois integrar correção de redação conforme docs/essay-workshop.md, medindo qualidade e custo antes de habilitar venda.
+
+
+## Simulados e cota mensal
+
+O treino cronometrado e a redação digitada estão descritos em [docs/timed-exams.md](timed-exams.md). Acesse /simulados ao executar o backend. Cada treino usa seis questões da cota no início; não há cobrança adicional ao salvar ou alterar respostas. A versão 2 do schema cria tabelas sem apagar tentativas antigas, que continuam contando no mês em que foram registradas.

@@ -37,4 +37,9 @@ Fixtures: web/essay-fixture.js é compartilhado entre demonstração e testes. E
 
 ## Primeiro percurso funcional
 
-Para usar cadastro, login, retomada e cota Free real, siga [docs/mvp.md](docs/mvp.md). O servidor estático descrito acima continua servindo só as demonstrações. Execute FastAPI para testar /estudar e /api. Instale requirements-dev.lock para reproduzir o ambiente validado.
+Para usar cadastro, login, retomada e cota mensal Free real, siga [docs/mvp.md](docs/mvp.md). O servidor estático descrito acima continua servindo só as demonstrações. Execute FastAPI para testar /estudar e /api. Instale requirements-dev.lock para reproduzir o ambiente validado.
+
+
+## Simulados cronometrados
+
+Execute o backend para acessar /simulados. Detalhes de prazo, consumo compartilhado e redação estão em [docs/timed-exams.md](docs/timed-exams.md). A página hospedada continua demonstrativa; somente os textos dos planos são atualizados nela.

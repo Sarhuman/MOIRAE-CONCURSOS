@@ -14,6 +14,18 @@ CREATE UNIQUE INDEX IF NOT EXISTS one_active_session ON practice_sessions(user_i
 CREATE TABLE IF NOT EXISTS session_questions(session_id TEXT NOT NULL REFERENCES practice_sessions(id),position INTEGER NOT NULL,question_id TEXT NOT NULL,PRIMARY KEY(session_id,position),UNIQUE(session_id,question_id));
 CREATE TABLE IF NOT EXISTS attempts(id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),session_id TEXT NOT NULL REFERENCES practice_sessions(id),question_id TEXT NOT NULL,choice TEXT NOT NULL,correct INTEGER NOT NULL,day TEXT NOT NULL,created_at INTEGER NOT NULL,UNIQUE(session_id,question_id));
 CREATE INDEX IF NOT EXISTS daily_attempts ON attempts(user_id,day);
+CREATE TABLE IF NOT EXISTS mock_exams(
+ id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),day INTEGER NOT NULL CHECK(day IN (1,2)),
+ started_at INTEGER NOT NULL,deadline INTEGER NOT NULL,status TEXT NOT NULL CHECK(status IN ('active','submitted','expired')),
+ essay TEXT NOT NULL DEFAULT '',essay_revision INTEGER NOT NULL DEFAULT 0,charged_questions INTEGER NOT NULL,
+ quota_period TEXT NOT NULL,start_key TEXT NOT NULL,UNIQUE(user_id,start_key));
+CREATE INDEX IF NOT EXISTS monthly_mock_usage ON mock_exams(user_id,quota_period);
+CREATE UNIQUE INDEX IF NOT EXISTS one_active_mock ON mock_exams(user_id) WHERE status='active';
+CREATE TABLE IF NOT EXISTS mock_items(
+ exam_id TEXT NOT NULL REFERENCES mock_exams(id),position INTEGER NOT NULL,question_id TEXT NOT NULL,
+ choice TEXT,flagged INTEGER NOT NULL DEFAULT 0,revision INTEGER NOT NULL DEFAULT 0,
+ PRIMARY KEY(exam_id,question_id),UNIQUE(exam_id,position));
+INSERT OR IGNORE INTO schema_version VALUES(2);
 CREATE TABLE IF NOT EXISTS idempotency(user_id TEXT NOT NULL REFERENCES users(id),key TEXT NOT NULL,payload TEXT NOT NULL,response TEXT NOT NULL,PRIMARY KEY(user_id,key));
 '''
 

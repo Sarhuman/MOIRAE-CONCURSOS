@@ -4,7 +4,8 @@ import time
 import uuid
 from fastapi import HTTPException
 from .catalog import BY_ID, QUESTIONS
-from .domain import SESSION_SIZE, FREE_DAILY_LIMIT, remaining, study_day
+from .domain import SESSION_SIZE, study_day
+from .quota import monthly_quota
 
 
 class Practice:
@@ -12,9 +13,7 @@ class Practice:
         self.store, self.clock = store, clock
 
     def quota(self, db, user):
-        day = self.clock()
-        used = db.execute('SELECT count(*) FROM attempts WHERE user_id=? AND day=?', (user,day)).fetchone()[0]
-        return dict(limit=FREE_DAILY_LIMIT,used=used,remaining=remaining(used),day=day,timezone='America/Sao_Paulo')
+        return monthly_quota(db,user,self.clock())
 
     def snapshot(self, db, user, row):
         count = db.execute('SELECT count(*) FROM attempts WHERE session_id=?',(row['id'],)).fetchone()[0]
@@ -30,7 +29,7 @@ class Practice:
                 return self.snapshot(db,user,row)
             quota=self.quota(db,user)
             if not quota['remaining']:
-                raise HTTPException(429,'Você usou suas 10 questões de hoje. Volte amanhã para continuar.')
+                raise HTTPException(429,'Você usou suas 30 questões deste mês. Aguarde a renovação mensal.')
             sid=str(uuid.uuid4())
             # Cobrir áreas com seleção embaralhada de conteúdo introdutório.
             selected=[]
@@ -54,7 +53,9 @@ class Practice:
             if previous:
                 if previous['payload']!=payload:
                     raise HTTPException(409,'Esta tentativa já foi usada para outra resposta.')
-                return json.loads(previous['response'])
+                result=json.loads(previous['response'])
+                result['session']['quota']=self.quota(db,user)
+                return result
             row=db.execute('SELECT * FROM practice_sessions WHERE id=? AND user_id=?',(sid,user)).fetchone()
             if not row:
                 raise HTTPException(404,'Atividade não encontrada.')
@@ -66,7 +67,7 @@ class Practice:
                 raise HTTPException(409,'A questão mudou ou já foi respondida. Atualize a atividade.')
             quota=self.quota(db,user)
             if not quota['remaining']:
-                raise HTTPException(429,'Limite diário atingido. Sua atividade foi preservada para amanhã.')
+                raise HTTPException(429,'Limite mensal atingido. Sua atividade foi preservada para o próximo mês.')
             question=BY_ID[question_id]
             if choice not in [chr(97+i) for i in range(len(question.options))]:
                 raise HTTPException(422,'Alternativa inválida.')

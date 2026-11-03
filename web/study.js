@@ -14,7 +14,7 @@ async function api(path, body) {
 }
 function showAuth() { csrf=''; session=null; pending=null; $('#auth-panel').hidden=false; $('#practice-panel').hidden=true; $('#logout').hidden=true; }
 function showPractice() { $('#auth-panel').hidden=true; $('#practice-panel').hidden=false; $('#logout').hidden=false; }
-function quota(value) { $('#quota').textContent = `${value.remaining} de ${value.limit} questões disponíveis hoje`; }
+function quota(value) { $('#quota').textContent = `${value.used} de ${value.limit} questões usadas neste mês · ${value.remaining} disponíveis`; }
 function render(value) {
   session=value; pending=null;
   $('#answer-feedback').hidden=true; $('#next').hidden=true; $('#complete').hidden=true;

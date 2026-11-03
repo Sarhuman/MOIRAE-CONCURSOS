@@ -5,6 +5,7 @@ import sqlite3
 import time
 import uuid
 from pathlib import Path
+from typing import Literal
 from fastapi import FastAPI, Request, Response, HTTPException, Depends
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -14,6 +15,7 @@ from .store import Store
 from .security import digest, hasher, verify
 from .service import Practice
 from .middleware import BodyLimit
+from .exams import Exams
 
 ROOT=Path(__file__).resolve().parents[2]
 
@@ -40,6 +42,26 @@ class Answer(BaseModel):
     key: uuid.UUID
 
 
+class ExamStart(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    day: Literal[1,2]
+    key: uuid.UUID
+
+
+class ExamItem(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    question_id: str=Field(max_length=40)
+    choice: str | None=Field(default=None,pattern='^[a-e]$')
+    flagged: bool=False
+    revision: int=Field(ge=0)
+
+
+class EssayDraft(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    text: str=Field(max_length=4000)
+    revision: int=Field(ge=0)
+
+
 def create_app(db_path=None,origin=None,secure=None):
     origin=origin or os.getenv('MOIRAE_ORIGIN','http://127.0.0.1:8000')
     secure=(os.getenv('MOIRAE_SECURE_COOKIE','true').lower()=='true') if secure is None else secure
@@ -49,9 +71,11 @@ def create_app(db_path=None,origin=None,secure=None):
         raise ValueError('HTTPS exige cookie Secure.')
     store=Store(db_path or os.getenv('MOIRAE_DB',str(ROOT/'var'/'moirae.sqlite3')))
     practice=Practice(store)
+    exams=Exams(store)
     app=FastAPI(title='MOIRAE — piloto',docs_url=None,redoc_url=None,openapi_url=None)
     app.state.store=store
     app.state.practice=practice
+    app.state.exams=exams
     cookie='__Host-moirae' if secure else 'moirae_local'
 
     @app.exception_handler(sqlite3.OperationalError)
@@ -60,7 +84,7 @@ def create_app(db_path=None,origin=None,secure=None):
 
     @app.exception_handler(RequestValidationError)
     async def invalid_input(request, error):
-        return JSONResponse({'detail':'Confira os campos. A senha precisa ter de 12 a 128 caracteres.'},status_code=422)
+        return JSONResponse({'detail':'Confira os campos e os limites informados na tela.'},status_code=422)
 
     @app.middleware('http')
     async def guard(request:Request,call_next):
@@ -157,9 +181,31 @@ def create_app(db_path=None,origin=None,secure=None):
     def answer(body:Answer,auth=Depends(user)):
         return practice.answer(auth['user_id'],str(body.session_id),body.question_id,body.choice,str(body.key))
 
+    @app.get('/api/exams/current')
+    def exam_current(auth=Depends(user)):return exams.current(auth['user_id'])
+
+    @app.post('/api/exams/start')
+    def exam_start(body:ExamStart,auth=Depends(user)):
+        return exams.start(auth['user_id'],body.day,str(body.key))
+
+    @app.post('/api/exams/{exam_id}/item')
+    def exam_item(exam_id:uuid.UUID,body:ExamItem,auth=Depends(user)):
+        return exams.save_item(auth['user_id'],str(exam_id),body.question_id,body.choice,body.flagged,body.revision)
+
+    @app.post('/api/exams/{exam_id}/essay')
+    def exam_essay(exam_id:uuid.UUID,body:EssayDraft,auth=Depends(user)):
+        return exams.save_essay(auth['user_id'],str(exam_id),body.text,body.revision)
+
+    @app.post('/api/exams/{exam_id}/finish')
+    def exam_finish(exam_id:uuid.UUID,auth=Depends(user)):
+        return exams.finish(auth['user_id'],str(exam_id))
+
     @app.get('/api/dashboard')
     def dashboard(auth=Depends(user)):
         raise HTTPException(403,'O painel de desempenho não faz parte do plano Free. Planos pagos ainda indisponíveis.')
+
+    @app.get('/simulados')
+    def mocks():return FileResponse(ROOT/'web'/'exam.html')
 
     @app.get('/estudar')
     def study():return FileResponse(ROOT/'web'/'study.html')

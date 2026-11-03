@@ -2,7 +2,7 @@
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
-FREE_DAILY_LIMIT = 10
+FREE_MONTHLY_LIMIT = 30
 SESSION_SIZE = 5
 
 
@@ -11,4 +11,4 @@ def study_day(now: datetime | None = None) -> str:
 
 
 def remaining(used: int) -> int:
-    return max(0, FREE_DAILY_LIMIT - used)
+    return max(0, FREE_MONTHLY_LIMIT - used)

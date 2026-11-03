@@ -197,3 +197,7 @@ Disponível a alunos com plano pago ativo; sem IA ou promessa de tempo exato. [R
 Nova página **/redacoes-ia**, separada da demonstração: envio autorizado, fila persistente com worker, reserva/consumo/liberação de créditos reais e evolução por competência agrupada por versão do avaliador. Adaptador OpenAI implementado e testado com respostas sintéticas, **sem chamada real**. Desativado por padrão; habilitação depende de modelo/credencial privados, avaliação pedagógica e operação. [Contrato, configuração e limitações](docs/real-essay-evaluation.md).
 
 Oito questões autorais adicionais estão em `data/content-drafts/authorial-batch-01.json`, sem publicação e com revisão editorial pendente.
+
+## Testar agora
+
+[Guia para WSL/Linux com conta Avançado e banco isolado](docs/next-local-test.md). O comando local_playtest cria apenas banco novo, pede senha sem exibi-la e não executa compra ou chamadas externas. Inclui preflight sem exposição de segredos e comparação offline de notas humanas/preditas; nenhuma dessas ferramentas aprova automaticamente a correção por IA.

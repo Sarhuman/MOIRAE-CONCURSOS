@@ -2,7 +2,7 @@
 
 ## Decisão e alcance
 
-Foco inicial: preparação ENEM com prática orientada e oficina de redação. Este documento atualiza as prioridades e hipóteses de produto do README; define preços e franquias planejados, mas não altera o catálogo executável, créditos existentes ou contratos de alunos. Não habilita cobrança ou integração externa. O PR #8 permanece draft, dependente do #7, sem merge.
+Foco inicial: preparação ENEM com prática orientada e oficina de redação. Este documento atualiza as prioridades e hipóteses de produto do README; define preços e franquias planejados, inclui catálogo sandbox versão 2 para novos pedidos, preservando créditos e contratos anteriores. Não habilita cobrança ou integração externa. O PR #8 permanece draft, dependente do #7, sem merge.
 
 Objetivo: oferecer uma experiência coerente que identifique dificuldades, proponha uma ação executável e demonstre evolução. Superioridade é uma hipótese a comprovar com usuários e avaliação pedagógica.
 
@@ -21,7 +21,7 @@ São alegações comerciais consultadas, não validação independente de entreg
 
 A branch feat/persistent-essay-demo contém piloto local, SQLite, atividades pequenas, simulados reduzidos, cobrança sandbox e redação com avaliador fixo. Há persistência e controles de integridade, mas não correção semântica real. O dashboard é básico; personalização adaptativa, catálogo amplo e operação pública ainda precisam de entrega. Experiência no celular aprovada pelo usuário nesta conversa. Essa validação de uso não substitui medições específicas de acessibilidade, desempenho ou revisão visual de alterações futuras.
 
-Decisão comercial do usuário: Essencial R$40/30 dias e Avançado R$100/30 dias, com 30 correções no Avançado. Para equilibrar a proposta, o Essencial passa a prever 10 correções e o conjunto de prática descrito abaixo. O sandbox ainda executa o catálogo anterior R$35/3 e R$55/8 até migração própria, com testes; não confundir configuração atual com a nova oferta planejada.
+Decisão comercial do usuário: Essencial R$40/30 dias e Avançado R$100/30 dias, com 30 correções no Avançado. Para equilibrar a proposta, o Essencial passa a prever 10 correções e o conjunto de prática descrito abaixo. O sandbox agora usa R$40/10 e R$100/30 nos novos pedidos, com preço, duração e créditos gravados no contrato. Pedidos legados reconhecidos preservam as condições anteriores.
 
 ## Produto e diferenciação
 
@@ -107,4 +107,4 @@ Avaliar: conclusão da primeira sessão, retorno em sete dias, revisões realiza
 
 ## Estado desta revisão
 
-Entregue: benchmark público e mudança documentada de estratégia, prioridade visual e sequência de implementação. Não entregue por esta revisão: redesign em código, alteração das franquias em código, IA real, QA renderizado ou publicação. O próximo trabalho deve partir do HEAD atual e preservar os contratos de teste.
+Entregue: benchmark público e mudança documentada de estratégia, prioridade visual e sequência de implementação. Catálogo e apresentação dos planos atualizados em código. Permanecem pendentes: redesign completo, recursos pedagógicos planejados, IA real, QA renderizado desta alteração e publicação. O próximo trabalho deve partir do HEAD atual e preservar os contratos de teste.

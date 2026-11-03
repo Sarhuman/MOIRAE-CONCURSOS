@@ -26,6 +26,7 @@ from .catalog import BY_ID
 from .essays import Essays
 from .review import Review
 from .planner import Planner
+from .essay_jobs import EssayJobs
 
 ROOT=Path(__file__).resolve().parents[2]
 
@@ -137,6 +138,14 @@ class FavoriteInput(BaseModel):
     model_config=ConfigDict(extra='forbid',strict=True)
     enabled: bool
 
+class RealEssaySubmission(EssaySubmission):
+    accept_external: bool=Field(strict=True)
+    @field_validator('accept_external')
+    @classmethod
+    def accept_processing(cls,value):
+        if not value:raise ValueError('Confirme o processamento externo do texto.')
+        return value
+
 class EssayRewrite(BaseModel):
     model_config=ConfigDict(extra='forbid')
     key: uuid.UUID
@@ -163,6 +172,7 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
         billing_provider=MercadoPagoSandbox(token)
     billing=Billing(store,billing_provider,billing_collector,billing_secret,origin)
     essays=Essays(store, enabled=(os.getenv('MOIRAE_ESSAY_DEMO','false').lower()=='true') if essay_demo is None else essay_demo)
+    real_essays=EssayJobs(store,enabled=os.getenv('MOIRAE_ESSAY_AI','false').lower()=='true' and os.getenv('MOIRAE_ESSAY_AI_REVIEWED','false').lower()=='true',model=os.getenv('MOIRAE_ESSAY_MODEL',''))
     practice=Practice(store)
     exams=Exams(store)
     app=FastAPI(title='MOIRAE — piloto',docs_url=None,redoc_url=None,openapi_url=None)
@@ -173,6 +183,7 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     app.state.mailer=mailer
     app.state.billing=billing
     app.state.essays=essays
+    app.state.real_essays=real_essays
     cookie='__Host-moirae' if secure else 'moirae_local'
 
     @app.exception_handler(sqlite3.OperationalError)
@@ -418,6 +429,23 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
 
     @app.get('/planos')
     def plans_page():return FileResponse(ROOT/'web'/'plans.html')
+
+    @app.get('/redacoes-ia')
+    def real_essays_page():return FileResponse(ROOT/'web'/'real-essays.html')
+
+    @app.get('/api/essay-evaluations')
+    def real_history(auth=Depends(student)):return real_essays.history(auth['user_id'])
+
+    @app.get('/api/essay-evaluations/evolution')
+    def real_evolution(auth=Depends(student)):return real_essays.evolution(auth['user_id'])
+
+    @app.post('/api/essay-evaluations',status_code=202)
+    def real_submit(body:RealEssaySubmission,request:Request,auth=Depends(student)):
+        rate(request,'real-essay:'+auth['user_id'])
+        return real_essays.submit(auth['user_id'],str(body.key),body.theme,body.text)
+
+    @app.get('/api/essay-evaluations/{job_id}')
+    def real_detail(job_id:uuid.UUID,auth=Depends(student)):return real_essays.detail(auth['user_id'],str(job_id))
 
     @app.get('/api/essays')
     def essay_history(auth=Depends(student)):return essays.history(auth['user_id'])

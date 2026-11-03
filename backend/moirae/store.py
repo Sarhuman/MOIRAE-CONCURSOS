@@ -56,6 +56,14 @@ class Store:
             if 'free_charge' not in {r[1] for r in db.execute('PRAGMA table_info(attempts)')}:
                 db.execute('ALTER TABLE attempts ADD COLUMN free_charge INTEGER NOT NULL DEFAULT 1')
             db.execute('INSERT OR IGNORE INTO schema_version VALUES(4)')
+            columns={r[1] for r in db.execute('PRAGMA table_info(billing_orders)')}
+            for column in ('essay_credits', 'access_days', 'catalog_version'):
+                if column not in columns:
+                    db.execute(f'ALTER TABLE billing_orders ADD COLUMN {column} INTEGER')
+            # Only the two known legacy contracts can be backfilled safely.
+            with self.connect(write=True) as migration:
+                migration.execute("UPDATE billing_orders SET essay_credits=CASE plan_id WHEN 'essencial' THEN 3 ELSE 8 END, access_days=30, catalog_version=1 WHERE catalog_version IS NULL AND ((plan_id='essencial' AND amount_cents=3500) OR (plan_id='avancado' AND amount_cents=5500))")
+                migration.execute('INSERT OR IGNORE INTO schema_version VALUES(6)')
 
     @contextmanager
     def connect(self, write=False):
@@ -75,3 +83,4 @@ class Store:
             raise
         finally:
             db.close()
+

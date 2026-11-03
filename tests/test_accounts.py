@@ -143,4 +143,3 @@ def test_no_token_or_outbox_endpoint_and_export_requires_csrf(setup):
     assert c.post('/api/account/export',json={'password':PASSWORD},headers={'X-CSRF-Token':'wrong'}).status_code==403
     assert c.get('/var/mail-outbox').status_code==404
     assert c.get('/api/account/tokens').status_code==404
-

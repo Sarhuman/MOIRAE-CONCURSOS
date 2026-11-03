@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "publication_allowed": false,
+  "items": [
+    {
+      "id": "mat-d01",
+      "area": "Matemática",
+      "subject": "Porcentagem e orçamento",
+      "prompt": "Uma escola compra um projetor anunciado por R$ 1.200. A loja oferece 10% de desconto sobre o produto e cobra R$ 35 de entrega, sem desconto. Qual é o total pago?",
+      "options": [
+        "R$ 1.080",
+        "R$ 1.111,50",
+        "R$ 1.115",
+        "R$ 1.165",
+        "R$ 1.235"
+      ],
+      "answer": "c",
+      "explanation": "O desconto é 0,10 × 1.200 = 120. O produto custa 1.080; somando a entrega de 35, o total é R$ 1.115.",
+      "source": "Autoral MOIRAE — rascunho editorial; não é questão oficial do ENEM.",
+      "status": "draft",
+      "editorial_reviewed": false
+    },
+    {
+      "id": "mat-d02",
+      "area": "Matemática",
+      "subject": "Taxas e proporcionalidade",
+      "prompt": "Uma cisterna recebe água de duas bombas. Operando sozinha, A enche a cisterna em 6 horas e B em 3 horas. Com vazões constantes e sem perdas, quanto tempo levam juntas para encher a cisterna vazia?",
+      "options": [
+        "1 hora",
+        "2 horas",
+        "3 horas",
+        "4,5 horas",
+        "9 horas"
+      ],
+      "answer": "b",
+      "explanation": "Em uma hora A enche 1/6 e B enche 1/3. Juntas, enchem 1/2 por hora. Para uma cisterna inteira, precisam de 2 horas.",
+      "source": "Autoral MOIRAE — rascunho editorial; não é questão oficial do ENEM.",
+      "status": "draft",
+      "editorial_reviewed": false
+    },
+    {
+      "id": "lin-d01",
+      "area": "Linguagens",
+      "subject": "Inferência e argumentação",
+      "prompt": "Leia o aviso autoral: “A biblioteca ampliou seus horários. As estantes continuam no mesmo lugar; agora, mais gente consegue chegar até elas.” A oposição entre permanecer no mesmo lugar e ampliar o acesso destaca que:",
+      "options": [
+        "A biblioteca mudou de endereço.",
+        "O número de livros necessariamente dobrou.",
+        "O horário pode reduzir barreiras de acesso sem alterar o espaço físico.",
+        "Todas as pessoas passaram a frequentar a biblioteca.",
+        "O acesso depende apenas da distância."
+      ],
+      "answer": "c",
+      "explanation": "O texto contrapõe a manutenção física das estantes à ampliação de oportunidades de acesso por mudança no horário. Não informa duplicação do acervo, mudança de endereço nem adesão de todas as pessoas.",
+      "source": "Autoral MOIRAE — rascunho editorial; não é questão oficial do ENEM.",
+      "status": "draft",
+      "editorial_reviewed": false
+    },
+    {
+      "id": "lin-d02",
+      "area": "Linguagens",
+      "subject": "Leitura crítica de evidências",
+      "prompt": "Em um relatório autoral, lê-se: “As turmas que participaram da oficina tiveram maior média. Como a participação foi voluntária e não houve controle de outros fatores, o resultado não demonstra que a oficina causou a diferença.” A ressalva serve para:",
+      "options": [
+        "Negar que houve diferença de médias.",
+        "Distinguir associação observada de conclusão causal.",
+        "Comprovar que a oficina prejudicou estudantes.",
+        "Afirmar que estudos nunca produzem conhecimento.",
+        "Garantir que só estudantes com boas notas participaram."
+      ],
+      "answer": "b",
+      "explanation": "A diferença de médias é uma associação observada. Seleção voluntária e fatores não controlados impedem atribuir causalidade à oficina a partir desses dados, sem negar o resultado observado.",
+      "source": "Autoral MOIRAE — rascunho editorial; não é questão oficial do ENEM.",
+      "status": "draft",
+      "editorial_reviewed": false
+    },
+    {
+      "id": "hum-d01",
+      "area": "Humanas",
+      "subject": "Participação e decisões coletivas",
+      "prompt": "Em um município fictício, o conselho de moradores recebe propostas, publica os critérios de seleção e explica quais demandas foram incluídas no orçamento. Qual prática descrita favorece o controle social?",
+      "options": [
+        "Manter os critérios em sigilo.",
+        "Substituir a legislação por preferências individuais.",
+        "Permitir acompanhar e questionar os critérios das decisões públicas.",
+        "Eliminar toda divergência entre moradores.",
+        "Impedir a apresentação de novas demandas."
+      ],
+      "answer": "c",
+      "explanation": "Critérios públicos e justificativas permitem que cidadãos acompanhem e questionem decisões. O controle social não elimina divergências nem dispensa regras legais.",
+      "source": "Autoral MOIRAE — rascunho editorial; não é questão oficial do ENEM.",
+      "status": "draft",
+      "editorial_reviewed": false
+    },
+    {
+      "id": "hum-d02",
+      "area": "Humanas",
+      "subject": "Fontes e perspectivas históricas",
+      "prompt": "Uma pesquisadora compara o diário de uma operária e o relatório de um empresário sobre a mesma fábrica. Os textos divergem sobre a jornada de trabalho. Qual procedimento é mais adequado?",
+      "options": [
+        "Descartar o diário por ser uma fonte pessoal.",
+        "Aceitar o relatório como neutro por ser institucional.",
+        "Considerar autoria, finalidade e contexto de cada fonte e confrontá-las com outras evidências.",
+        "Escolher o relato mais antigo sem examinar seu conteúdo.",
+        "Concluir que toda divergência torna a pesquisa impossível."
+      ],
+      "answer": "c",
+      "explanation": "Fontes pessoais e institucionais têm contextos e finalidades. A crítica histórica considera essas condições e confronta evidências, sem presumir neutralidade automática nem invalidar a pesquisa pela divergência.",
+      "source": "Autoral MOIRAE — rascunho editorial; não é questão oficial do ENEM.",
+      "status": "draft",
+      "editorial_reviewed": false
+    },
+    {
+      "id": "nat-d01",
+      "area": "Natureza",
+      "subject": "Calor específico",
+      "prompt": "Dois corpos de mesma massa recebem a mesma quantidade de calor, sem perdas e sem mudança de estado. O calor específico de A é o dobro do de B. Pela relação Q = m c ΔT, a variação de temperatura de A será:",
+      "options": [
+        "O dobro da de B.",
+        "A metade da de B.",
+        "Igual à de B.",
+        "Quatro vezes a de B.",
+        "Nula, independentemente do calor recebido."
+      ],
+      "answer": "b",
+      "explanation": "Com Q e m iguais, ΔT = Q/(m c). Ao dobrar c, a variação de temperatura cai à metade. Não há motivo para concluir variação nula.",
+      "source": "Autoral MOIRAE — rascunho editorial; não é questão oficial do ENEM.",
+      "status": "draft",
+      "editorial_reviewed": false
+    },
+    {
+      "id": "nat-d02",
+      "area": "Natureza",
+      "subject": "Ecologia e qualidade da água",
+      "prompt": "Após receber excesso de nutrientes, um lago apresenta proliferação de algas. Depois, observa-se intensa decomposição da matéria orgânica e redução do oxigênio dissolvido. Qual relação explica a redução descrita?",
+      "options": [
+        "A decomposição aeróbia consome oxigênio.",
+        "Nutrientes transformam diretamente todo oxigênio em gás nitrogênio.",
+        "Algas tornam toda decomposição impossível.",
+        "A água perde oxigênio porque deixa de conter moléculas de água.",
+        "A decomposição produz necessariamente mais oxigênio do que consome."
+      ],
+      "answer": "a",
+      "explanation": "Microrganismos envolvidos na decomposição aeróbia usam oxigênio na respiração. A grande quantidade de matéria orgânica pode aumentar essa demanda e diminuir o oxigênio disponível para organismos aquáticos.",
+      "source": "Autoral MOIRAE — rascunho editorial; não é questão oficial do ENEM.",
+      "status": "draft",
+      "editorial_reviewed": false
+    }
+  ]
+}

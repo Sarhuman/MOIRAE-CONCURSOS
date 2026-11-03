@@ -34,7 +34,7 @@ class Billing:
             pending=db.execute("SELECT id FROM billing_orders WHERE user_id=? AND status IN ('preparing','pending','in_process','authorized')",(user,)).fetchone()
             if pending:raise HTTPException(409,'Você já tem um pedido pendente. Confira-o antes de iniciar outro.')
             oid=str(uuid.uuid4());now=int(self.clock())
-            db.execute('INSERT INTO billing_orders(id,user_id,plan_id,amount_cents,status,created_at,request_key) VALUES(?,?,?,?,?,?,?)',(oid,user,plan_id,plan['price_cents'],'preparing',now,key))
+            db.execute('INSERT INTO billing_orders(id,user_id,plan_id,amount_cents,status,created_at,request_key,essay_credits,access_days,catalog_version) VALUES(?,?,?,?,?,?,?,?,?,?)',(oid,user,plan_id,plan['price_cents'],'preparing',now,key,plan['essay_credits'],plan['days'],plan['catalog_version']))
         try:
             result=self.provider.preference({'id':oid},plan,self.origin);safe_checkout(result['checkout_url'])
         except Exception:
@@ -61,6 +61,8 @@ class Billing:
         with self.store.connect(write=True) as db:
             order=db.execute('SELECT * FROM billing_orders WHERE id=?',(reference,)).fetchone()
             if not order or int(cents)!=order['amount_cents']:raise HTTPException(400,'Pagamento não corresponde ao pedido.')
+            if order['essay_credits'] is None or order['access_days'] is None or order['catalog_version'] is None:
+                raise HTTPException(409,'Contrato do pedido requer revisão antes de conceder acesso.')
             if order['payment_id'] and order['payment_id']!=payment_id:raise HTTPException(409,'Outro pagamento já está vinculado ao pedido. É necessária análise.')
             if order['provider_version'] is not None and version<order['provider_version']:return {'ok':True,'ignored':'older_version'}
             # Reembolso parcial/contestação suspende o direito até reconciliação operacional.
@@ -76,8 +78,8 @@ class Billing:
             if revoked:
                 db.execute("UPDATE access_grants SET status='revoked' WHERE order_id=?",(order['id'],))
             elif status=='approved':
-                plan=PLANS[order['plan_id']];now=int(self.clock())
-                db.execute("INSERT OR IGNORE INTO access_grants(order_id,user_id,plan_id,starts_at,ends_at,status,essay_credits) VALUES(?,?,?,?,?,'active',?)",(order['id'],order['user_id'],plan['id'],now,now+30*86400,plan['essay_credits']))
+                now=int(self.clock())
+                db.execute("INSERT OR IGNORE INTO access_grants(order_id,user_id,plan_id,starts_at,ends_at,status,essay_credits) VALUES(?,?,?,?,?,'active',?)",(order['id'],order['user_id'],order['plan_id'],now,now+order['access_days']*86400,order['essay_credits']))
                 db.execute("UPDATE access_grants SET status='active' WHERE order_id=? AND status='suspended'",(order['id'],))
             else:
                 db.execute("UPDATE access_grants SET status='suspended' WHERE order_id=? AND status='active'",(order['id'],))
@@ -91,3 +93,4 @@ class Billing:
             now=int(self.clock());within=bool(grant and now<=grant['starts_at']+7*86400)
             db.execute('UPDATE billing_orders SET refund_requested_at=coalesce(refund_requested_at,?) WHERE id=?',(now,order_id))
         return dict(requested=True,within_initial_window=within,message='Pedido registrado para análise. Isso não confirma estorno no Mercado Pago; esta integração está em teste e não possui processamento operacional de reembolso.')
+

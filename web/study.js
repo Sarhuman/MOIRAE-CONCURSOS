@@ -21,6 +21,7 @@ function render(value) {
   $('#start').hidden=Boolean(value);
   $('#question-panel').hidden=!value || !value.question;
   if (!value) return;
+  if(value.status==='completed') { $('#question-panel').hidden=true; $('#complete').hidden=false; $('#summary').textContent=`Atividade concluída: ${value.answered} de ${value.total} questões respondidas. Escolha Fazer outra atividade para iniciar um novo bloco.`; return; }
   quota(value.quota);
   if (!value.question) { $('#complete').hidden=false; return; }
   const q=value.question;
@@ -29,7 +30,7 @@ function render(value) {
   $('#question-title').textContent=q.prompt;
   $('#choices').disabled=false;
   $('#answer-form button').hidden=false;
-  const options=q.options.map(option=>{const label=document.createElement('label');const input=document.createElement('input');input.type='radio';input.name='choice';input.value=option.id;input.required=true;label.append(input,document.createTextNode(option.text));return label;});
+  const options=q.options.map(option=>{const label=document.createElement('label');const input=document.createElement('input');input.type='radio';input.name='choice';input.value=option.id;input.required=true;label.append(input,document.createTextNode(option.id.toUpperCase()+'. '+option.text));return label;});
   $('#options').replaceChildren(...options);
 }
 async function resume() { const result=await api('/practice/current');showPractice();quota(result.quota);render(result.session); }
@@ -44,13 +45,14 @@ $('#answer-form').addEventListener('submit',event=>{event.preventDefault();actio
   const choice=new FormData($('#answer-form')).get('choice');if(!choice)return;
   if(!pending || pending.choice!==choice)pending={session_id:session.id,question_id:session.question.id,choice,key:crypto.randomUUID()};
   // Guardar a chave em memória permite repetir com segurança após falha de rede.
+  const answeredQuestion=session.question;
   const result=await api('/practice/answer',pending);
   session=result.session;quota(session.quota);$('#choices').disabled=true;$('#answer-form button').hidden=true;
-  $('#answer-feedback').textContent=(result.correct?'Você acertou!':'A resposta correta é a alternativa '+result.answer.toUpperCase()+'.')+'\n'+result.explanation;
+  $('#answer-feedback').textContent=(result.correct?'Você acertou!':'Resposta correta: '+result.answer.toUpperCase()+'. '+(answeredQuestion.options.find(option=>option.id===result.answer)?.text || ''))+'\n'+result.explanation;
   if(result.review_schedule){$('#answer-feedback').textContent+='\nPróxima revisão: '+new Date(result.review_schedule.due_at*1000).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'})+'.';}
   $('#answer-feedback').hidden=false;$('#answer-feedback').focus();
   $('#next').hidden=session.status==='completed';
-  if(session.status==='completed'){$('#complete').hidden=false;$('#summary').textContent=`Você acertou ${result.summary.correct} de ${result.summary.total} questões nesta atividade.`;}
+  if(session.status==='completed'){$('#question-panel').hidden=true;$('#complete').hidden=false;$('#summary').textContent=`Você acertou ${result.summary.correct} de ${result.summary.total} questões nesta atividade.`;}
 });});
 $('#next').addEventListener('click',()=>{render(session);$('#question-title').scrollIntoView({block:'center'});});
 action(async()=>{try{const result=await api('/auth/me');csrf=result.csrf;await resume();}catch(error){showAuth();if(!error.message.includes('Entre na sua conta'))throw error;}});

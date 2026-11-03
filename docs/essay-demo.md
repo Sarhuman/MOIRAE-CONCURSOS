@@ -20,7 +20,7 @@ As mutações exigem sessão, origem e CSRF. UUID é identificação, não autor
 
 Todas as notas são **fixas em 120 por competência**, marcadas como demonstração, sem avaliação pedagógica do texto. O primeiro trecho recebe uma orientação ilustrativa de C3. O modelo não é chamado e não há geração de feedback semântico. A reescrita é guardada e exibida junto do original, sem afirmar melhora.
 
-A franquia de teste é 3/8 por concessão Essencial/Avançado. Os registros de demonstração não alteram `access_grants.essay_credits` e não serão o ledger de correções reais. Envios `received` e `processing` reservam uma unidade; `completed` consome a unidade de teste; `failed` libera a reserva. Não há acúmulo entre concessões. Transações SQLite `IMMEDIATE` impedem reserva duplicada e ultrapassagem do saldo. Falhas são terminais para aquele envio e não disparadas novamente por repetição de HTTP; um novo envio usa uma nova chave.
+Novas concessões de teste recebem 10/30 créditos Essencial/Avançado. Concessões antigas preservam 3/8; o saldo usa a franquia gravada na concessão, não o catálogo atual. Os registros de demonstração não alteram `access_grants.essay_credits` e não serão o ledger de correções reais. Envios `received` e `processing` reservam uma unidade; `completed` consome a unidade de teste; `failed` libera a reserva. Não há acúmulo entre concessões. Transações SQLite `IMMEDIATE` impedem reserva duplicada e ultrapassagem do saldo. Falhas são terminais para aquele envio e não disparadas novamente por repetição de HTTP; um novo envio usa uma nova chave.
 
 O processamento valida o acesso antes de executar. Erro técnico, resultado malformado e acesso expirado não produzem nota zero. Erros internos são substituídos por códigos genéricos; não retornam textos de exceção.
 
@@ -41,3 +41,4 @@ Testes cobrem fluxo HTTP, retomada após reinício, exportação, restrições d
 ## Revisão de interface
 
 Marcações têm cores e rótulos C1–C5, seleção pelo teclado e lista de trechos. Segmentação por offsets preserva sobreposições sem descartar texto. Comparação mostra o trecho original associado à versão escolhida, lado a lado em tela ampla e empilhado no celular. Rascunhos de reescrita são mantidos em memória por redação e marcação, sem localStorage; falhas preservam texto e chave idempotente. Fechar/recarregar com alterações não enviadas aciona o aviso nativo do navegador quando permitido. Não é recuperação durável: a interface informa a perda ao fechar a aba. Durante envios, campos são bloqueados para evitar sobrescrever edições feitas enquanto a resposta chega. Nenhuma avaliação semântica foi acrescentada.
+

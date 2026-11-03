@@ -150,3 +150,35 @@ def test_five_questions_finish_without_restart(env):
     with app.state.store.connect() as db:
         assert db.execute('SELECT count(*) FROM practice_sessions').fetchone()[0]==1
         assert db.execute('SELECT count(*) FROM attempts WHERE session_id=?',(original,)).fetchone()[0]==5
+
+def test_initial_diagnostic_is_private_durable_and_covers_four_areas(env):
+    app,c=env
+    register(c)
+    assert c.get('/api/diagnostic').json()['status']=='not_started'
+    s=c.post('/api/diagnostic/start',json={}).json()
+    areas=set()
+    assert c.post('/api/diagnostic/start',json={}).json()['id']==s['id']
+    for _ in range(5):
+        areas.add(s['question']['area'])
+        assert c.get('/api/diagnostic').json()['areas']==[]
+        q=BY_ID[s['question']['id']]
+        wrong=next(chr(97+i) for i in range(5) if chr(97+i)!=q.answer)
+        s=answer(c,s,choice=wrong).json()['session']
+    assert len(areas)==4
+    result=c.get('/api/diagnostic').json()
+    assert result['status']=='completed' and result['focus']
+    assert sum(a['errors'] for a in result['areas'])==5
+    assert c.get('/api/practice/current').json()['session'] is None
+    register(c,'other-diagnostic@example.test')
+    assert c.get('/api/diagnostic').json()['status']=='not_started'
+
+def test_diagnostic_respects_existing_activity_and_all_correct(env):
+    _,c=env;register(c)
+    s=c.post('/api/practice/start',json={}).json()
+    assert c.post('/api/diagnostic/start',json={}).status_code==409
+    while s['status']=='active':s=answer(c,s).json()['session']
+    s=c.post('/api/diagnostic/start',json={}).json()
+    while s['status']=='active':s=answer(c,s).json()['session']
+    d=c.get('/api/diagnostic').json()
+    assert d['status']=='completed' and d['focus'] is None
+    assert sum(a['errors'] for a in d['areas'])==0

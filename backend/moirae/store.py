@@ -61,6 +61,8 @@ CREATE INDEX IF NOT EXISTS real_essay_credit_grant ON essay_credit_events(grant_
 CREATE TABLE IF NOT EXISTS essay_provider_calls(id INTEGER PRIMARY KEY AUTOINCREMENT,job_id TEXT NOT NULL REFERENCES real_essay_jobs(id) ON DELETE CASCADE,created_at INTEGER NOT NULL);
 CREATE INDEX IF NOT EXISTS essay_daily_calls ON essay_provider_calls(created_at);
 INSERT OR IGNORE INTO schema_version VALUES(9);
+CREATE TABLE IF NOT EXISTS diagnostic_sessions(session_id TEXT PRIMARY KEY REFERENCES practice_sessions(id));
+INSERT OR IGNORE INTO schema_version VALUES(10);
 CREATE TABLE IF NOT EXISTS idempotency(user_id TEXT NOT NULL REFERENCES users(id),key TEXT NOT NULL,payload TEXT NOT NULL,response TEXT NOT NULL,PRIMARY KEY(user_id,key));
 '''
 

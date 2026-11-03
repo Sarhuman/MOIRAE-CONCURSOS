@@ -1,5 +1,6 @@
 'use strict';
-(()=>{const $=s=>document.querySelector(s);let minutes=30,busy=false;
+(()=>{const $=s=>document.querySelector(s);let minutes=[15,30,60].includes(Number(new URLSearchParams(location.search).get("minutes")))?Number(new URLSearchParams(location.search).get("minutes")):30,busy=false;
+ document.querySelectorAll("[data-plan-minutes]").forEach(b=>b.setAttribute("aria-pressed",String(Number(b.dataset.planMinutes)===minutes)));
 const date=ts=>new Date(ts*1000).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});
 async function api(path,body,csrf){const r=await fetch('/api'+path,{method:body===undefined?'GET':'POST',credentials:'same-origin',headers:body===undefined?{}:{'Content-Type':'application/json','X-CSRF-Token':csrf},...(body===undefined?{}:{body:JSON.stringify(body)})});const d=await r.json();if(!r.ok)throw new Error(typeof d.detail==='string'?d.detail:'Não foi possível preparar sua sessão.');return d;}
 function lock(value){busy=value;document.querySelectorAll('[data-plan-minutes],#planned-start,#plan-refresh').forEach(b=>b.disabled=value);}

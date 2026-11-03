@@ -400,6 +400,19 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
         from starlette.concurrency import run_in_threadpool
         return await run_in_threadpool(billing.reconcile,payment_id)
 
+    @app.get('/diagnostico')
+    def diagnostic_page():return FileResponse(ROOT/'web'/'diagnostic.html')
+
+    @app.post('/api/diagnostic/start')
+    def diagnostic_start(request:Request,auth=Depends(student)):
+        rate(request,'diagnostic:'+auth['user_id'])
+        return practice.start(auth['user_id'],diagnostic=True)
+
+    @app.get('/api/diagnostic')
+    def diagnostic_result(auth=Depends(student)):
+        from .diagnostic import result
+        return result(store,auth['user_id'])
+
     @app.get('/api/planner')
     def planner_preview(minutes:int=Query(default=30),auth=Depends(student)):
         if minutes not in (15,30,60):raise HTTPException(422,'Escolha 15, 30 ou 60 minutos.')

@@ -57,7 +57,7 @@ $('#answer-form').addEventListener('submit',event=>{event.preventDefault();actio
   if(result.alternatives?.length)$('#answer-feedback').append(detail);
   $('#answer-feedback').hidden=false;$('#answer-feedback').focus();
   $('#next').hidden=session.status==='completed';
-  if(session.status==='completed'){$('#choices').hidden=true;$('#complete').hidden=false;$('#summary').textContent=`Você acertou ${result.summary.correct} de ${result.summary.total} questões nesta atividade.`;}
+  if(session.status==='completed'){$('#choices').hidden=true;$('#complete').hidden=false;$('#summary').textContent=`Você acertou ${result.summary.correct} de ${result.summary.total} questões nesta atividade. Se este foi seu diagnóstico, consulte o resultado no link acima.`;}
 });});
 $('#next').addEventListener('click',()=>{render(session);$('#question-title').scrollIntoView({block:'center'});});
 action(async()=>{try{const result=await api('/auth/me');csrf=result.csrf;await resume();}catch(error){showAuth();if(!error.message.includes('Entre na sua conta'))throw error;}});

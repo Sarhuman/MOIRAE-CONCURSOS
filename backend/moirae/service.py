@@ -25,13 +25,15 @@ class Practice:
         return dict(plan=json.loads(plan['description']) if plan else None,id=row['id'],status=row['status'],answered=count,total=total,
                     question=BY_ID[next_row[0]].public() if next_row else None,quota=self.quota(db,user))
 
-    def start(self, user, minutes=None):
+    def start(self, user, minutes=None, diagnostic=False):
         with self.store.connect(write=True) as db:
             planned=None
             if minutes is not None:
                 selected,planned=selection(db,user,minutes,int(time.time()))
             row = db.execute("SELECT * FROM practice_sessions WHERE user_id=? AND status='active'",(user,)).fetchone()
             if row:
+                if diagnostic and not db.execute('SELECT 1 FROM diagnostic_sessions WHERE session_id=?',(row['id'],)).fetchone():
+                    raise HTTPException(409,'Termine sua atividade atual antes de iniciar o diagnóstico.')
                 return self.snapshot(db,user,row)
             quota=self.quota(db,user)
             if not quota['unlimited'] and not quota['remaining']:
@@ -45,6 +47,7 @@ class Practice:
             if minutes is None:selected=baseline[:SESSION_SIZE if quota['unlimited'] else min(SESSION_SIZE,quota['remaining'])]
             if not selected:raise HTTPException(409,'Não há revisões vencidas ou questões elegíveis agora. Consulte o próximo agendamento no painel.')
             db.execute('INSERT INTO practice_sessions VALUES(?,?,?,?)',(sid,user,'active',int(time.time())))
+            if diagnostic:db.execute('INSERT INTO diagnostic_sessions VALUES(?)',(sid,))
             if planned is not None:db.execute('INSERT INTO practice_plans VALUES(?,?,?)',(sid,minutes,json.dumps(planned)))
             db.executemany('INSERT INTO session_questions VALUES(?,?,?)',[(sid,i,q.id) for i,q in enumerate(selected)])
             return self.snapshot(db,user,db.execute('SELECT * FROM practice_sessions WHERE id=?',(sid,)).fetchone())

@@ -10,7 +10,7 @@ Schema aditivo 7: favoritos por aluno/questão, exclusão em cascata com a conta
 
 ## Limites
 
-Simulados não integram esta primeira versão. A revisão é leitura de respostas anteriores; responder novamente continua sendo uma tentativa normal em /estudar. Ainda não há agenda de revisão espaçada nem plano adaptativo. A lista mostra até 100 questões, sem paginação nesta versão; expansão do catálogo deve incluir paginação antes de ultrapassar esse limite.
+Simulados não integram esta primeira versão. A revisão é leitura de respostas anteriores; responder novamente continua sendo uma tentativa normal em /estudar. A agenda de prática e o planejamento determinístico foram adicionados em [study-planner.md](study-planner.md). A lista mostra até 100 questões, sem paginação nesta versão; expansão do catálogo deve incluir paginação antes de ultrapassar esse limite.
 
 ## Apresentação
 

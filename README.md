@@ -1,7 +1,7 @@
 # MOIRAE
 ### Sua preparação para o ENEM começa aqui.
 
-> **Plano revisado em 03/11/2026:** [estratégia competitiva e próximas entregas](docs/competitive-plan.md). Priorizar direção de arte, prática orientada e evolução em redação. Preços e franquias abaixo permanecem baseline do sandbox, sujeitos a revisão antes da venda. Experiência atual no celular aprovada pelo usuário; verificar regressões nas próximas mudanças.
+> **Plano revisado em 03/11/2026:** [estratégia competitiva e próximas entregas](docs/competitive-plan.md). Priorizar direção de arte, prática orientada e evolução em redação. Oferta planejada: Essencial R$40/30 dias com 10 correções IA e Avançado R$100/30 dias com 30. Sem videoaulas. O catálogo executável do sandbox ainda usa os valores anteriores, conforme seção de teste. Experiência atual no celular aprovada pelo usuário; verificar regressões nas próximas mudanças.
 
 
 Plataforma web de estudos com questões comentadas, simulados e prática de redação. O ENEM é o foco inicial; concursos são uma possibilidade futura, fora do escopo do primeiro lançamento.
@@ -25,17 +25,21 @@ O site deve funcionar bem no celular e no computador, com navegação por teclad
 
 ## Planos propostos
 
-Os valores abaixo são hipóteses para validação, não ofertas comerciais aprovadas. Preços definidos: Essencial R$ 35,00 e Avançado R$ 55,00 por 30 dias, sem renovação automática. Compras reais ainda desabilitadas.
+Decisão comercial: Essencial **R$40 por 30 dias** e Avançado **R$100 por 30 dias**, sem renovação automática. A proposta abaixo define o escopo a implementar; compras reais seguem desabilitadas e os recursos futuros só serão anunciados como disponíveis após validação.
 
-| Recurso | Free | Essencial | Avançado |
+| Recurso planejado | Free | Essencial — R$40/30 dias | Avançado — R$100/30 dias |
 |---|---|---|---|
-| Questões comentadas | 30 por mês | Sem limite diário comercial | Sem limite diário comercial |
-| Quatro áreas do ENEM | Sim | Sim | Sim |
-| Resultado da atividade atual | Sim | Sim | Sim |
-| Dashboard e histórico consultável | Não | Evolução e acertos por área | Também análise por assunto/habilidade, quando houver dados suficientes |
+| Questões comentadas nas quatro áreas | 30/mês | Sem limite diário comercial | Sem limite diário comercial |
+| Histórico e desempenho | Resultado da atividade | Histórico e evolução por área | Também análise por assunto/habilidade |
 | Caderno de erros e favoritos | Não | Sim | Sim |
-| Simulados | Demonstração reduzida | Por área e completos | Por área e completos, com análise detalhada |
-| Redações corrigidas | Não | 3 por ciclo mensal | 8 por ciclo mensal |
+| Revisão espaçada e planejamento 15/30/60 min | Não | Sim | Sim, priorizado por dificuldades |
+| Simulados por área e completos | Demonstração reduzida | Sim, com resoluções e análise por área | Também diagnóstico detalhado por habilidade |
+| Correções de redação por IA | Não | 10 por ciclo de 30 dias | 30 por ciclo de 30 dias |
+| Devolutiva nas cinco competências e marcações | Não | Sim | Sim |
+| Reescrita orientada de trecho | Não | 1 rodada por correção | 2 rodadas por correção |
+| Histórico de redações | Não | Sim | Sim, com evolução por competência e comparação entre envios |
+| Materiais escritos revisados | Demonstração | Resumos e exercícios vinculados às dificuldades | Tudo do Essencial |
+| Videoaulas | Não | Não | Não |
 
 As quatro áreas são Linguagens, Ciências Humanas, Ciências da Natureza e Matemática. Redação é uma frente própria.
 
@@ -54,7 +58,7 @@ As quatro áreas são Linguagens, Ciências Humanas, Ciências da Natureza e Mat
 
 ## Redação e simulados
 
-Decisão: correção automatizada por IA usando a OpenAI, exclusivamente no backend. Não há revisão humana incluída. Modelo, custos, prazo e preços dependem de avaliação pedagógica e operacional.
+Decisão: correção automatizada por IA usando a OpenAI, exclusivamente no backend. Não há revisão humana incluída. Preços comerciais definidos acima; modelo, custos e prazo de entrega exigem avaliação pedagógica e operacional antes da venda.
 
 Não anunciar correção humana se ela não existir. Identificar claramente correções automatizadas e suas limitações. A rubrica e a devolutiva precisam de validação pedagógica antes da venda.
 
@@ -120,7 +124,7 @@ A etapa 3 pode usar direitos de acesso de teste; não vender assinaturas antes d
 
 - Stack web e quanto reaproveitar do backend anterior.
 - Seleção e avaliação do modelo OpenAI; custo, prazo e rubrica versionada.
-- Preços, cotas definitivas e custos por aluno.
+- Implementar catálogo versionado R$40/10 e R$100/30, preservar pedidos anteriores e validar custos por aluno.
 - Tamanho dos simulados e regras para interrupção e repetição.
 - Provedor de cobrança e regras para mudanças de plano.
 - Política de privacidade, retenção e operação com menores.
@@ -139,7 +143,7 @@ Execute conforme [DEVELOPMENT.md](DEVELOPMENT.md). A página apresenta a identid
 
 ### Extensão proposta dos planos
 
-Free: 30 questões/mês, sem dashboard e sem correção de redação; proposta de até 3 ajudas de IA/dia vinculadas a questões. Essencial: 3 correções por ciclo e 1 rodada de reescrita de trecho por correção. Avançado: 8 correções por ciclo, 2 rodadas de reescrita e evolução por competência. Tutor pago com franquia mensal ainda a definir. Sem IA ilimitada. Essas propostas dependem de custo e validação antes da venda.
+Free: 30 questões/mês, sem dashboard e sem correção de redação; proposta de até 3 ajudas de IA/dia vinculadas a questões. Essencial: 10 correções por ciclo de 30 dias e 1 rodada de reescrita de trecho por correção. Avançado: 30 correções por ciclo de 30 dias, 2 rodadas de reescrita e evolução por competência. Tutor pago com franquia mensal ainda a definir. Sem IA ilimitada. Essas propostas dependem de custo e validação antes da venda.
 
 Veja [o contrato da oficina](docs/essay-workshop.md) para separar os recursos demonstrativos da integração futura.
 
@@ -165,7 +169,7 @@ Os links são gravados na caixa de saída local privada, sem envio de e-mail pel
 
 ## Planos e Mercado Pago em teste
 
-Catálogo servidor: Essencial **R$ 35,00 / 30 dias / 3 créditos previstos** e Avançado **R$ 55,00 / 30 dias / 8 créditos previstos**. Sem renovação automática. `/planos` consulta pedidos próprios e inicia checkout sandbox somente se configurado; `/painel` apresenta acompanhamento básico para acesso pago ativo.
+Catálogo anterior ainda executado no sandbox (pendente migrar para a oferta planejada acima): Essencial **R$ 35,00 / 30 dias / 3 créditos previstos** e Avançado **R$ 55,00 / 30 dias / 8 créditos previstos**. Sem renovação automática. `/planos` consulta pedidos próprios e inicia checkout sandbox somente se configurado; `/painel` apresenta acompanhamento básico para acesso pago ativo.
 
 O webhook autentica a assinatura e consulta o provedor para conferir valor, moeda, vendedor, pedido e ambiente antes de conceder acesso uma única vez. Uso pago não debita a cota Free; expiração/revogação volta ao Free. O processamento é restrito a testes e não foi validado com uma compra real de sandbox.
 

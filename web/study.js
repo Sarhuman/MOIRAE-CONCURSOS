@@ -25,7 +25,7 @@ function render(value) {
   if (!value.question) { $('#complete').hidden=false; return; }
   const q=value.question;
   $('#question-meta').textContent=`${q.area} · ${q.subject}`;
-  $('#progress').textContent=`Questão ${value.answered+1} de ${value.total}`;
+  $('#progress').textContent=`Questão ${value.answered+1} de ${value.total}`+(value.plan?` · bloco de ${value.plan.minutes} min (estimativa)`:'');
   $('#question-title').textContent=q.prompt;
   $('#choices').disabled=false;
   $('#answer-form button').hidden=false;
@@ -47,6 +47,7 @@ $('#answer-form').addEventListener('submit',event=>{event.preventDefault();actio
   const result=await api('/practice/answer',pending);
   session=result.session;quota(session.quota);$('#choices').disabled=true;$('#answer-form button').hidden=true;
   $('#answer-feedback').textContent=(result.correct?'Você acertou!':'A resposta correta é a alternativa '+result.answer.toUpperCase()+'.')+'\n'+result.explanation;
+  if(result.review_schedule){$('#answer-feedback').textContent+='\nPróxima revisão: '+new Date(result.review_schedule.due_at*1000).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'})+'.';}
   $('#answer-feedback').hidden=false;$('#answer-feedback').focus();
   $('#next').hidden=session.status==='completed';
   if(session.status==='completed'){$('#complete').hidden=false;$('#summary').textContent=`Você acertou ${result.summary.correct} de ${result.summary.total} questões nesta atividade.`;}

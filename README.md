@@ -191,3 +191,9 @@ O planejamento e a revisão espaçada de prática estão disponíveis no piloto,
 O painel oferece sessões estimadas de **15/30/60 minutos**, com até **3/6/12 questões**, priorizando revisões vencidas, assuntos com erros e conteúdos ainda não praticados. O servidor escolhe as questões e preserva uma sessão em andamento. Erros agendam revisão em 1 dia; acertos posteriores ampliam os intervalos até 30 dias. Respostas repetidas com a mesma chave não duplicam agendamentos.
 
 Disponível a alunos com plano pago ativo; sem IA ou promessa de tempo exato. [Regras, migração e limites](docs/study-planner.md). Correção real de redação e QA visual desta atualização continuam pendentes.
+
+## Integração controlada de correção automatizada
+
+Nova página **/redacoes-ia**, separada da demonstração: envio autorizado, fila persistente com worker, reserva/consumo/liberação de créditos reais e evolução por competência agrupada por versão do avaliador. Adaptador OpenAI implementado e testado com respostas sintéticas, **sem chamada real**. Desativado por padrão; habilitação depende de modelo/credencial privados, avaliação pedagógica e operação. [Contrato, configuração e limitações](docs/real-essay-evaluation.md).
+
+Oito questões autorais adicionais estão em `data/content-drafts/authorial-batch-01.json`, sem publicação e com revisão editorial pendente.

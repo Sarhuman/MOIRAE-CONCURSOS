@@ -4,6 +4,7 @@ import time
 import uuid
 from fastapi import HTTPException
 from .catalog import BY_ID, QUESTIONS
+from .alternative_feedback import alternative_feedback
 from .domain import SESSION_SIZE, study_day
 from .quota import monthly_quota
 from .planner import selection,record_answer
@@ -86,7 +87,7 @@ class Practice:
                 db.execute("UPDATE practice_sessions SET status='completed' WHERE id=?",(sid,))
             row=db.execute('SELECT * FROM practice_sessions WHERE id=?',(sid,)).fetchone()
             scheduled=db.execute('SELECT stage,due_at FROM review_schedule WHERE user_id=? AND question_id=?',(user,question_id)).fetchone()
-            result=dict(review_schedule=dict(scheduled) if scheduled else None,correct=correct,answer=question.answer,explanation=question.explanation,
+            result=dict(review_schedule=dict(scheduled) if scheduled else None,correct=correct,answer=question.answer,explanation=question.explanation,alternatives=alternative_feedback(question),
                         session=self.snapshot(db,user,row))
             # O resultado da atividade atual não é um dashboard histórico.
             if row['status']=='completed':

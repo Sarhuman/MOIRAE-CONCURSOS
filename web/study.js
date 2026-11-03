@@ -28,6 +28,7 @@ function render(value) {
   $('#question-meta').textContent=`${q.area} · ${q.subject}`;
   $('#progress').textContent=`Questão ${value.answered+1} de ${value.total}`+(value.plan?` · bloco de ${value.plan.minutes} min (estimativa)`:'');
   $('#question-title').textContent=q.prompt;
+  $('#choices').hidden=false;
   $('#choices').disabled=false;
   $('#answer-form button').hidden=false;
   const options=q.options.map(option=>{const label=document.createElement('label');const input=document.createElement('input');input.type='radio';input.name='choice';input.value=option.id;input.required=true;label.append(input,document.createTextNode(option.id.toUpperCase()+'. '+option.text));return label;});
@@ -50,9 +51,13 @@ $('#answer-form').addEventListener('submit',event=>{event.preventDefault();actio
   session=result.session;quota(session.quota);$('#choices').disabled=true;$('#answer-form button').hidden=true;
   $('#answer-feedback').textContent=(result.correct?'Você acertou!':'Resposta correta: '+result.answer.toUpperCase()+'. '+(answeredQuestion.options.find(option=>option.id===result.answer)?.text || ''))+'\n'+result.explanation;
   if(result.review_schedule){$('#answer-feedback').textContent+='\nPróxima revisão: '+new Date(result.review_schedule.due_at*1000).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'})+'.';}
+  const detail=document.createElement('details'), heading=document.createElement('summary'), list=document.createElement('ul');
+  heading.textContent='Entenda cada alternativa'; detail.append(heading,list);
+  for(const option of result.alternatives || []){const item=document.createElement('li');item.textContent=option.id.toUpperCase()+'. '+option.text+' — '+(option.correct?'Correta. ':'')+option.explanation;list.append(item);}
+  if(result.alternatives?.length)$('#answer-feedback').append(detail);
   $('#answer-feedback').hidden=false;$('#answer-feedback').focus();
   $('#next').hidden=session.status==='completed';
-  if(session.status==='completed'){$('#question-panel').hidden=true;$('#complete').hidden=false;$('#summary').textContent=`Você acertou ${result.summary.correct} de ${result.summary.total} questões nesta atividade.`;}
+  if(session.status==='completed'){$('#choices').hidden=true;$('#complete').hidden=false;$('#summary').textContent=`Você acertou ${result.summary.correct} de ${result.summary.total} questões nesta atividade.`;}
 });});
 $('#next').addEventListener('click',()=>{render(session);$('#question-title').scrollIntoView({block:'center'});});
 action(async()=>{try{const result=await api('/auth/me');csrf=result.csrf;await resume();}catch(error){showAuth();if(!error.message.includes('Entre na sua conta'))throw error;}});

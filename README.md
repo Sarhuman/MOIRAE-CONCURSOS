@@ -1,6 +1,9 @@
 # MOIRAE
 ### Sua preparação para o ENEM começa aqui.
 
+> **Plano revisado em 03/11/2026:** [estratégia competitiva e próximas entregas](docs/competitive-plan.md). Priorizar direção de arte, prática orientada e evolução em redação. Preços e franquias abaixo permanecem baseline do sandbox, sujeitos a revisão antes da venda. Experiência atual no celular aprovada pelo usuário; verificar regressões nas próximas mudanças.
+
+
 Plataforma web de estudos com questões comentadas, simulados e prática de redação. O ENEM é o foco inicial; concursos são uma possibilidade futura, fora do escopo do primeiro lançamento.
 
 ## Estado atual

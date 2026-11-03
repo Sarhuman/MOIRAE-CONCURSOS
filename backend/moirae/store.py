@@ -45,6 +45,9 @@ INSERT OR IGNORE INTO schema_version VALUES(5);
 CREATE INDEX IF NOT EXISTS review_attempt_history ON attempts(user_id,question_id,created_at DESC);
 CREATE TABLE IF NOT EXISTS review_favorites(user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,question_id TEXT NOT NULL,PRIMARY KEY(user_id,question_id));
 INSERT OR IGNORE INTO schema_version VALUES(7);
+CREATE TABLE IF NOT EXISTS review_schedule(user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,question_id TEXT NOT NULL,stage INTEGER NOT NULL CHECK(stage BETWEEN 0 AND 4),due_at INTEGER NOT NULL,last_answered_at INTEGER NOT NULL,PRIMARY KEY(user_id,question_id));
+CREATE INDEX IF NOT EXISTS review_due ON review_schedule(user_id,due_at);
+CREATE TABLE IF NOT EXISTS practice_plans(session_id TEXT PRIMARY KEY REFERENCES practice_sessions(id) ON DELETE CASCADE,minutes INTEGER NOT NULL,description TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS idempotency(user_id TEXT NOT NULL REFERENCES users(id),key TEXT NOT NULL,payload TEXT NOT NULL,response TEXT NOT NULL,PRIMARY KEY(user_id,key));
 '''
 
@@ -67,6 +70,17 @@ class Store:
             with self.connect(write=True) as migration:
                 migration.execute("UPDATE billing_orders SET essay_credits=CASE plan_id WHEN 'essencial' THEN 3 ELSE 8 END, access_days=30, catalog_version=1 WHERE catalog_version IS NULL AND ((plan_id='essencial' AND amount_cents=3500) OR (plan_id='avancado' AND amount_cents=5500))")
                 migration.execute('INSERT OR IGNORE INTO schema_version VALUES(6)')
+                if not migration.execute('SELECT 1 FROM schema_version WHERE version=8').fetchone():
+                    migration.execute("""WITH ranked AS (
+                        SELECT user_id,question_id,correct,created_at,
+                        row_number() OVER(PARTITION BY user_id,question_id ORDER BY created_at DESC,rowid DESC) AS position,
+                        min(correct) OVER(PARTITION BY user_id,question_id) AS no_error
+                        FROM attempts)
+                        INSERT OR IGNORE INTO review_schedule(user_id,question_id,stage,due_at,last_answered_at)
+                        SELECT user_id,question_id,CASE WHEN correct=1 THEN 1 ELSE 0 END,
+                        created_at+CASE WHEN correct=1 THEN 259200 ELSE 86400 END,created_at
+                        FROM ranked WHERE position=1 AND no_error=0""")
+                    migration.execute('INSERT INTO schema_version VALUES(8)')
 
     @contextmanager
     def connect(self, write=False):

@@ -7,7 +7,7 @@ import time
 import uuid
 from pathlib import Path
 from typing import Literal
-from fastapi import FastAPI, Request, Response, HTTPException, Depends
+from fastapi import FastAPI, Request, Response, HTTPException, Depends, Query
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
@@ -25,6 +25,7 @@ from .plans import entitlement
 from .catalog import BY_ID
 from .essays import Essays
 from .review import Review
+from .planner import Planner
 
 ROOT=Path(__file__).resolve().parents[2]
 
@@ -127,6 +128,10 @@ class EssaySubmission(BaseModel):
         try:value.encode('utf-16-le')
         except UnicodeEncodeError:raise ValueError('Texto inválido.')
         return value
+
+class PlannedSessionInput(BaseModel):
+    model_config=ConfigDict(extra='forbid',strict=True)
+    minutes: Literal[15,30,60]
 
 class FavoriteInput(BaseModel):
     model_config=ConfigDict(extra='forbid',strict=True)
@@ -373,6 +378,16 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
         # SDK HTTP síncrono em worker, sem bloquear o event loop do servidor.
         from starlette.concurrency import run_in_threadpool
         return await run_in_threadpool(billing.reconcile,payment_id)
+
+    @app.get('/api/planner')
+    def planner_preview(minutes:int=Query(default=30),auth=Depends(student)):
+        if minutes not in (15,30,60):raise HTTPException(422,'Escolha 15, 30 ou 60 minutos.')
+        return Planner(store).preview(auth['user_id'],minutes)
+
+    @app.post('/api/planner/start')
+    def planner_start(body:PlannedSessionInput,request:Request,auth=Depends(student)):
+        rate(request,'planner:'+auth['user_id'])
+        return practice.start(auth['user_id'],body.minutes)
 
     @app.get('/api/review')
     def review_list(view:Literal['errors','favorites','all']='errors',auth=Depends(student)):

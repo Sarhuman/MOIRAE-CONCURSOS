@@ -33,3 +33,8 @@ Verificação adicional: selecionar as três durações; trocar C3/C4/C5; compar
 A integração OpenAI é futura e está especificada em docs/essay-workshop.md. Nenhuma variável de chave é necessária para executar esta demonstração.
 
 Fixtures: web/essay-fixture.js é compartilhado entre demonstração e testes. Execute `node --test tests/essay-fixture.test.cjs` na raiz do repositório. Os testes não acessam a OpenAI.
+
+
+## Primeiro percurso funcional
+
+Para usar cadastro, login, retomada e cota Free real, siga [docs/mvp.md](docs/mvp.md). O servidor estático descrito acima continua servindo só as demonstrações. Execute FastAPI para testar /estudar e /api. Instale requirements-dev.lock para reproduzir o ambiente validado.

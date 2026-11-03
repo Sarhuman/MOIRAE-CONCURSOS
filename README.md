@@ -5,9 +5,10 @@ Plataforma web de estudos com questões comentadas, simulados e prática de reda
 
 ## Estado atual
 
-Página pública estática implementada na branch deste PR, com demonstrações locais de questão, seleção de duração de sessão e oficina de reescrita. Não há autenticação, cobrança, tutor ou correção real por IA implementados.
+Primeiro percurso funcional implementado para **piloto local**: cadastro/login/logout, atividades de até cinco questões, respostas persistentes, retomada e cota Free de 10 respostas por dia validada no servidor. Backend FastAPI com SQLite de instância única. A interface pública anterior permanece disponível.
 
-O nome do repositório permanece **MOIRAE-CONCURSOS**. A marca apresentada ao aluno será **MOIRAE**, com comunicação inicial voltada ao ENEM.
+**Execute seguindo [docs/mvp.md](docs/mvp.md)**. Esta entrega não está pronta para lançamento público: falta autenticação de lançamento, validação editorial, operação em produção e integração OpenAI/cobrança. O site hospedado anterior continua sendo a demonstração estática; o backend deste PR é executado separadamente.
+
 
 ## Experiência inicial
 
@@ -129,7 +130,7 @@ Aplicativo nativo, comunidade, ranking público, marketplace, expansão para con
 O primeiro objetivo é validar se o aluno volta para praticar e percebe valor em acompanhar sua evolução e melhorar a redação.
 
 
-## Entrega atual: demonstrações web
+## Demonstrações web preservadas
 
 Execute conforme [DEVELOPMENT.md](DEVELOPMENT.md). A página apresenta a identidade azul-escuro/verde-lima e a oficina de redação com comentários fixos C3/C4/C5, comparação textual e rascunhos por marcação mantidos somente em memória durante a visita. Não há envio à OpenAI, nota ou persistência. Selecionar 15/30/60 minutos muda um exemplo fixo, não um plano adaptativo real.
 

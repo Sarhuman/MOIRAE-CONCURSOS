@@ -57,3 +57,7 @@ A roleta exibe regras, resultados possíveis e pesos, validade, elegibilidade e 
 ## Limites
 
 Carteira ligada somente à oficina demonstrativa. Pagamento, compra de lotes, worker OpenAI, cupom em pedido real e tarifas efetivas do Mercado Pago continuam fora desta entrega. Nenhuma venda real, merge ou deploy.
+
+## Política definida posteriormente
+
+A política aprovada e o suporte a três meses de calendário estão em `coupon-policy-v8.md` (schema v14). Use a configuração versionada, mantendo o ambiente sandbox; exemplos sintéticos dos testes anteriores não substituem essa política.

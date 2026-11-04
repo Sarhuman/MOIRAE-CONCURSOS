@@ -1,5 +1,9 @@
 """Server-authoritative coupon groundwork, restricted to sandbox and off by default."""
 import json
+import calendar
+from datetime import datetime
+from zoneinfo import ZoneInfo
+from pathlib import Path
 import secrets
 import time
 from fastapi import HTTPException
@@ -14,13 +18,27 @@ class SandboxCoupons:
         if not self.enabled:
             raise HTTPException(503, 'Campanhas sandbox desativadas. Nenhum cupom real foi emitido.')
 
-    def configure(self, campaign, starts_at, ends_at, valid_seconds, products, outcomes, max_uses):
+    @staticmethod
+    def calendar_expiry(now, months):
+        start=datetime.fromtimestamp(now,ZoneInfo('America/Sao_Paulo'))
+        index=start.year*12+start.month-1+months
+        year,month=index//12,index%12+1
+        return int(start.replace(year=year,month=month,day=min(start.day,calendar.monthrange(year,month)[1])).timestamp())
+
+    def configure_approved(self, campaign, starts_at, ends_at, max_uses):
+        policy=json.loads((Path(__file__).resolve().parents[2]/'data'/'coupon-policies'/'avancado-5-v1.json').read_text(encoding='utf-8'))
+        # Issuance window and operational cap remain explicit operator choices.
+        self.configure(campaign,starts_at,ends_at,1,policy['products'],policy['outcomes'],max_uses,valid_months=policy['valid_months'])
+
+    def configure(self, campaign, starts_at, ends_at, valid_seconds, products, outcomes, max_uses, valid_months=0):
         """Trusted provisioning, no public management API and no default discounts."""
         self.guard()
         if not isinstance(campaign, str) or not 1 <= len(campaign) <= 80:
             raise ValueError('Campanha inválida.')
         if any(type(n) is not int for n in (starts_at, ends_at, valid_seconds, max_uses)) or ends_at <= starts_at or not 1 <= valid_seconds <= 365*86400 or not 1 <= max_uses <= 1000000:
             raise ValueError('Limites inválidos.')
+        if type(valid_months) is not int or not 0<=valid_months<=12:
+            raise ValueError('Validade em meses inválida.')
         if not isinstance(products, list) or not products or len(set(products)) != len(products) or any(p not in PLANS for p in products):
             raise ValueError('Produtos inválidos.')
         if not isinstance(outcomes, list) or not 1 <= len(outcomes) <= 12:
@@ -28,14 +46,14 @@ class SandboxCoupons:
         for o in outcomes:
             if not isinstance(o, dict) or set(o) != {'discount_bps', 'weight'} or type(o['discount_bps']) is not int or not 0 <= o['discount_bps'] <= 10000 or type(o['weight']) is not int or not 1 <= o['weight'] <= 10000:
                 raise ValueError('Probabilidades inválidas.')
-        values = (campaign, starts_at, ends_at, valid_seconds, json.dumps(products), json.dumps(outcomes), max_uses)
+        values = (campaign, starts_at, ends_at, valid_seconds, json.dumps(products), json.dumps(outcomes), max_uses, valid_months)
         with self.store.connect(write=True) as db:
             old = db.execute('SELECT * FROM sandbox_coupon_campaigns WHERE id=?', (campaign,)).fetchone()
             if old:
-                if tuple(old[k] for k in ('id','starts_at','ends_at','valid_seconds','products','outcomes','max_uses')) != values:
+                if tuple(old[k] for k in ('id','starts_at','ends_at','valid_seconds','products','outcomes','max_uses','valid_months')) != values:
                     raise HTTPException(409, 'Campanha imutável. Crie outra versão.')
                 return
-            db.execute('INSERT INTO sandbox_coupon_campaigns(id,starts_at,ends_at,valid_seconds,products,outcomes,max_uses,enabled) VALUES(?,?,?,?,?,?,?,1)', values)
+            db.execute('INSERT INTO sandbox_coupon_campaigns(id,starts_at,ends_at,valid_seconds,products,outcomes,max_uses,valid_months,enabled) VALUES(?,?,?,?,?,?,?,?,1)', values)
 
     def campaign(self, db, cid, now):
         row = db.execute('SELECT * FROM sandbox_coupon_campaigns WHERE id=? AND enabled=1 AND starts_at<=? AND ends_at>?', (cid, now, now)).fetchone()
@@ -49,9 +67,14 @@ class SandboxCoupons:
             c = self.campaign(db, cid, int(self.clock()))
         outcomes = json.loads(c['outcomes'])
         total = sum(o['weight'] for o in outcomes)
-        return dict(sandbox=True, id=cid, starts_at=c['starts_at'], ends_at=c['ends_at'], valid_seconds=c['valid_seconds'], products=json.loads(c['products']),
+        return dict(sandbox=True, id=cid, starts_at=c['starts_at'], ends_at=c['ends_at'], valid_months=c['valid_months'],expiry_timezone='America/Sao_Paulo',valid_seconds=None if c['valid_months'] else c['valid_seconds'], products=json.loads(c['products']),
                     outcomes=[dict(discount_bps=o['discount_bps'], weight=o['weight'], total_weight=total) for o in outcomes], max_uses=c['max_uses'],
                     notice='Uma participação por conta. Uso único, sem acúmulo; cotação de teste, sem pagamento ou desconto real.')
+
+    @staticmethod
+    def draw_result(row):
+        won=row['discount_bps']>0
+        return dict(sandbox=True,won=won,code=row['code'] if won else None,discount_bps=row['discount_bps'],expires_at=row['expires_at'])
 
     def draw(self, uid, cid):
         self.guard()
@@ -60,7 +83,7 @@ class SandboxCoupons:
             c = self.campaign(db, cid, now)
             old = db.execute('SELECT code,discount_bps,expires_at FROM sandbox_coupons WHERE user_id=? AND campaign_id=?', (uid, cid)).fetchone()
             if old:
-                return dict(sandbox=True, **dict(old))
+                return self.draw_result(old)
             outcomes = json.loads(c['outcomes'])
             ticket = secrets.randbelow(sum(o['weight'] for o in outcomes))
             for o in outcomes:
@@ -69,15 +92,19 @@ class SandboxCoupons:
                     bps = o['discount_bps']
                     break
             code = 'TEST-' + secrets.token_hex(16).upper()
-            expires = min(c['ends_at'], now+c['valid_seconds'])
+            expires = self.calendar_expiry(now,c['valid_months']) if c['valid_months'] else min(c['ends_at'], now+c['valid_seconds'])
             db.execute('INSERT INTO sandbox_coupons VALUES(?,?,?,?,?,?)', (code, uid, cid, bps, expires, now))
-            return dict(sandbox=True, code=code, discount_bps=bps, expires_at=expires)
+            return self.draw_result(dict(code=code,discount_bps=bps,expires_at=expires))
 
     def validated(self, db, uid, code, product, now):
         coupon = db.execute('SELECT * FROM sandbox_coupons WHERE code=? AND user_id=?', (code, uid)).fetchone()
         if not coupon or coupon['expires_at'] <= now:
             raise HTTPException(409, 'Cupom indisponível para esta conta.')
-        c = self.campaign(db, coupon['campaign_id'], now)
+        if not coupon['discount_bps']:
+            raise HTTPException(409,'Participação sem prêmio não concede cupom.')
+        # Issuance ending must not shorten an already-issued calendar-month coupon.
+        c = db.execute('SELECT * FROM sandbox_coupon_campaigns WHERE id=? AND enabled=1', (coupon['campaign_id'],)).fetchone()
+        if not c:raise HTTPException(404,'Campanha indisponível.')
         if product not in json.loads(c['products']) or product not in PLANS:
             raise HTTPException(409, 'Produto não elegível.')
         if db.execute('SELECT 1 FROM sandbox_coupon_redemptions WHERE code=?', (code,)).fetchone():

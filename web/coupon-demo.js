@@ -17,8 +17,10 @@
       const d=await api('/api/coupon-experience');mode=d.mode;campaign=d.rules;
       if(mode==='sandbox'&&campaign){
         $('#coupon-title').textContent='Um giro de teste. Um resultado do servidor.';
-        rules.textContent=`Campanha sandbox ${campaign.id}. Uma participação por conta; cupom válido por até ${Math.floor(campaign.valid_seconds/60)} minutos, limitado ao fim da campanha em ${new Date(campaign.ends_at*1000).toLocaleString('pt-BR')}. Produtos: ${campaign.products.join(', ')}. Limite global: ${campaign.max_uses} usos. Sem compra ou desconto real.`;
-        list.replaceChildren(...campaign.outcomes.map(o=>{const li=document.createElement('li');li.textContent=`${o.discount_bps/100}% de desconto de teste · probabilidade ${o.weight}/${o.total_weight}.`;return li;}));
+        const validity=campaign.valid_months?`${campaign.valid_months} meses corridos a partir do giro (calendário de Brasília)`: `até ${Math.floor(campaign.valid_seconds/60)} minutos, limitado ao fim da campanha`;
+        const products=campaign.products.map(p=>({avancado:'Avançado',essencial:'Essencial'})[p]||p).join(', ');
+        rules.textContent=`Campanha sandbox ${campaign.id}. Uma participação por conta; cupom válido por ${validity}. Produtos elegíveis: ${products}. Rodadas até ${new Date(campaign.ends_at*1000).toLocaleString('pt-BR')}. Limite global: ${campaign.max_uses} usos. Sem compra ou desconto real.`;
+        list.replaceChildren(...campaign.outcomes.map(o=>{const li=document.createElement('li');li.textContent=o.discount_bps>0?`${o.discount_bps/100}% de desconto de teste · chance ${o.weight} em ${o.total_weight}.`:`Sem prêmio · chance ${o.weight} em ${o.total_weight}.`;return li;}));
         consent.hidden=false;list.hidden=false;spin.textContent='Solicitar giro sandbox';
         result.textContent=campaign.notice;
       }else{
@@ -50,7 +52,7 @@
         const me=await api('/api/auth/me');
         const d=await api('/api/sandbox/coupons/draw',{campaign:campaign.id,accepted_rules:true},me.csrf);
         angle=(10000-d.discount_bps)/10000*360;
-        message=`Cupom sandbox: ${d.code}. Desconto de teste: ${d.discount_bps/100}%. Validade: ${new Date(d.expires_at*1000).toLocaleString('pt-BR')}. Uso único, sem valor comercial; não aplicado a compras. Repetir a solicitação retorna o mesmo resultado.`;
+        message=d.won===false||d.discount_bps===0?'Desta vez não houve prêmio. Nenhum cupom foi emitido. Esta participação já foi registrada; atualizar a página não concede outro giro.':`Cupom sandbox: ${d.code}. Desconto de teste: ${d.discount_bps/100}%. Validade: ${new Date(d.expires_at*1000).toLocaleString('pt-BR')}. Uso único, sem valor comercial; não aplicado a compras. Repetir a solicitação retorna o mesmo resultado.`;
         drawn=true;
       }else{
         angle=Math.floor(Math.random()*360);

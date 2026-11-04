@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS sandbox_wallet_events(
  id INTEGER PRIMARY KEY AUTOINCREMENT,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,lot_id TEXT NOT NULL REFERENCES sandbox_credit_lots(id) ON DELETE CASCADE,
  kind TEXT NOT NULL CHECK(kind IN ('grant','reserve','consume','release','refund','revoke')),reference TEXT NOT NULL,units INTEGER NOT NULL CHECK(units>0),created_at INTEGER NOT NULL,UNIQUE(kind,reference));
 CREATE TABLE IF NOT EXISTS sandbox_coupon_campaigns(
- id TEXT PRIMARY KEY,starts_at INTEGER NOT NULL,ends_at INTEGER NOT NULL,valid_seconds INTEGER NOT NULL CHECK(valid_seconds>0),products TEXT NOT NULL,outcomes TEXT NOT NULL,max_uses INTEGER NOT NULL CHECK(max_uses>0),enabled INTEGER NOT NULL CHECK(enabled IN (0,1)),used_count INTEGER NOT NULL DEFAULT 0 CHECK(used_count>=0),CHECK(ends_at>starts_at));
+ id TEXT PRIMARY KEY,starts_at INTEGER NOT NULL,ends_at INTEGER NOT NULL,valid_seconds INTEGER NOT NULL CHECK(valid_seconds>0),products TEXT NOT NULL,outcomes TEXT NOT NULL,max_uses INTEGER NOT NULL CHECK(max_uses>0),enabled INTEGER NOT NULL CHECK(enabled IN (0,1)),used_count INTEGER NOT NULL DEFAULT 0 CHECK(used_count>=0),valid_months INTEGER NOT NULL DEFAULT 0 CHECK(valid_months BETWEEN 0 AND 12),CHECK(ends_at>starts_at));
 CREATE TABLE IF NOT EXISTS sandbox_coupons(
  code TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,campaign_id TEXT NOT NULL REFERENCES sandbox_coupon_campaigns(id),
  discount_bps INTEGER NOT NULL CHECK(discount_bps BETWEEN 0 AND 10000),expires_at INTEGER NOT NULL,created_at INTEGER NOT NULL,UNIQUE(user_id,campaign_id));
@@ -109,6 +109,9 @@ class Store:
                 campaign_columns={r[1] for r in migration.execute('PRAGMA table_info(sandbox_coupon_campaigns)')}
                 if 'used_count' not in campaign_columns:
                     migration.execute('ALTER TABLE sandbox_coupon_campaigns ADD COLUMN used_count INTEGER NOT NULL DEFAULT 0 CHECK(used_count>=0)')
+                if 'valid_months' not in campaign_columns:
+                    migration.execute('ALTER TABLE sandbox_coupon_campaigns ADD COLUMN valid_months INTEGER NOT NULL DEFAULT 0 CHECK(valid_months BETWEEN 0 AND 12)')
+                migration.execute('INSERT OR IGNORE INTO schema_version VALUES(14)')
                 if not migration.execute('SELECT 1 FROM schema_version WHERE version=12').fetchone():
                     migration.execute('UPDATE sandbox_coupon_campaigns SET used_count=max(used_count,(SELECT count(*) FROM sandbox_coupon_redemptions r WHERE r.campaign_id=sandbox_coupon_campaigns.id))')
                     migration.execute('INSERT INTO schema_version VALUES(12)')

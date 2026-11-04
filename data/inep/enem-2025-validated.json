@@ -290,5 +290,190 @@
       "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
       "batch": 2
     }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q155",
+    "area": "Matemática",
+    "subject": "Análise combinatória",
+    "prompt": "Dez casais fundaram um grupo de dança e decidiram constituir uma diretoria com três cargos: presidente, secretário e tesoureiro. Para maior representatividade, decidiu-se que no máximo uma pessoa por casal poderá ocupar um cargo nessa diretoria. Quantas diretorias diferentes podem ser constituídas por esses 10 casais?",
+    "options": [
+      "10 × 9 × 8",
+      "20 × 18 × 16",
+      "20 × 19 × 18",
+      "10 × 9 × 8 × 2",
+      "20 × 18 × 16 × 2"
+    ],
+    "answer": "b",
+    "explanation": "Há 20 escolhas para presidente. Excluindo seu casal, restam 18 para secretário. Excluindo os dois casais escolhidos, restam 16 para tesoureiro: 20 × 18 × 16.",
+    "alternative_explanations": [
+      "Escolher apenas casais não distingue qual integrante ocupa cada cargo.",
+      "Há 20 escolhas para presidente. Excluindo seu casal, restam 18 para secretário. Excluindo os dois casais escolhidos, restam 16 para tesoureiro: 20 × 18 × 16.",
+      "19 e 18 não excluem os cônjuges das pessoas já escolhidas.",
+      "É preciso considerar duas pessoas possíveis em cada um dos três casais, não apenas em um.",
+      "O fator 2 adicional conta possibilidades que já estão incluídas em 20, 18 e 16."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 155,
+      "page": 23,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 3
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q156",
+    "area": "Matemática",
+    "subject": "Escalas",
+    "prompt": "Um artista, que costuma fazer desenhos com areia na praia, pediu a um banhista que fizesse um pequeno desenho, que serviria de esboço para uma grande obra de arte a ser feita na areia. Esse desenho está representado na figura.\n\nTranscrição acessível da figura: um sol estilizado formado por um disco e oito raios triangulares; a largura total e a altura total indicadas são, ambas, 20 cm.\n\nApós a conclusão, a obra de arte obtida manteve as mesmas proporções do desenho feito pelo banhista, sendo que as medidas indicadas na figura foram ampliadas para 30 m. Em qual escala esse desenho representa a obra de arte?",
+    "options": [
+      "1 : 1,5",
+      "1 : 2,25",
+      "1 : 10",
+      "1 : 100",
+      "1 : 150"
+    ],
+    "answer": "e",
+    "explanation": "Converta 30 m em 3 000 cm. A escala desenho:obra é 20:3 000 = 1:150.",
+    "alternative_explanations": [
+      "Comparar 20 e 30 sem igualar as unidades produz uma escala incorreta.",
+      "Escala linear não é a razão de áreas.",
+      "A razão entre medidas na mesma unidade é 150, não 10.",
+      "20 cm para 30 m corresponde a fator 150.",
+      "Converta 30 m em 3 000 cm. A escala desenho:obra é 20:3 000 = 1:150."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 156,
+      "page": 23,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 3
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q157",
+    "area": "Matemática",
+    "subject": "Razões e proporções",
+    "prompt": "O cortisol é um hormônio produzido pelas glândulas adrenais e pode ser considerado um importante marcador do estresse fisiológico. Em um estudo desenvolvido com enfermeiros, foi verificado que a concentração de cortisol salivar em um dia de trabalho, denotada por T, era, em média, 1,59 vezes a concentração de cortisol salivar em um dia de folga, denotada por F.\nROCHA, M. C. P. et al. Estresse em enfermeiros: o uso do cortisol salivar no dia de trabalho e de folga. Rev. Esc. Enferm. USP, n. 5, 2013 (adaptado).\nNesse estudo, a relação obtida entre T e F foi",
+    "options": [
+      "T = 1,59 + F",
+      "F = 1,59 + T",
+      "T/F = 1,59",
+      "F/T = 1,59",
+      "F · T = 1,59"
+    ],
+    "answer": "c",
+    "explanation": "Ser 1,59 vezes significa T = 1,59F. Dividindo por F, obtém-se T/F = 1,59.",
+    "alternative_explanations": [
+      "O enunciado estabelece multiplicação, não soma.",
+      "Além de usar soma, a expressão coloca a concentração de folga como maior.",
+      "Ser 1,59 vezes significa T = 1,59F. Dividindo por F, obtém-se T/F = 1,59.",
+      "A razão foi invertida: F/T é 1/1,59.",
+      "O valor informado é uma razão, não o produto das concentrações."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 157,
+      "page": 23,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 3
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q158",
+    "area": "Matemática",
+    "subject": "Custos e porcentagens",
+    "prompt": "Um estacionamento possui 120 vagas para veículos, e todas essas vagas estão ocupadas. Cada cliente paga uma mensalidade para utilizar uma vaga, que é calculada com base nas despesas mensais do estacionamento e no lucro pretendido. As despesas mensais do estacionamento são: R$ 14 240,00 com manutenção mais R$ 36,00 de seguro por veículo. O lucro do estacionamento é determinado pela diferença do valor arrecadado com as mensalidades pelas despesas efetuadas. A partir do mês seguinte, o valor do seguro por veículo aumentará em 20%, e as despesas com manutenção permanecerão sem alterações. Com isso, o dono do estacionamento reajustará as mensalidades para obter um lucro mensal de R$ 10 000,00. Apesar desse reajuste, todas as vagas continuarão ocupadas. O valor, em real, da mensalidade reajustada será",
+    "options": [
+      "185,60",
+      "226,09",
+      "245,20",
+      "268,93",
+      "285,60"
+    ],
+    "answer": "c",
+    "explanation": "O seguro passa a 36 × 1,20 = 43,20 por veículo, totalizando 5 184. A receita necessária é 14 240 + 5 184 + 10 000 = 29 424. Dividindo por 120 vagas: R$ 245,20.",
+    "alternative_explanations": [
+      "Esse valor não cobre simultaneamente as despesas reajustadas e o lucro pretendido.",
+      "A divisão da receita necessária por 120 resulta em 245,20.",
+      "O seguro passa a 36 × 1,20 = 43,20 por veículo, totalizando 5 184. A receita necessária é 14 240 + 5 184 + 10 000 = 29 424. Dividindo por 120 vagas: R$ 245,20.",
+      "O aumento de 20% incide apenas sobre o seguro, não sobre todos os custos.",
+      "Esse valor excede a mensalidade necessária para o lucro indicado."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 158,
+      "page": 23,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 3
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q159",
+    "area": "Matemática",
+    "subject": "Conversão de volume",
+    "prompt": "O dono de uma sorveteria armazena sorvete em potes de 20 000 cm³. Ele serve o sorvete em taças, em porções de 250 mL. A quantidade de taças que ele consegue servir a partir de um pote cheio de sorvete é",
+    "options": [
+      "5",
+      "8",
+      "50",
+      "80",
+      "800"
+    ],
+    "answer": "d",
+    "explanation": "Como 1 cm³ = 1 mL, o pote contém 20 000 mL. Dividindo por 250 mL por taça, obtêm-se 80 taças.",
+    "alternative_explanations": [
+      "20 000 dividido por 250 não resulta em 5.",
+      "8 taças consumiriam apenas 2 000 mL.",
+      "50 taças consumiriam 12 500 mL, deixando sorvete no pote.",
+      "Como 1 cm³ = 1 mL, o pote contém 20 000 mL. Dividindo por 250 mL por taça, obtêm-se 80 taças.",
+      "800 taças exigiriam 200 000 mL, dez vezes o volume disponível."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 159,
+      "page": 23,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 3
+    }
   }
 ]

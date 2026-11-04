@@ -75,3 +75,11 @@ O botão “Praticar ENEM 2025 · 4 questões”, na área de estudo, usa as mes
 Adicionados os itens 150, 151, 152 e 154, segundo dia, caderno 7 azul: gabaritos D, D, D e C. Conferência visual nas páginas 21–22 e no gabarito oficial registrado pelos mesmos hashes do lote 1. A questão 154 utiliza transcrição acessível explícita do gráfico com estoques brasileiro/estrangeiro e demanda; os demais itens deste lote não dependem de figura. As questões 149 e 153, presentes nessas páginas, continuam fora do lote: suas figuras não foram integradas.
 
 O botão “ENEM 2025 · lote 2 · 4 questões” inicia esse bloco usando as mesmas regras de conta, cota, sessão e correção. O lote 1 permanece acessível pelo botão anterior. O catálogo tem agora oito itens oficiais de 2025 conferidos; os demais candidatos continuam pendentes.
+
+## Terceiro lote interativo de 2025
+
+Itens 155–159 do segundo dia, caderno 7 azul, página 23: gabaritos B, E, C, C e D conferidos no gabarito oficial. Resoluções verificadas: 20×18×16; escala 20 cm:30 m = 1:150; T/F=1,59; (14.240+120×36×1,20+10.000)/120=245,20; 20.000/250=80.
+
+A questão 156 contém transcrição acessível explícita da figura do sol, com as duas dimensões de 20 cm. As questões 155, 157, 158 e 159 não dependem de imagem. Dados e referências de origem estão em `enem-2025-validated.json`. O botão “ENEM 2025 · lote 3 · 5 questões” preserva os dois blocos anteriores. Total integrado: 13 questões oficiais; demais candidatos continuam pendentes.
+
+Validação no navegador: desktop 5/5 e celular emulado com um erro proposital, 4/5. Conclusão e atualização sem reinício automático em ambos. Nenhuma rolagem horizontal na largura móvel testada.

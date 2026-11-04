@@ -21,6 +21,8 @@ from .accounts import Accounts
 from .mail import LocalMail, MailUnavailable
 from .billing import Billing
 from .mercadopago import MercadoPagoSandbox, verify_signature
+from .sandbox_wallet import SandboxWallet
+from .sandbox_coupons import SandboxCoupons
 from .plans import entitlement
 from .catalog import BY_ID
 from .essays import Essays
@@ -30,6 +32,17 @@ from .essay_jobs import EssayJobs
 from .commercial import catalog as commercial_catalog,quote as commercial_quote
 
 ROOT=Path(__file__).resolve().parents[2]
+
+
+class CouponDraw(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    campaign: str = Field(min_length=1,max_length=80)
+
+
+class CouponQuote(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    code: str = Field(min_length=1,max_length=80)
+    product: Literal['essencial','avancado']
 
 
 class Credentials(BaseModel):
@@ -174,9 +187,13 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     billing=Billing(store,billing_provider,billing_collector,billing_secret,origin)
     essays=Essays(store, enabled=(os.getenv('MOIRAE_ESSAY_DEMO','false').lower()=='true') if essay_demo is None else essay_demo)
     real_essays=EssayJobs(store,enabled=os.getenv('MOIRAE_ESSAY_AI','false').lower()=='true' and os.getenv('MOIRAE_ESSAY_AI_REVIEWED','false').lower()=='true',model=os.getenv('MOIRAE_ESSAY_MODEL',''))
+    wallet=SandboxWallet(store,enabled=os.getenv("MOIRAE_COMMERCE_SANDBOX","false").lower()=="true")
+    coupons=SandboxCoupons(store,enabled=wallet.enabled)
     practice=Practice(store)
     exams=Exams(store)
     app=FastAPI(title='MOIRAE — piloto',docs_url=None,redoc_url=None,openapi_url=None)
+    app.state.wallet=wallet
+    app.state.coupons=coupons
     app.state.store=store
     app.state.practice=practice
     app.state.exams=exams
@@ -357,6 +374,24 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     @app.post('/api/exams/{exam_id}/finish')
     def exam_finish(exam_id:uuid.UUID,auth=Depends(student)):
         return exams.finish(auth['user_id'],str(exam_id))
+
+    @app.get('/api/sandbox/wallet')
+    def wallet_snapshot(auth=Depends(student)):
+        return wallet.snapshot(auth['user_id'])
+
+    @app.get('/api/sandbox/coupons/{campaign}/rules')
+    def coupon_rules(campaign:str,auth=Depends(student)):
+        return coupons.rules(campaign)
+
+    @app.post('/api/sandbox/coupons/draw')
+    def coupon_draw(body:CouponDraw,request:Request,auth=Depends(student)):
+        rate(request,'coupon:'+auth['user_id'])
+        return coupons.draw(auth['user_id'],body.campaign)
+
+    @app.post('/api/sandbox/coupons/quote')
+    def coupon_quote(body:CouponQuote,request:Request,auth=Depends(student)):
+        rate(request,'coupon:'+auth['user_id'])
+        return coupons.quote(auth['user_id'],body.code,body.product)
 
     @app.get('/api/commercial/catalog')
     def commercial_products():return commercial_catalog()

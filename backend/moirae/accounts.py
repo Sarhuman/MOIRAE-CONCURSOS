@@ -86,7 +86,13 @@ class Accounts:
             essays=[dict(r) for r in db.execute('SELECT id,theme,text,status,created_at,result,error FROM essay_submissions WHERE user_id=?',(uid,))]
             for essay in essays:
                 essay['rewrites']=[dict(r) for r in db.execute('SELECT id,annotation_id,text,created_at FROM essay_rewrites WHERE essay_id=?',(essay['id'],))]
-        return dict(real_essays=real_essays,real_credit_events=real_credit_events,review_schedule=reviews,planned_sessions=planned_sessions,favorites=favorites,essays=essays,orders=orders,exported_at=int(self.clock()),account=account,profile=dict(profile) if profile else None,practice_sessions=sessions,attempts=attempts,exams=exams)
+        with self.store.connect() as db:
+            sandbox_lots=[dict(r) for r in db.execute('SELECT * FROM sandbox_credit_lots WHERE user_id=?',(uid,))]
+            sandbox_reservations=[dict(r) for r in db.execute('SELECT * FROM sandbox_credit_reservations WHERE user_id=?',(uid,))]
+            sandbox_events=[dict(r) for r in db.execute('SELECT * FROM sandbox_wallet_events WHERE user_id=?',(uid,))]
+            sandbox_coupons=[dict(r) for r in db.execute('SELECT * FROM sandbox_coupons WHERE user_id=?',(uid,))]
+            sandbox_redemptions=[dict(r) for r in db.execute('SELECT * FROM sandbox_coupon_redemptions WHERE user_id=?',(uid,))]
+        return dict(sandbox_wallet=dict(lots=sandbox_lots,reservations=sandbox_reservations,events=sandbox_events),sandbox_coupons=sandbox_coupons,sandbox_redemptions=sandbox_redemptions,real_essays=real_essays,real_credit_events=real_credit_events,review_schedule=reviews,planned_sessions=planned_sessions,favorites=favorites,essays=essays,orders=orders,exported_at=int(self.clock()),account=account,profile=dict(profile) if profile else None,practice_sessions=sessions,attempts=attempts,exams=exams)
 
     def erase(self,uid,password):
         with self.store.connect(write=True) as db:

@@ -63,6 +63,30 @@ CREATE INDEX IF NOT EXISTS essay_daily_calls ON essay_provider_calls(created_at)
 INSERT OR IGNORE INTO schema_version VALUES(9);
 CREATE TABLE IF NOT EXISTS diagnostic_sessions(session_id TEXT PRIMARY KEY REFERENCES practice_sessions(id));
 INSERT OR IGNORE INTO schema_version VALUES(10);
+CREATE TABLE IF NOT EXISTS sandbox_credit_lots(
+ id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,source TEXT NOT NULL UNIQUE,
+ units INTEGER NOT NULL CHECK(units>0),available INTEGER NOT NULL CHECK(available>=0),expires_at INTEGER NOT NULL,
+ reserved INTEGER NOT NULL CHECK(reserved>=0),consumed INTEGER NOT NULL CHECK(consumed>=0),created_at INTEGER NOT NULL,revoked_at INTEGER,
+ CHECK(available+reserved+consumed=units));
+CREATE INDEX IF NOT EXISTS sandbox_wallet_owner ON sandbox_credit_lots(user_id,expires_at);
+CREATE TABLE IF NOT EXISTS sandbox_credit_reservations(
+ id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,lot_id TEXT NOT NULL REFERENCES sandbox_credit_lots(id) ON DELETE CASCADE,
+ request_key TEXT NOT NULL,status TEXT NOT NULL CHECK(status IN ('reserved','consumed','released','refunded')),created_at INTEGER NOT NULL,UNIQUE(user_id,request_key));
+CREATE TABLE IF NOT EXISTS sandbox_wallet_events(
+ id INTEGER PRIMARY KEY AUTOINCREMENT,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,lot_id TEXT NOT NULL REFERENCES sandbox_credit_lots(id) ON DELETE CASCADE,
+ kind TEXT NOT NULL CHECK(kind IN ('grant','reserve','consume','release','refund','revoke')),reference TEXT NOT NULL,units INTEGER NOT NULL CHECK(units>0),created_at INTEGER NOT NULL,UNIQUE(kind,reference));
+CREATE TABLE IF NOT EXISTS sandbox_coupon_campaigns(
+ id TEXT PRIMARY KEY,starts_at INTEGER NOT NULL,ends_at INTEGER NOT NULL,valid_seconds INTEGER NOT NULL CHECK(valid_seconds>0),products TEXT NOT NULL,outcomes TEXT NOT NULL,max_uses INTEGER NOT NULL CHECK(max_uses>0),enabled INTEGER NOT NULL CHECK(enabled IN (0,1)),CHECK(ends_at>starts_at));
+CREATE TABLE IF NOT EXISTS sandbox_coupons(
+ code TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,campaign_id TEXT NOT NULL REFERENCES sandbox_coupon_campaigns(id),
+ discount_bps INTEGER NOT NULL CHECK(discount_bps BETWEEN 0 AND 10000),expires_at INTEGER NOT NULL,created_at INTEGER NOT NULL,UNIQUE(user_id,campaign_id));
+CREATE TABLE IF NOT EXISTS sandbox_coupon_redemptions(
+ order_reference TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,code TEXT NOT NULL UNIQUE REFERENCES sandbox_coupons(code) ON DELETE CASCADE,
+ campaign_id TEXT NOT NULL REFERENCES sandbox_coupon_campaigns(id),product TEXT NOT NULL,snapshot TEXT NOT NULL,created_at INTEGER NOT NULL,mode TEXT NOT NULL CHECK(mode='sandbox'));
+CREATE INDEX IF NOT EXISTS sandbox_event_owner ON sandbox_wallet_events(user_id,id);
+CREATE INDEX IF NOT EXISTS sandbox_reservation_lot ON sandbox_credit_reservations(lot_id,status);
+CREATE INDEX IF NOT EXISTS sandbox_coupon_usage ON sandbox_coupon_redemptions(campaign_id);
+INSERT OR IGNORE INTO schema_version VALUES(11);
 CREATE TABLE IF NOT EXISTS idempotency(user_id TEXT NOT NULL REFERENCES users(id),key TEXT NOT NULL,payload TEXT NOT NULL,response TEXT NOT NULL,PRIMARY KEY(user_id,key));
 '''
 

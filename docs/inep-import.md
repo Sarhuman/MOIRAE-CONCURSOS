@@ -83,3 +83,11 @@ Itens 155–159 do segundo dia, caderno 7 azul, página 23: gabaritos B, E, C, C
 A questão 156 contém transcrição acessível explícita da figura do sol, com as duas dimensões de 20 cm. As questões 155, 157, 158 e 159 não dependem de imagem. Dados e referências de origem estão em `enem-2025-validated.json`. O botão “ENEM 2025 · lote 3 · 5 questões” preserva os dois blocos anteriores. Total integrado: 13 questões oficiais; demais candidatos continuam pendentes.
 
 Validação no navegador: desktop 5/5 e celular emulado com um erro proposital, 4/5. Conclusão e atualização sem reinício automático em ambos. Nenhuma rolagem horizontal na largura móvel testada.
+
+## Quarto lote interativo de 2025
+
+Itens 162, 163, 165 e 166, segundo dia, caderno 7 azul, páginas 24–26; gabaritos B, B, D e E conferidos no gabarito oficial. A questão 162 não depende de figura. A 163 preserva, por transcrição acessível explícita, as alturas relativas das barras, o setor de futebol com metade do círculo e os 80 estudantes do basquete. A 165 preserva todos os campos preenchidos e a ausência de valores nos demais campos da tabela. A 166 preserva tempos acumulados, intervalos e distâncias do esquema.
+
+Resoluções: reciclagem mínima de 140 t; 8 unidades gráficas=80 alunos e total de 36 unidades=360; grupo 4 com média 25 e desvio 1; tempo final de 273 s e redução de 15 s em relação ao quarto trecho. O bloco usa as mesmas regras de conta, quota, sessão e correção. Total integrado: 17 questões oficiais. Os itens 160, 161 e 164 permanecem pendentes de integração visual.
+
+Conferência no navegador: desktop 4/4; celular emulado 3/4 com um erro proposital. Conclusão e atualização sem reinício automático; largura móvel sem rolagem horizontal.

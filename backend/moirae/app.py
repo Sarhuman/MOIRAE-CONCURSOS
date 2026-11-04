@@ -415,6 +415,11 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
         rate(request,'practice:'+auth['user_id'])
         return practice.start(auth['user_id'],official=3)
 
+    @app.post('/api/practice/enem-2025/batch-4/start')
+    def official_batch_four_start(request:Request,auth=Depends(student)):
+        rate(request,'practice:'+auth['user_id'])
+        return practice.start(auth['user_id'],official=4)
+
     @app.get('/acervo-enem')
     def archive_page():return FileResponse(ROOT/'web'/'enem-archive.html')
 

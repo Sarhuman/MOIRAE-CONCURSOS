@@ -45,7 +45,7 @@ class Practice:
                 baseline.append(secrets.choice([q for q in QUESTIONS if q.area==area]))
             baseline.append(secrets.choice([q for q in QUESTIONS if q not in baseline]))
             if minutes is None:selected=baseline[:SESSION_SIZE if quota['unlimited'] else min(SESSION_SIZE,quota['remaining'])]
-            if official:selected=[q for q in QUESTIONS if q.provenance][:SESSION_SIZE if quota['unlimited'] else min(SESSION_SIZE,quota['remaining'])]
+            if official:selected=[q for q in QUESTIONS if q.provenance and q.provenance.get('batch',1)==int(official)][:SESSION_SIZE if quota['unlimited'] else min(SESSION_SIZE,quota['remaining'])]
             if not selected:raise HTTPException(409,'Não há revisões vencidas ou questões elegíveis agora. Consulte o próximo agendamento no painel.')
             db.execute('INSERT INTO practice_sessions VALUES(?,?,?,?)',(sid,user,'active',int(time.time())))
             if diagnostic:db.execute('INSERT INTO diagnostic_sessions VALUES(?)',(sid,))

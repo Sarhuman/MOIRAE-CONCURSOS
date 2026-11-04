@@ -69,3 +69,9 @@ Quatro itens do segundo dia, caderno 7 azul, foram conferidos visualmente nas p�
 A questão 137 usa uma transcrição acessível dos dados do infográfico (90% dos internautas usam redes; 60% desses usuários são mulheres), identificada como tal, com a referência original. Os demais três itens selecionados não dependem de imagens. Não se publicou automaticamente texto de colunas misturadas ou questão anulada. Os demais candidatos continuam pendentes de revisão.
 
 O botão “Praticar ENEM 2025 · 4 questões”, na área de estudo, usa as mesmas sessões, autenticação, confirmação, termos, cotas e idempotência da prática normal. Retoma a atividade em andamento em vez de duplicá-la. As quatro questões também integram o catálogo de prática; a indicação de origem distingue os itens oficiais dos exemplos autorais.
+
+## Segundo lote interativo de 2025
+
+Adicionados os itens 150, 151, 152 e 154, segundo dia, caderno 7 azul: gabaritos D, D, D e C. Conferência visual nas páginas 21–22 e no gabarito oficial registrado pelos mesmos hashes do lote 1. A questão 154 utiliza transcrição acessível explícita do gráfico com estoques brasileiro/estrangeiro e demanda; os demais itens deste lote não dependem de figura. As questões 149 e 153, presentes nessas páginas, continuam fora do lote: suas figuras não foram integradas.
+
+O botão “ENEM 2025 · lote 2 · 4 questões” inicia esse bloco usando as mesmas regras de conta, cota, sessão e correção. O lote 1 permanece acessível pelo botão anterior. O catálogo tem agora oito itens oficiais de 2025 conferidos; os demais candidatos continuam pendentes.

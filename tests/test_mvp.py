@@ -198,3 +198,16 @@ def test_validated_official_block_sources_answers_and_resume(env):
     assert numbers==[136,137,144,146]
     assert r['summary']['correct']==4
     assert c.get('/api/practice/current').json()['session'] is None
+
+def test_second_official_batch_and_explanations(env):
+    _,c=env;register(c)
+    s=c.post('/api/practice/enem-2025/batch-2/start',json={}).json();seen=[]
+    assert s['total']==4
+    while s['status']=='active':
+        q=s['question'];seen.append(q['provenance']['number'])
+        assert q['provenance']['batch']==2 and 'answer' not in q
+        r=answer(c,s).json();assert r['correct'];assert len(r['alternatives'])==5
+        s=r['session']
+    assert seen==[150,151,152,154]
+    assert r['summary']['correct']==4
+    assert c.get('/api/practice/current').json()['session'] is None

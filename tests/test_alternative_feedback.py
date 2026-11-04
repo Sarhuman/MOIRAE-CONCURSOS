@@ -15,8 +15,8 @@ def test_official_key_matches_validated_batch():
     from pathlib import Path
     from backend.moirae.catalog import BY_ID
     rows=json.loads(Path('data/inep/enem-2025-validated.json').read_text(encoding='utf-8'))
-    expected={136:'c',137:'b',144:'d',146:'b'}
-    assert len(rows)==4
+    expected={136:'c',137:'b',144:'d',146:'b',150:'d',151:'d',152:'d',154:'c'}
+    assert len(rows)==8
     for row in rows:
         assert row['answer']==expected[row['source']['number']]
         assert len(row['options'])==len(row['alternative_explanations'])==5

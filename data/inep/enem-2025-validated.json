@@ -142,5 +142,153 @@
       "image_mode": "no_image",
       "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE."
     }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q150",
+    "area": "Matemática",
+    "subject": "Proporcionalidade composta",
+    "prompt": "Uma fábrica de tijolos ecológicos com 3 funcionários, cada um trabalhando 6 horas diárias, produz 720 unidades por dia. Para atender ao crescimento da demanda por esse tipo de tijolo, essa fábrica passou a ter 5 funcionários, cada um trabalhando 9 horas por dia, aumentando, assim, sua capacidade de produção. Todos os funcionários produzem igual quantidade de tijolos a cada hora, independentemente de trabalharem 6 ou 9 horas diárias. O número de tijolos fabricados diariamente após o aumento da capacidade de produção é",
+    "options": [
+      "800",
+      "1 080",
+      "1 200",
+      "1 800",
+      "2 520"
+    ],
+    "answer": "d",
+    "explanation": "A produção por funcionário-hora é 720 ÷ (3 × 6) = 40 tijolos. A nova produção é 5 × 9 × 40 = 1 800 tijolos.",
+    "alternative_explanations": [
+      "800 não corresponde à produção em 45 horas de trabalho somadas.",
+      "1 080 considera apenas o aumento de horas diárias.",
+      "1 200 considera apenas o aumento do número de funcionários.",
+      "A produção por funcionário-hora é 720 ÷ (3 × 6) = 40 tijolos. A nova produção é 5 × 9 × 40 = 1 800 tijolos.",
+      "2 520 não corresponde ao produto dos dois fatores de crescimento."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 150,
+      "page": 21,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 2
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q151",
+    "area": "Matemática",
+    "subject": "Sistemas de numeração",
+    "prompt": "Para acompanhar o fluxo de visitantes em seu prédio, uma empresa estabeleceu um código de identificação para a visitação. De acordo com a regra estabelecida, cada visitante será identificado com um código sequencial numérico com 7 dígitos, determinado, da esquerda para a direita, da seguinte forma:\n• o primeiro dígito indica o andar ao qual o visitante se dirige, que é um número de 1 a 4;\n• os dois próximos dígitos correspondem ao número do setor da empresa ao qual o visitante se destina. Esse número varia de 01 a 20;\n• os três dígitos seguintes correspondem ao número do funcionário da empresa com quem o visitante irá se reunir. Esse número varia de 001 a 135;\n• o último dígito indica se o visitante chegou à empresa pela manhã, dígito 0, ou à tarde, dígito 1.\nUm visitante chegou à empresa às 10 horas da manhã para se reunir com o funcionário identificado pelo número 109, que trabalha no setor 08 da empresa, localizado no 2º andar. O código de identificação desse visitante é",
+    "options": [
+      "0109082",
+      "0281090",
+      "1010982",
+      "2081090",
+      "2810910"
+    ],
+    "answer": "d",
+    "explanation": "Concatene na ordem definida: andar 2, setor 08, funcionário 109, manhã 0. Resultado: 2|08|109|0 = 2081090.",
+    "alternative_explanations": [
+      "A sequência não começa pelo andar 2.",
+      "O primeiro dígito deve ser 2, não 0.",
+      "O primeiro dígito deve ser 2, não 1.",
+      "Concatene na ordem definida: andar 2, setor 08, funcionário 109, manhã 0. Resultado: 2|08|109|0 = 2081090.",
+      "O setor deve ocupar dois dígitos: 08; não se pode retirar o zero."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 151,
+      "page": 21,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 2
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q152",
+    "area": "Matemática",
+    "subject": "Probabilidade e permutações",
+    "prompt": "Quatro candidatos se apresentaram para realizar a prova de um concurso. Antes de iniciar a prova, os celulares dos quatro candidatos foram recolhidos pelo aplicador, que os guardou, cada um, dentro de um envelope preto. Ao término da prova, o aplicador devolveu os quatro envelopes com os celulares aos quatro candidatos, de maneira aleatória, já que não havia feito a identificação dos envelopes. A probabilidade de que todos os candidatos tenham recebido de volta os envelopes com os seus respectivos celulares é",
+    "options": [
+      "1/2",
+      "1/10",
+      "1/16",
+      "1/24",
+      "1/256"
+    ],
+    "answer": "d",
+    "explanation": "Existem 4! = 24 distribuições equiprováveis dos quatro envelopes. Apenas uma devolve todos os celulares aos donos. A probabilidade é 1/24.",
+    "alternative_explanations": [
+      "Há mais de duas distribuições possíveis.",
+      "O total de distribuições é 24, não 10.",
+      "As escolhas são sem reposição: não há quatro escolhas independentes com dois resultados.",
+      "Existem 4! = 24 distribuições equiprováveis dos quatro envelopes. Apenas uma devolve todos os celulares aos donos. A probabilidade é 1/24.",
+      "4⁴ conta escolhas com repetição; cada envelope é entregue uma única vez."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 152,
+      "page": 21,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 2
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q154",
+    "area": "Matemática",
+    "subject": "Leitura de gráficos",
+    "prompt": "Uma livraria comercializa livros dos seguintes gêneros literários: ficção científica, autoajuda, romance e biografia. O gráfico apresenta o estoque dos livros que essa livraria tem, por gênero literário e por nacionalidade do autor, bem como a demanda por gênero literário, obtida por meio de uma enquete feita com seus clientes habituais.\n\nTranscrição acessível do gráfico “Estoque e demanda por livros”, na ordem estoque de autor brasileiro; estoque de autor estrangeiro; demanda:\nFicção: 80; 120; 160.\nAutoajuda: 50; 80; 135.\nRomance: 40; 105; 140.\nBiografia: 45; 50; 80.\n\nO gerente da livraria fará a encomenda de novos exemplares somente do gênero cuja quantidade em estoque seja insuficiente para atender à demanda constatada pela enquete. O gênero de livro do qual o gerente deverá encomendar mais exemplares é",
+    "options": [
+      "ficção, pois é o que apresenta maior demanda.",
+      "biografia, pois é o gênero que tem a menor demanda.",
+      "autoajuda, pois a quantidade em estoque é inferior à demanda.",
+      "biografia, pois é o gênero que tem a menor quantidade de livros em estoque.",
+      "romance, pois é o que apresenta o menor estoque de livros de autores brasileiros."
+    ],
+    "answer": "c",
+    "explanation": "Some os estoques das duas origens: ficção 200, autoajuda 130, romance 145 e biografia 95. Somente autoajuda tem estoque abaixo da demanda: faltam 5 livros para atender 135 pedidos.",
+    "alternative_explanations": [
+      "Ficção tem 200 livros para demanda de 160: não há falta.",
+      "Menor demanda não implica falta; biografia tem 95 livros para demanda de 80.",
+      "Some os estoques das duas origens: ficção 200, autoajuda 130, romance 145 e biografia 95. Somente autoajuda tem estoque abaixo da demanda: faltam 5 livros para atender 135 pedidos.",
+      "Biografia tem estoque suficiente, mesmo com total menor.",
+      "É preciso somar os livros brasileiros e estrangeiros; romance tem 145 para demanda de 140."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 154,
+      "page": 22,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 2
+    }
   }
 ]

@@ -35,7 +35,9 @@ O preço vem de `PLANS`, que já contém o acréscimo aprovado de 10%; ele não 
 
 ## Segurança, dados e operação
 
-Schema v11 aditivo; tabelas `sandbox_*` separadas. Transações SQLite `BEGIN IMMEDIATE` serializam disputa por saldo e por limite de campanha; índices apoiam consultas por usuário, lote e campanha. Continuamos no piloto de instância única. Migração para Postgres e concorrência distribuída exigem outro contrato transacional.
+Schema v12 aditivo (v11 cria a infraestrutura; v12 preserva contagem global de uso); tabelas `sandbox_*` separadas. Transações SQLite `BEGIN IMMEDIATE` serializam disputa por saldo e por limite de campanha; índices apoiam consultas por usuário, lote e campanha. Continuamos no piloto de instância única. Migração para Postgres e concorrência distribuída exigem outro contrato transacional.
+
+A contagem global da campanha é monotônica e agregada, sem identificador do titular; excluir uma conta não repõe usos já realizados. A migração preenche a contagem a partir dos recibos existentes e pode ser repetida sem duplicá-la.
 
 Exportação autenticada inclui lotes, reservas, eventos e cupons do titular. Exclusão de conta sem pedidos remove os dados sandbox por cascata. Registros financeiros reais preservam a política de retenção anterior. Não publique o banco ou códigos de cupons nos logs.
 

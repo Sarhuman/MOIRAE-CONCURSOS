@@ -195,3 +195,34 @@ def test_restart_preserves_reservations_and_receipts(env):
     fresh=Store(store.path)
     assert SandboxWallet(fresh,True,lambda:1000).reserve('u','job')==r
     assert SandboxCoupons(fresh,True,lambda:1000).redeem('u',code,'essencial','order')==receipt
+
+
+def test_account_deletion_cannot_replenish_global_coupon_cap(env):
+    store,_,c,_=env;campaign(c,max_uses=1)
+    a=c.draw('u','test')['code']
+    b=c.draw('v','test')['code']
+    c.redeem('u',a,'essencial','order-deleted-account')
+    with store.connect(write=True) as db:
+        db.execute("DELETE FROM users WHERE id='u'")
+    fails(409,lambda:c.redeem('v',b,'essencial','other'))
+    assert c.rules('test')['max_uses']==1
+    with store.connect() as db:
+        assert db.execute('SELECT used_count FROM sandbox_coupon_campaigns').fetchone()[0]==1
+        assert db.execute('SELECT count(*) FROM sandbox_coupon_redemptions').fetchone()[0]==0
+
+def test_v11_coupon_migration_preserves_usage_and_is_repeatable(tmp_path):
+    path=tmp_path/'old.sqlite3'
+    store=Store(str(path))
+    with store.connect(write=True) as db:
+        db.execute("INSERT INTO users VALUES('u','u@example.test','unused',1)")
+    c=SandboxCoupons(store,True,lambda:1000);campaign(c,max_uses=1)
+    code=c.draw('u','test')['code']
+    receipt=c.redeem('u',code,'essencial','migrated-order')
+    with store.connect(write=True) as db:
+        db.execute('ALTER TABLE sandbox_coupon_campaigns DROP COLUMN used_count')
+        db.execute('DELETE FROM schema_version WHERE version=12')
+    fresh=Store(str(path));Store(str(path))
+    with fresh.connect() as db:
+        assert db.execute('SELECT used_count FROM sandbox_coupon_campaigns').fetchone()[0]==1
+        assert db.execute('SELECT count(*) FROM schema_version WHERE version=12').fetchone()[0]==1
+    assert SandboxCoupons(fresh,True,lambda:1000).redeem('u',code,'essencial','migrated-order')==receipt

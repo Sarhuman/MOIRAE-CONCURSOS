@@ -35,7 +35,7 @@ class SandboxCoupons:
                 if tuple(old[k] for k in ('id','starts_at','ends_at','valid_seconds','products','outcomes','max_uses')) != values:
                     raise HTTPException(409, 'Campanha imutável. Crie outra versão.')
                 return
-            db.execute('INSERT INTO sandbox_coupon_campaigns VALUES(?,?,?,?,?,?,?,1)', values)
+            db.execute('INSERT INTO sandbox_coupon_campaigns(id,starts_at,ends_at,valid_seconds,products,outcomes,max_uses,enabled) VALUES(?,?,?,?,?,?,?,1)', values)
 
     def campaign(self, db, cid, now):
         row = db.execute('SELECT * FROM sandbox_coupon_campaigns WHERE id=? AND enabled=1 AND starts_at<=? AND ends_at>?', (cid, now, now)).fetchone()
@@ -82,7 +82,7 @@ class SandboxCoupons:
             raise HTTPException(409, 'Produto não elegível.')
         if db.execute('SELECT 1 FROM sandbox_coupon_redemptions WHERE code=?', (code,)).fetchone():
             raise HTTPException(409, 'Cupom já utilizado.')
-        if db.execute('SELECT count(*) FROM sandbox_coupon_redemptions WHERE campaign_id=?', (c['id'],)).fetchone()[0] >= c['max_uses']:
+        if c['used_count'] >= c['max_uses']:
             raise HTTPException(409, 'Limite de usos da campanha atingido.')
         base = PLANS[product]['price_cents']
         discount = base*coupon['discount_bps']//10000
@@ -108,4 +108,5 @@ class SandboxCoupons:
             result = self.validated(db, uid, code, product, now)
             c = db.execute('SELECT campaign_id FROM sandbox_coupons WHERE code=?', (code,)).fetchone()
             db.execute('INSERT INTO sandbox_coupon_redemptions VALUES(?,?,?,?,?,?,?,?)', (order_reference, uid, code, c['campaign_id'], product, json.dumps(result), now, 'sandbox'))
+            db.execute('UPDATE sandbox_coupon_campaigns SET used_count=used_count+1 WHERE id=?', (c['campaign_id'],))
             return result

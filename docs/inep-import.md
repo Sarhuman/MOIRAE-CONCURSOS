@@ -99,3 +99,16 @@ Itens 167, 168 e 169, segundo dia, caderno 7 azul, páginas 27–28; gabaritos D
 Resoluções conferidas: 120/8×3−120/10×2=21; totais das autoescolas I=1.400, II=1.300 e III=1.200; produção em toneladas=área×produtividade×50/1.000. Total integrado: 20 questões oficiais, mantendo os blocos anteriores disponíveis.
 
 Conferência por cliques: desktop 3/3; celular emulado 2/3 com um erro proposital. Atualização após conclusão sem reinício automático em ambos; sem rolagem horizontal na largura móvel testada.
+
+
+## Disponibilidade por instalação — revisão de 04/11/2026
+
+O índice versionado documenta a coleta; seu status `downloaded` não prova que o arquivo existe nesta máquina. `/api/enem-archive` calcula `available_local` na consulta, sem cache. A página oferece o PDF local somente quando disponível; caso contrário, aponta diretamente à URL oficial. O endpoint de arquivos continua limitado aos nomes do índice e não baixa URLs enviadas pelo cliente.
+
+No PowerShell, na raiz do projeto:
+
+```powershell
+.\.venv-win\Scripts\python.exe -m backend.moirae.importing.archive
+```
+
+Requer `curl.exe` do Windows e acesso ao INEP. Os PDFs ficam em `var/inep/archive`, fora do Git; preserve esse diretório entre atualizações. A coleta atualiza `data/inep/archive-index.json`; confira o resumo de falhas. Sem os PDFs, o acesso pela fonte oficial continua disponível.

@@ -253,3 +253,28 @@ def test_fifth_official_batch_and_explanations(env):
     assert seen==[167,168,169]
     assert r['summary']['correct']==3
     assert c.get('/api/practice/current').json()['session'] is None
+
+
+def test_diagnostic_low_quota_does_not_create_partial_session(env):
+    app,c=env;register(c)
+    for _ in range(6):complete(c)
+    with app.state.store.connect(write=True) as db:
+        db.execute('DELETE FROM attempts WHERE id IN (SELECT id FROM attempts LIMIT 4)')
+        before=db.execute('SELECT count(*) FROM practice_sessions').fetchone()[0]
+    r=c.post('/api/diagnostic/start',json={})
+    assert r.status_code==429
+    assert c.get('/api/practice/current').json()['quota']['remaining']==4
+    with app.state.store.connect() as db:
+        assert db.execute('SELECT count(*) FROM practice_sessions').fetchone()[0]==before
+        assert db.execute('SELECT count(*) FROM diagnostic_sessions').fetchone()[0]==0
+
+def test_diagnostic_covers_four_areas_with_introductory_items(env):
+    app,c=env;register(c)
+    s=c.post('/api/diagnostic/start',json={}).json();areas=set()
+    assert s['total']==5
+    while s['status']=='active':
+        assert not s['question'].get('provenance')
+        areas.add(s['question']['area'])
+        s=answer(c,s).json()['session']
+    assert len(areas)==4
+    assert c.get('/api/diagnostic').json()['answered']==5

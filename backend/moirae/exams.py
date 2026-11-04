@@ -69,7 +69,11 @@ class Exams:
             if active:
                 if active['day']!=day:raise HTTPException(409,'Encerre o simulado em andamento antes de iniciar outro.')
                 return self.snapshot(db,active)
-            profile=PROFILES[day];selected=[q for q in QUESTIONS if q.area in profile['areas']]
+            profile=PROFILES[day]
+            # Keep the announced six-item introductory pilot independent of catalog growth.
+            selected=[q for q in QUESTIONS if q.area in profile['areas'] and not q.provenance]
+            if len(selected)<6:raise HTTPException(409,'O caderno introdutório está indisponível.')
+            selected=random.SystemRandom().sample(selected,6)
             quota=monthly_quota(db,user,self.day_now())
             if not quota['unlimited'] and quota['remaining']<len(selected):raise HTTPException(429,f"Este simulado usa {len(selected)} questões. Seu saldo é {quota['remaining']}.")
             random.SystemRandom().shuffle(selected)

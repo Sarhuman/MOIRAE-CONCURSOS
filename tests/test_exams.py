@@ -171,5 +171,16 @@ def test_existing_baseline_is_preserved_on_extension(tmp_path):
     with store.connect() as db:
         assert practice.quota(db,'u')['used']==2
         assert practice.quota(db,'u')['remaining']==28
-        assert {r[0] for r in db.execute('SELECT version FROM schema_version')}=={1,2,3,4,5,6,7,8,9}
+        assert {r[0] for r in db.execute('SELECT version FROM schema_version')}=={1,2,3,4,5,6,7,8,9,10}
         assert db.execute('SELECT count(*) FROM attempts').fetchone()[0]==2
+
+
+def test_day_two_keeps_announced_size_and_debit(setup):
+    _,c,_=setup
+    key=str(uuid.uuid4())
+    first=start(c,day=2,key=key).json()
+    assert len(first['items'])==6
+    assert first['quota']['used']==6
+    assert first['deadline']-first['started_at']==900
+    assert all(not item['question'].get('provenance') for item in first['items'])
+    assert start(c,day=2,key=key).json()['quota']['used']==6

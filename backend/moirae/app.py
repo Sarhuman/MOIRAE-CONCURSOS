@@ -429,7 +429,13 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     def archive_page():return FileResponse(ROOT/'web'/'enem-archive.html')
 
     @app.get('/api/enem-archive')
-    def archive_index():return FileResponse(ROOT/'data'/'inep'/'archive-index.json',media_type='application/json')
+    def archive_index():
+        rows=json.loads((ROOT/'data'/'inep'/'archive-index.json').read_text(encoding='utf-8'))
+        for row in rows:
+            for item in row['files']:
+                name=item['name']
+                item['available_local']=Path(name).name==name and (ROOT/'var'/'inep'/'archive'/str(row['year'])/name).is_file()
+        return JSONResponse(rows,headers={'Cache-Control':'no-store'})
 
     @app.get('/acervo-enem/{year}/{name}')
     def archive_pdf(year:int,name:str):

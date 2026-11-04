@@ -1,22 +1,24 @@
-# Próximo passo: testar localmente no WSL/Linux
+# Próximo passo: testar no Windows nativo (PowerShell)
+
+Execute na pasta do projeto no PowerShell, preferencialmente dentro da sua pasta de usuário, fora de System32. O Python precisa estar instalado no Windows; a venv do Linux não é reutilizável.
 
 Use um checkout separado deste PR para evitar misturar alterações suas. Sem merge ou publicação.
 
-```bash
+```powershell
 git clone --branch feat/persistent-essay-demo https://github.com/Sarhuman/MOIRAE-CONCURSOS.git MOIRAE-PLAYTEST
 cd MOIRAE-PLAYTEST
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements-dev.lock
-export MOIRAE_ORIGIN=http://127.0.0.1:8000
-export MOIRAE_SECURE_COOKIE=false
-export MOIRAE_DB="$PWD/var/henrique-playtest.sqlite3"
-export MOIRAE_ESSAY_DEMO=true
-export MOIRAE_ESSAY_AI=false
-export MOIRAE_ESSAY_AI_REVIEWED=false
-export MOIRAE_MP_SANDBOX=false
-.venv/bin/python -m backend.moirae.local_playtest --database "$MOIRAE_DB" --email henrique@example.test
-.venv/bin/python -m backend.moirae.preflight
-.venv/bin/python -m uvicorn backend.moirae.app:create_app --factory --host 127.0.0.1 --port 8000 --no-proxy-headers
+python -m venv .venv-win
+.\.venv-win\Scripts\python.exe -m pip install -r requirements-dev.lock
+$env:MOIRAE_ORIGIN="http://127.0.0.1:8000"
+$env:MOIRAE_SECURE_COOKIE="false"
+$env:MOIRAE_DB=Join-Path $PWD "var\henrique-playtest.sqlite3"
+$env:MOIRAE_ESSAY_DEMO="true"
+$env:MOIRAE_ESSAY_AI="false"
+$env:MOIRAE_ESSAY_AI_REVIEWED="false"
+$env:MOIRAE_MP_SANDBOX="false"
+.\.venv-win\Scripts\python.exe -m backend.moirae.local_playtest --database "$env:MOIRAE_DB" --email henrique@example.test
+.\.venv-win\Scripts\python.exe -m backend.moirae.preflight
+.\.venv-win\Scripts\python.exe -m uvicorn backend.moirae.app:create_app --factory --host 127.0.0.1 --port 8000 --no-proxy-headers
 ```
 
 O comando pede uma senha de teste duas vezes, sem mostrá-la. Não use sua senha pessoal. E-mail de teste: henrique@example.test. A conta já vem verificada, com plano Avançado local e 30 créditos demonstrativos por concessão. Não envia e-mail, não inicia pagamento e não configura OpenAI. O histórico financeiro identifica local_test. A criação só aceita banco novo: se existir, mantenha-o e escolha outro nome para repetir o preparo. Não tente rodar esse comando em produção.
@@ -44,7 +46,7 @@ Prepare redações com autorização de uso e notas humanas por competência, pr
 - model, rubric_version, prompt_version: versões exatas.
 - human_scores e predicted_scores: objetos com chaves "1", "2", "3", "4", "5" e notas inteiras 0/40/80/120/160/200.
 
-Execute `.venv/bin/python -m backend.moirae.essay_benchmark /caminho/privado/corpus.json` para imprimir métricas sem fazer chamadas externas. O comparador rejeita corpus vazio, IDs repetidos e dados sem declarações de revisão/autorização. Compara erro absoluto médio e concordância por competência, separando versões. Não avalia comentários nem decide aprovação; a saída permanece approved=false. Referências humanas sintéticas dos testes não constituem corpus validado.
+Execute `.\.venv-win\Scripts\python.exe -m backend.moirae.essay_benchmark /caminho/privado/corpus.json` para imprimir métricas sem fazer chamadas externas. O comparador rejeita corpus vazio, IDs repetidos e dados sem declarações de revisão/autorização. Compara erro absoluto médio e concordância por competência, separando versões. Não avalia comentários nem decide aprovação; a saída permanece approved=false. Referências humanas sintéticas dos testes não constituem corpus validado.
 
 Só depois: definir modelo, limites de custo, privacidade e avaliação pedagógica, configurar credencial exclusivamente no worker e fazer um ensaio externo controlado. Não envie a chave pelo chat. As travas de correção real continuam false neste roteiro.
 

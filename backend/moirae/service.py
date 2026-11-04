@@ -38,12 +38,15 @@ class Practice:
             quota=self.quota(db,user)
             if not quota['unlimited'] and not quota['remaining']:
                 raise HTTPException(429,'Você usou suas 30 questões deste mês. Aguarde a renovação mensal.')
+            if diagnostic and not quota['unlimited'] and quota['remaining']<SESSION_SIZE:
+                raise HTTPException(429,'O diagnóstico precisa de 5 questões disponíveis. Seu saldo foi preservado; aguarde a renovação mensal.')
             sid=str(uuid.uuid4())
             # Cobrir áreas com seleção embaralhada de conteúdo introdutório.
             baseline=[]
+            pool=[q for q in QUESTIONS if not diagnostic or not q.provenance]
             for area in ('Matemática','Linguagens','Natureza','Humanas'):
-                baseline.append(secrets.choice([q for q in QUESTIONS if q.area==area]))
-            baseline.append(secrets.choice([q for q in QUESTIONS if q not in baseline]))
+                baseline.append(secrets.choice([q for q in pool if q.area==area]))
+            baseline.append(secrets.choice([q for q in pool if q not in baseline]))
             if minutes is None:selected=baseline[:SESSION_SIZE if quota['unlimited'] else min(SESSION_SIZE,quota['remaining'])]
             if official:selected=[q for q in QUESTIONS if q.provenance and q.provenance.get('batch',1)==int(official)][:SESSION_SIZE if quota['unlimited'] else min(SESSION_SIZE,quota['remaining'])]
             if not selected:raise HTTPException(409,'Não há revisões vencidas ou questões elegíveis agora. Consulte o próximo agendamento no painel.')

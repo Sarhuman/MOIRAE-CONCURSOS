@@ -22,11 +22,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: node --check web/study.js
-      - run: node --check web/exam.js
-      - run: node --check web/account.js
-      - run: node --check web/plans.js
-      - run: node --check web/dashboard.js
-      - run: node --check web/essays.js
-      - run: node --check web/essay-view.js
-      - run: node --test tests/essay-fixture.test.cjs tests/essay-view.test.cjs tests/learning-focus.test.cjs
+      - run: node -e "const fs=require('node:fs'),cp=require('node:child_process');for(const f of fs.readdirSync('web').filter(f=>f.endsWith('.js')))cp.execFileSync(process.execPath,['--check','web/'+f],{stdio:'inherit'});"
+      - run: node --test tests/*.test.cjs

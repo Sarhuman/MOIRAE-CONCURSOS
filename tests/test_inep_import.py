@@ -105,3 +105,7 @@ def test_cli_missing_files_returns_failure(fixture,tmp_path,capsys):
     status=main(['--manifest',str(p),'--input-dir',str(tmp_path/'missing'),'--output-dir',str(out)])
     assert status==1 and not out.exists()
     assert 'não concluída' in capsys.readouterr().err
+
+def test_spaced_question_heading_from_pdf_font_layout():
+    rows=split_questions(['Q\nU\nESTÃ O 01\nTexto de teste\nQU EST Ã O 02\nOutro texto'],1)
+    assert [row['number'] for row in rows]==[1,2]

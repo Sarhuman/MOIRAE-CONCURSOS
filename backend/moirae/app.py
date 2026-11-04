@@ -400,6 +400,22 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
         from starlette.concurrency import run_in_threadpool
         return await run_in_threadpool(billing.reconcile,payment_id)
 
+    @app.get('/acervo-enem')
+    def archive_page():return FileResponse(ROOT/'web'/'enem-archive.html')
+
+    @app.get('/api/enem-archive')
+    def archive_index():return FileResponse(ROOT/'data'/'inep'/'archive-index.json',media_type='application/json')
+
+    @app.get('/acervo-enem/{year}/{name}')
+    def archive_pdf(year:int,name:str):
+        import json
+        rows=json.loads((ROOT/'data'/'inep'/'archive-index.json').read_text(encoding='utf-8'))
+        valid=any(row['year']==year and any(f['name']==name and f['status']=='downloaded' for f in row['files']) for row in rows)
+        if not valid or Path(name).name!=name:raise HTTPException(404,'Arquivo não encontrado.')
+        path=ROOT/'var'/'inep'/'archive'/str(year)/name
+        if not path.is_file():raise HTTPException(404,'PDF não instalado nesta instância. Use a fonte oficial.')
+        return FileResponse(path,media_type='application/pdf',filename=name)
+
     @app.get('/diagnostico')
     def diagnostic_page():return FileResponse(ROOT/'web'/'diagnostic.html')
 

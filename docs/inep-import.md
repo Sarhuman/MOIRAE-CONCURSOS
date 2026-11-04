@@ -53,3 +53,11 @@ Deduplicação entre cores ainda não foi implementada. O lote trabalha com uma 
 ```
 
 Os testes cobrem extração de PDF sintético, gabarito, anulações, repetição de número em idiomas, hashes estáveis, ausência de arquivos, PDF falso, URLs proibidas, correspondência do manifesto e falha de download sem criar saída inválida. Não fazem chamadas ao Inep e não precisam de OpenAI.
+
+## Acervo baixado em 03/11/2026
+
+Foram recuperados 98 PDFs oficiais vinculados às páginas de 1998–2025: 290.064.379 bytes e 2.013 páginas. O índice `data/inep/archive-index.json` registra URL, nome, tamanho e SHA-256. Os arquivos ficam em `var/inep/archive/<ano>/`, fora do Git. Há materiais suplementares com nomes de aplicações distintas: nunca combine automaticamente seus gabaritos com outro caderno.
+
+A página `/acervo-enem`, acessível pelo painel e pela área de estudo, permite filtrar o ano e baixar a cópia local. Em outra instalação é preciso executar `.venv-win\Scripts\python.exe -m backend.moirae.importing.archive`; sem os PDFs locais, use a fonte oficial indicada na página. O download usa curl.exe com validação HTTPS nativa do Windows, sem desativar certificados.
+
+Extração inicial: 2020–2025, 185 candidatos por edição (incluindo ocorrências distintas das questões de língua estrangeira), total 1.110. `data/inep/extraction-summary.json` registra os totais; textos e relatórios completos ficam em `var/inep/review-archive/`, com 2025 corrigido em `2025-v2`. Os lotes anteriores foram preservados. Nenhum desses candidatos foi publicado no catálogo interativo: extração em PDF não comprova separação das alternativas, imagens, interpretação do gabarito, resolução ou classificação pedagógica. Edições anteriores a 2020 estão disponíveis em PDF; a adaptação dos formatos antigos ainda está pendente.

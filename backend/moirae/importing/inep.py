@@ -13,7 +13,7 @@ from pypdf import PdfReader
 from pypdf.errors import PyPdfError
 
 MAX_PDF=40*1024*1024
-QUESTION=re.compile(r'QUEST[ÃA]O\s+(\d{1,3})\b',re.IGNORECASE)
+QUESTION=re.compile(r'Q\s*U\s*E\s*S\s*T\s*[ÃA]\s*O\s+(\d{1,3})\b',re.IGNORECASE)
 KEY=re.compile(r'\b(\d{1,3})\s*[-–.:]?\s+(ANULAD[AO]|EXCLU[IÍ]D[AO]|[ABCDE])\b',re.IGNORECASE)
 
 

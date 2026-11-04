@@ -126,3 +126,22 @@ def test_all_future_reviews_do_not_create_empty_session(setup):
     assert c.get('/api/planner').json()['question_count']==0
     assert c.post('/api/planner/start',json={'minutes':15}).status_code==409
     with app.state.store.connect() as db:assert db.execute('SELECT count(*) FROM practice_sessions').fetchone()[0]==0
+
+def test_first_plan_prioritizes_diagnostic_without_anticipating_reviews(setup):
+    app,c,uid=setup
+    s=c.post('/api/diagnostic/start',json={}).json()
+    while s['status']=='active':
+        q=BY_ID[s['question']['id']]
+        choice=next(x for x in 'abcde' if x!=q.answer) if q.area=='Natureza' else q.answer
+        s=c.post('/api/practice/answer',json=dict(session_id=s['id'],question_id=q.id,choice=choice,key=str(uuid.uuid4()))).json()['session']
+    preview=c.get('/api/planner?minutes=15').json()
+    assert preview['diagnostic_guided']
+    assert preview['reasons'][0]['area']=='Natureza'
+    assert 'diagnóstico' in preview['reasons'][0]['reason']
+    with app.state.store.connect() as db:
+        future={r['question_id'] for r in db.execute('SELECT question_id FROM review_schedule WHERE user_id=? AND due_at>?',(uid,int(time.time())))}
+    assert not future.intersection(r['question_id'] for r in preview['reasons'])
+    started=c.post('/api/planner/start',json={'minutes':15}).json()
+    assert started['question']['area']=='Natureza'
+    assert started['plan']['diagnostic_guided']
+    assert c.post('/api/planner/start',json={'minutes':15}).json()['id']==started['id']

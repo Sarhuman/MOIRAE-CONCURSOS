@@ -26,24 +26,34 @@ def selection(db,uid,minutes,now):
         if q.id in performance:
             row=performance[q.id];key=(q.area,q.subject)
             total,correct=subjects.get(key,(0,0));subjects[key]=(total+row['total'],correct+row['correct'])
+    diagnostic=db.execute("SELECT s.id,s.rowid AS sequence FROM practice_sessions s JOIN diagnostic_sessions d ON d.session_id=s.id WHERE s.user_id=? AND s.status='completed' ORDER BY s.rowid DESC LIMIT 1",(uid,)).fetchone()
+    diagnostic_areas={}
+    if diagnostic and not db.execute('SELECT 1 FROM practice_plans p JOIN practice_sessions s ON s.id=p.session_id WHERE s.user_id=? AND s.rowid>?',(uid,diagnostic['sequence'])).fetchone():
+        from .catalog import BY_ID
+        for row in db.execute('SELECT question_id,correct FROM attempts WHERE session_id=?',(diagnostic['id'],)):
+            area=BY_ID[row['question_id']].area
+            total,errors=diagnostic_areas.get(area,(0,0))
+            diagnostic_areas[area]=(total+1,errors+1-row['correct'])
     def priority(q):
         review=schedule.get(q.id)
         if review and review['due_at']<=now:return (0,review['due_at'],q.id)
+        diagnostic_total,diagnostic_errors=diagnostic_areas.get(q.area,(0,0))
+        if diagnostic_errors:return (1,-diagnostic_errors,q.id)
         total,correct=subjects.get((q.area,q.subject),(0,0))
-        if total and correct<total:return (1,correct/total,q.id)
-        if q.id not in performance:return (2,0,q.id)
-        return (3,0,q.id)
+        if total and correct<total:return (2,correct/total,q.id)
+        if q.id not in performance:return (3,0,q.id)
+        return (4,0,q.id)
     eligible=[q for q in QUESTIONS if q.id not in schedule or schedule[q.id]['due_at']<=now]
     chosen=sorted(eligible,key=priority)[:SIZES[minutes]]
     reasons=[]
     for q in chosen:
         kind=priority(q)[0]
         reasons.append(dict(question_id=q.id,area=q.area,subject=q.subject,
-            reason=('Revisão agendada para agora.','Assunto com erros no seu histórico.','Conteúdo ainda não praticado.','Consolidar conteúdo já praticado.')[kind]))
+            reason=('Revisão agendada para agora.','Área com dificuldade no diagnóstico inicial; outra questão elegível, sem antecipar revisão.','Assunto com erros no seu histórico.','Conteúdo ainda não praticado.','Consolidar conteúdo já praticado.')[kind]))
     due=sum(1 for r in schedule.values() if r['due_at']<=now)
     future=[r['due_at'] for r in schedule.values() if r['due_at']>now]
     return chosen,dict(minutes=minutes,estimated_minutes=minutes,question_count=len(chosen),due_reviews=due,
-        next_review_at=min(future) if future else None,reasons=reasons,
+        diagnostic_guided=bool(diagnostic_areas and any(errors for _,errors in diagnostic_areas.values())),next_review_at=min(future) if future else None,reasons=reasons,
         notice='Tempo é uma referência para ritmo, resolução e leitura; não é um cronômetro. Seleção limitada ao catálogo autoral do piloto. Simulados e redação não compõem este plano.')
 
 class Planner:

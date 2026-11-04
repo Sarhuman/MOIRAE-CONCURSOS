@@ -400,6 +400,11 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
         from starlette.concurrency import run_in_threadpool
         return await run_in_threadpool(billing.reconcile,payment_id)
 
+    @app.post('/api/practice/enem-2025/start')
+    def official_practice_start(request:Request,auth=Depends(student)):
+        rate(request,'practice:'+auth['user_id'])
+        return practice.start(auth['user_id'],official=True)
+
     @app.get('/acervo-enem')
     def archive_page():return FileResponse(ROOT/'web'/'enem-archive.html')
 

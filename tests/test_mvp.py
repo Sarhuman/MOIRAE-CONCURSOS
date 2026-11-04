@@ -182,3 +182,19 @@ def test_diagnostic_respects_existing_activity_and_all_correct(env):
     d=c.get('/api/diagnostic').json()
     assert d['status']=='completed' and d['focus'] is None
     assert sum(a['errors'] for a in d['areas'])==0
+
+def test_validated_official_block_sources_answers_and_resume(env):
+    _,c=env;register(c)
+    s=c.post('/api/practice/enem-2025/start',json={}).json();sid=s['id']
+    assert s['total']==4
+    assert c.post('/api/practice/enem-2025/start',json={}).json()['id']==sid
+    numbers=[]
+    while s['status']=='active':
+        q=s['question'];numbers.append(q['provenance']['number'])
+        assert 'answer' not in q and 'explanation' not in q
+        assert q['provenance']['visual_review']
+        r=answer(c,s).json();assert r['correct'];assert len(r['alternatives'])==5
+        s=r['session']
+    assert numbers==[136,137,144,146]
+    assert r['summary']['correct']==4
+    assert c.get('/api/practice/current').json()['session'] is None

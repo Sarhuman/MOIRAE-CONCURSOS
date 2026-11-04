@@ -25,7 +25,7 @@ class Practice:
         return dict(plan=json.loads(plan['description']) if plan else None,id=row['id'],status=row['status'],answered=count,total=total,
                     question=BY_ID[next_row[0]].public() if next_row else None,quota=self.quota(db,user))
 
-    def start(self, user, minutes=None, diagnostic=False):
+    def start(self, user, minutes=None, diagnostic=False, official=False):
         with self.store.connect(write=True) as db:
             planned=None
             if minutes is not None:
@@ -45,6 +45,7 @@ class Practice:
                 baseline.append(secrets.choice([q for q in QUESTIONS if q.area==area]))
             baseline.append(secrets.choice([q for q in QUESTIONS if q not in baseline]))
             if minutes is None:selected=baseline[:SESSION_SIZE if quota['unlimited'] else min(SESSION_SIZE,quota['remaining'])]
+            if official:selected=[q for q in QUESTIONS if q.provenance][:SESSION_SIZE if quota['unlimited'] else min(SESSION_SIZE,quota['remaining'])]
             if not selected:raise HTTPException(409,'Não há revisões vencidas ou questões elegíveis agora. Consulte o próximo agendamento no painel.')
             db.execute('INSERT INTO practice_sessions VALUES(?,?,?,?)',(sid,user,'active',int(time.time())))
             if diagnostic:db.execute('INSERT INTO diagnostic_sessions VALUES(?)',(sid,))

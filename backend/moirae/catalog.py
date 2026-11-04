@@ -11,11 +11,13 @@ class Question:
     options: tuple[str, ...]
     answer: str
     explanation: str
+    provenance: dict | None = None
+    alternative_explanations: tuple[str, ...] = ()
 
     def public(self):
         return dict(id=self.id, area=self.area, subject=self.subject, prompt=self.prompt,
                     options=[dict(id=chr(97+i), text=t) for i, t in enumerate(self.options)],
-                    source='Questão autoral introdutória do MOIRAE; não oficial do ENEM.')
+                    source=(f"ENEM 2025 · 2º dia · Caderno 7 azul · Questão {self.provenance['number']}" if self.provenance else 'Questão autoral introdutória do MOIRAE; não oficial do ENEM.'),provenance=self.provenance)
 
 
 QUESTIONS = [
@@ -32,4 +34,8 @@ QUESTIONS = [
     Question('hum-02','Humanas','Cidadania','Qual situação exemplifica a participação da população em decisões públicas?',('Participar de uma audiência pública sobre transporte','Impedir a divulgação de informações públicas','Proibir debates comunitários','Ignorar todas as consultas públicas','Excluir moradores de uma discussão'),'a','Uma audiência pública abre espaço para que moradores apresentem demandas e discutam propostas.'),
     Question('hum-03','Humanas','Urbanização','Qual situação caracteriza um deslocamento pendular?',('Mudar de país definitivamente','Viajar uma única vez nas férias','Ir diariamente de uma cidade à outra para trabalhar e retornar','Trocar permanentemente de residência','Migrar sem previsão de volta'),'c','O deslocamento pendular envolve trajetos recorrentes entre moradia e trabalho ou estudo, com retorno.'),
 ]
+import json
+from pathlib import Path
+for item in json.loads((Path(__file__).resolve().parents[2]/'data'/'inep'/'enem-2025-validated.json').read_text(encoding='utf-8')):
+    QUESTIONS.append(Question(item['id'],item['area'],item['subject'],item['prompt'],tuple(item['options']),item['answer'],item['explanation'],item['source'],tuple(item['alternative_explanations'])))
 BY_ID = {q.id: q for q in QUESTIONS}

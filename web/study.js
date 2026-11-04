@@ -19,13 +19,14 @@ function render(value) {
   session=value; pending=null;
   $('#answer-feedback').hidden=true; $('#next').hidden=true; $('#complete').hidden=true;
   $('#start').hidden=Boolean(value);
+  $('#official-start').hidden=Boolean(value);
   $('#question-panel').hidden=!value || !value.question;
   if (!value) return;
   if(value.status==='completed') { $('#question-panel').hidden=true; $('#complete').hidden=false; $('#summary').textContent=`Atividade concluída: ${value.answered} de ${value.total} questões respondidas. Escolha Fazer outra atividade para iniciar um novo bloco.`; return; }
   quota(value.quota);
   if (!value.question) { $('#complete').hidden=false; return; }
   const q=value.question;
-  $('#question-meta').textContent=`${q.area} · ${q.subject}`;
+  $('#question-meta').textContent=`${q.area} · ${q.subject} · ${q.source}`;
   $('#progress').textContent=`Questão ${value.answered+1} de ${value.total}`+(value.plan?` · bloco de ${value.plan.minutes} min (estimativa)`:'');
   $('#question-title').textContent=q.prompt;
   $('#choices').hidden=false;
@@ -40,6 +41,7 @@ $('#auth-form').addEventListener('submit',event=>{event.preventDefault();const m
 $('#logout').addEventListener('click',()=>action(async()=>{await api('/auth/logout',{});showAuth();message('Você saiu da conta.');}));
 async function start() { await action(async()=>{render(await api('/practice/start',{}));}); }
 $('#refresh').addEventListener('click',()=>action(resume));
+$('#official-start').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/start',{}));}));
 $('#start').addEventListener('click',start);$('#again').addEventListener('click',start);
 $('#answer-form').addEventListener('submit',event=>{event.preventDefault();action(async()=>{
   if(!session?.question)return;

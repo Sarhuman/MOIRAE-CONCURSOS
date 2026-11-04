@@ -1,0 +1,146 @@
+[
+  {
+    "id": "enem-2025-d2-cd7-q136",
+    "area": "Matemática",
+    "subject": "Proporção e consumo",
+    "prompt": "Uma pessoa pretende instalar um kit de gás natural veicular (GNV) em seu carro. Na loja que escolheu para realizar a compra e instalação desse kit, havia cinco modelos de cilindro para armazenamento do gás, cujas capacidades, em metro cúbico, eram, respectivamente: 10, 14, 17, 21 e 25. O preço do cilindro é proporcional à sua capacidade. Esse carro rodará 30 km diariamente, 7 dias por semana, e o consumo do GNV é de 1 m³ a cada 13 km rodados. A pessoa escolherá o modelo de cilindro de menor preço e que garanta apenas um abastecimento semanal. Nessas condições, qual será a capacidade, em metro cúbico, do cilindro escolhido por essa pessoa?",
+    "options": [
+      "10",
+      "14",
+      "17",
+      "21",
+      "25"
+    ],
+    "answer": "c",
+    "explanation": "Em uma semana são 30 × 7 = 210 km. O consumo é 210 ÷ 13 ≈ 16,15 m³. A menor capacidade suficiente é 17 m³.",
+    "alternative_explanations": [
+      "10 m³ permitem 130 km, menos que os 210 km semanais.",
+      "14 m³ permitem 182 km, insuficientes.",
+      "Em uma semana são 30 × 7 = 210 km. O consumo é 210 ÷ 13 ≈ 16,15 m³. A menor capacidade suficiente é 17 m³.",
+      "21 m³ atendem, mas custam mais que o cilindro de 17 m³.",
+      "25 m³ atendem, mas não representam o menor preço."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 136,
+      "page": 16,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE."
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q137",
+    "area": "Matemática",
+    "subject": "Probabilidade",
+    "prompt": "A reportagem de uma revista abordou o uso de redes sociais pelos internautas brasileiros. Alguns dos dados apurados pela reportagem estão apresentados no infográfico.\n\nTranscrição acessível do infográfico “Perfil dos brasileiros nas redes sociais”: 90% dos internautas brasileiros acessam redes sociais; 60% da quantidade de internautas brasileiros que acessam redes sociais são mulheres. Fonte do infográfico: revistagalileu.globo.com, acesso em 22 out. 2015 (adaptado).\n\nSegundo os dados do infográfico, ao se escolher aleatoriamente um internauta brasileiro no período ao qual se refere a reportagem, a probabilidade de ele ser um homem que acessa alguma rede social é",
+    "options": [
+      "30/90",
+      "36/100",
+      "40/100",
+      "40/90",
+      "46/90"
+    ],
+    "answer": "b",
+    "explanation": "Dos usuários de redes sociais, 40% são homens. Assim, 90% × 40% = 36% de todos os internautas, ou 36/100.",
+    "alternative_explanations": [
+      "O numerador 30 não corresponde à quantidade proporcional de homens nas redes.",
+      "Dos usuários de redes sociais, 40% são homens. Assim, 90% × 40% = 36% de todos os internautas, ou 36/100.",
+      "40% é a proporção de homens entre usuários de redes, não entre todos os internautas.",
+      "40/90 não representa a composição de probabilidades solicitada.",
+      "46 não é obtido da distribuição informada."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 137,
+      "page": 16,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE."
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q144",
+    "area": "Matemática",
+    "subject": "Geometria espacial",
+    "prompt": "Uma fábrica utilizou uma impressora 3D para produzir o protótipo de uma peça. O protótipo tem forma de um poliedro convexo, obtido pela justaposição de dois sólidos distintos, um com a forma de um prisma hexagonal regular reto e o outro com a forma de um tronco de pirâmide hexagonal reta. A base maior do tronco de pirâmide coincide com uma das bases do prisma. Após a impressão do protótipo, ele foi encaminhado ao setor de customização para realização da pintura de sua superfície. O critério definido para realização da pintura considera que faces congruentes entre si devem ser pintadas com uma mesma cor, e faces não congruentes entre si devem apresentar cores distintas. Qual é a quantidade de cores utilizadas para pintar o protótipo?",
+    "options": [
+      "9",
+      "8",
+      "6",
+      "4",
+      "3"
+    ],
+    "answer": "d",
+    "explanation": "As faces externas formam quatro grupos: retângulos laterais do prisma, trapézios laterais do tronco, base hexagonal do prisma e base menor do tronco. As duas bases externas têm tamanhos diferentes. A face de contato é interna e não recebe pintura.",
+    "alternative_explanations": [
+      "Não se conta uma cor por conjunto arbitrário de faces: agrupam-se faces congruentes.",
+      "O número de faces não determina diretamente a quantidade de cores.",
+      "As seis faces laterais congruentes de cada sólido compartilham uma cor.",
+      "As faces externas formam quatro grupos: retângulos laterais do prisma, trapézios laterais do tronco, base hexagonal do prisma e base menor do tronco. As duas bases externas têm tamanhos diferentes. A face de contato é interna e não recebe pintura.",
+      "As duas bases hexagonais externas têm tamanhos diferentes e precisam de cores distintas."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 144,
+      "page": 19,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE."
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q146",
+    "area": "Matemática",
+    "subject": "Números decimais",
+    "prompt": "No atletismo, um grande desafio da prova de 100 metros rasos é a sua conclusão num tempo abaixo da marca de referência dos 10,00 segundos. Vários atletas já alcançaram esse feito. Em 2009, o jamaicano Usain Bolt estabeleceu o recorde mundial masculino dessa prova, com o tempo de 9,58 segundos. Qual é a diferença, em segundo, entre a marca de referência e a marca estabelecida por Usain Bolt em 2009?",
+    "options": [
+      "0,02",
+      "0,42",
+      "0,52",
+      "1,02",
+      "1,42"
+    ],
+    "answer": "b",
+    "explanation": "A diferença é 10,00 − 9,58 = 0,42 segundo.",
+    "alternative_explanations": [
+      "0,02 não é a diferença entre 10,00 e 9,58.",
+      "A diferença é 10,00 − 9,58 = 0,42 segundo.",
+      "O empréstimo na subtração deve resultar em 42 centésimos, não 52.",
+      "A diferença é menor que um segundo.",
+      "A diferença é menor que um segundo."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 146,
+      "page": 19,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE."
+    }
+  }
+]

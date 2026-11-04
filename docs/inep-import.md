@@ -61,3 +61,11 @@ Foram recuperados 98 PDFs oficiais vinculados às páginas de 1998–2025: 290.0
 A página `/acervo-enem`, acessível pelo painel e pela área de estudo, permite filtrar o ano e baixar a cópia local. Em outra instalação é preciso executar `.venv-win\Scripts\python.exe -m backend.moirae.importing.archive`; sem os PDFs locais, use a fonte oficial indicada na página. O download usa curl.exe com validação HTTPS nativa do Windows, sem desativar certificados.
 
 Extração inicial: 2020–2025, 185 candidatos por edição (incluindo ocorrências distintas das questões de língua estrangeira), total 1.110. `data/inep/extraction-summary.json` registra os totais; textos e relatórios completos ficam em `var/inep/review-archive/`, com 2025 corrigido em `2025-v2`. Os lotes anteriores foram preservados. Nenhum desses candidatos foi publicado no catálogo interativo: extração em PDF não comprova separação das alternativas, imagens, interpretação do gabarito, resolução ou classificação pedagógica. Edições anteriores a 2020 estão disponíveis em PDF; a adaptação dos formatos antigos ainda está pendente.
+
+## Primeiro lote interativo de 2025
+
+Quatro itens do segundo dia, caderno 7 azul, foram conferidos visualmente nas páginas 16 e 19 e contra o gabarito oficial: 136=C, 137=B, 144=D, 146=B. Não são anulados no gabarito consultado. O JSON `data/inep/enem-2025-validated.json` registra os textos transcritos, alternativas, origem, páginas e hashes. As resoluções e comentários por alternativa são do MOIRAE, não do INEP.
+
+A questão 137 usa uma transcrição acessível dos dados do infográfico (90% dos internautas usam redes; 60% desses usuários são mulheres), identificada como tal, com a referência original. Os demais três itens selecionados não dependem de imagens. Não se publicou automaticamente texto de colunas misturadas ou questão anulada. Os demais candidatos continuam pendentes de revisão.
+
+O botão “Praticar ENEM 2025 · 4 questões”, na área de estudo, usa as mesmas sessões, autenticação, confirmação, termos, cotas e idempotência da prática normal. Retoma a atividade em andamento em vez de duplicá-la. As quatro questões também integram o catálogo de prática; a indicação de origem distingue os itens oficiais dos exemplos autorais.

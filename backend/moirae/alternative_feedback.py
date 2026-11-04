@@ -16,5 +16,5 @@ DISTRACTORS = {
 
 def alternative_feedback(question):
     return [dict(id=chr(97+i),text=text,correct=chr(97+i)==question.answer,
-                 explanation=question.explanation if chr(97+i)==question.answer else DISTRACTORS[question.id][i])
+                 explanation=question.explanation if chr(97+i)==question.answer else (question.alternative_explanations or DISTRACTORS[question.id])[i])
             for i,text in enumerate(question.options)]

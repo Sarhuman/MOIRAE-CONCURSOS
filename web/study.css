@@ -9,3 +9,5 @@
 #answer-feedback{white-space:pre-line;padding:22px;border-left:4px solid #655080;background:#f0ebff;border-radius:12px;line-height:1.8}
 #complete{border-top:5px solid #91ad29;background:linear-gradient(135deg,#f4f9df,#fff)}
 @media(prefers-reduced-motion:reduce){#options label{transition:none}}
+
+#question-title{white-space:pre-line;overflow-wrap:anywhere}

@@ -239,3 +239,17 @@ def test_fourth_official_batch_and_explanations(env):
     assert seen==[162,163,165,166]
     assert r['summary']['correct']==4
     assert c.get('/api/practice/current').json()['session'] is None
+
+def test_fifth_official_batch_and_explanations(env):
+    _,c=env;register(c)
+    s=c.post('/api/practice/enem-2025/batch-5/start',json={}).json();seen=[]
+    assert s['total']==3
+    assert c.post('/api/practice/enem-2025/batch-5/start',json={}).json()['id']==s['id']
+    while s['status']=='active':
+        q=s['question'];seen.append(q['provenance']['number'])
+        assert q['provenance']['batch']==5 and 'answer' not in q
+        r=answer(c,s).json();assert r['correct'];assert len(r['alternatives'])==5
+        s=r['session']
+    assert seen==[167,168,169]
+    assert r['summary']['correct']==3
+    assert c.get('/api/practice/current').json()['session'] is None

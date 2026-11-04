@@ -623,5 +623,116 @@
       "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
       "batch": 4
     }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q167",
+    "area": "Matemática",
+    "subject": "Consumo e leitura de gráficos",
+    "prompt": "Uma pessoa tem um carro bicombustível, que funciona a gás natural veicular (GNV) e a gasolina. O rendimento do carro, medido em km/m³, no caso do gás, ou medido em km/L, no caso da gasolina, depende, entre outros fatores, da velocidade, em km/h, em que o carro trafega. Essa relação está em conformidade com estes gráficos.\n\nTranscrição acessível dos gráficos: os dois gráficos têm velocidade no eixo horizontal e rendimento no eixo vertical. No gráfico do GNV, a curva passa por 8 km/m³ a 20 km/h e 10 km/m³ a 60 km/h, atinge cerca de 12 km/m³ a 100 km/h e termina em 10 km/m³ a 140 km/h. No gráfico da gasolina, a curva passa por 6 km/L a 20 km/h e 8 km/L a 60 km/h, atinge cerca de 11 km/L a 100 km/h e termina em 9 km/L a 140 km/h.\n\nDurante um feriado, essa pessoa realizou uma viagem de 240 km. Para obter uma estimativa de gasto com combustível, assuma que em todo o trajeto se manteve uma velocidade constante de 60 km/h. Considere que, durante metade do caminho, foi utilizado apenas GNV e, na outra metade, apenas gasolina. O que foi pago pelo metro cúbico de GNV e pelo litro de gasolina correspondeu, respectivamente, a R$ 2,00 e a R$ 3,00. Qual foi a diferença, em real, entre os gastos totais com gasolina e com GNV?",
+    "options": [
+      "4",
+      "8",
+      "14",
+      "21",
+      "30"
+    ],
+    "answer": "d",
+    "explanation": "Cada combustível foi usado por 120 km. A 60 km/h, o GNV rende 10 km/m³: 120/10×2 = R$ 24. A gasolina rende 8 km/L: 120/8×3 = R$ 45. A diferença é R$ 21.",
+    "alternative_explanations": [
+      "A diferença entre os gastos é 45−24, não 4.",
+      "É preciso converter distância em consumo e multiplicar pelo preço de cada combustível.",
+      "14 não corresponde à diferença entre R$ 45 e R$ 24.",
+      "Cada combustível foi usado por 120 km. A 60 km/h, o GNV rende 10 km/m³: 120/10×2 = R$ 24. A gasolina rende 8 km/L: 120/8×3 = R$ 45. A diferença é R$ 21.",
+      "30 não corresponde à diferença entre os custos dos dois trechos."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 167,
+      "page": 27,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 5
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q168",
+    "area": "Matemática",
+    "subject": "Comparação de custos",
+    "prompt": "Em um país, a primeira etapa para obtenção da carteira de motorista é a contratação de três produtos:\n• pacote com 20 aulas teóricas;\n• pacote com 10 aulas práticas;\n• aluguel do veículo para realização das aulas práticas.\nUma pessoa que pretende obter a carteira de motorista pesquisou o valor do aluguel do veículo e os valores de cada aula teórica e de cada aula prática em três autoescolas. O quadro apresenta esses valores.\n\nTranscrição acessível do quadro, na ordem valor de cada aula teórica; valor de cada aula prática; aluguel do veículo (em reais): autoescola I: 10; 80; 400. Autoescola II: 30; 50; 200. Autoescola III: 20; 40; 400.\n\nEla contratará os três produtos numa mesma autoescola de modo que o custo total nessa primeira etapa seja o menor possível. A autoescola que será contratada é a",
+    "options": [
+      "I, com o custo total de R$ 1 400,00.",
+      "II, com o custo total de R$ 280,00.",
+      "II, com o custo total de R$ 1 300,00.",
+      "III, com o custo total de R$ 460,00.",
+      "III, com o custo total de R$ 1 200,00."
+    ],
+    "answer": "e",
+    "explanation": "Multiplique as aulas pelos respectivos preços e acrescente o aluguel: I = 20×10+10×80+400 = 1 400; II = 20×30+10×50+200 = 1 300; III = 20×20+10×40+400 = 1 200. O menor custo é o da III.",
+    "alternative_explanations": [
+      "O custo de I está correto, mas não é o menor.",
+      "280 soma apenas uma aula de cada tipo ao aluguel; são 20 teóricas e 10 práticas.",
+      "O custo de II está correto, mas III é mais barata.",
+      "460 considera só uma aula de cada tipo, não os dois pacotes.",
+      "Multiplique as aulas pelos respectivos preços e acrescente o aluguel: I = 20×10+10×80+400 = 1 400; II = 20×30+10×50+200 = 1 300; III = 20×20+10×40+400 = 1 200. O menor custo é o da III."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 168,
+      "page": 27,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 5
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q169",
+    "area": "Matemática",
+    "subject": "Produção e conversão de unidades",
+    "prompt": "A produtividade de soja em uma área cultivada é a média da quantidade de sacas de 50 quilogramas que são produzidas por hectare. O quadro apresenta a área cultivada e a produtividade de soja em certa propriedade, ao longo de cinco safras, com períodos de um ano, de 2011 a 2016.\n\nTranscrição acessível do quadro, na ordem safra; área em hectares; produtividade em sacas de 50 kg por hectare:\n11–12: 200; 40.\n12–13: 220; 30.\n13–14: 250; 45.\n14–15: 250; 45.\n15–16: 200; 50.\n\nO gráfico de linhas que representa a produção de soja dessa propriedade, em tonelada, nessas cinco safras é\n\nAs alternativas abaixo transcrevem os valores marcados nos cinco gráficos, na ordem cronológica das safras. Em todos, o eixo horizontal é Safra e o vertical é Produção (tonelada).",
+    "options": [
+      "400; 330; 562,5; 562,5; 500.",
+      "40; 30; 45; 45; 50.",
+      "200; 220; 250; 250; 200.",
+      "240; 250; 295; 295; 250.",
+      "8; 6,6; 11,25; 11,25; 10."
+    ],
+    "answer": "a",
+    "explanation": "A produção em toneladas é área×produtividade×50/1 000. As cinco produções são 400, 330, 562,5, 562,5 e 500 toneladas.",
+    "alternative_explanations": [
+      "A produção em toneladas é área×produtividade×50/1 000. As cinco produções são 400, 330, 562,5, 562,5 e 500 toneladas.",
+      "Esses valores são produtividades em sacas por hectare, não produções em toneladas.",
+      "Esses valores são áreas cultivadas em hectares.",
+      "Somar área e produtividade não fornece a produção.",
+      "Esses valores multiplicam área e produtividade e dividem por 1 000, mas omitem os 50 kg por saca."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 169,
+      "page": 28,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 5
+    }
   }
 ]

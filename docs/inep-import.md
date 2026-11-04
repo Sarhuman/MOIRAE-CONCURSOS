@@ -91,3 +91,11 @@ Itens 162, 163, 165 e 166, segundo dia, caderno 7 azul, páginas 24–26; gabari
 Resoluções: reciclagem mínima de 140 t; 8 unidades gráficas=80 alunos e total de 36 unidades=360; grupo 4 com média 25 e desvio 1; tempo final de 273 s e redução de 15 s em relação ao quarto trecho. O bloco usa as mesmas regras de conta, quota, sessão e correção. Total integrado: 17 questões oficiais. Os itens 160, 161 e 164 permanecem pendentes de integração visual.
 
 Conferência no navegador: desktop 4/4; celular emulado 3/4 com um erro proposital. Conclusão e atualização sem reinício automático; largura móvel sem rolagem horizontal.
+
+## Quinto lote interativo de 2025
+
+Itens 167, 168 e 169, segundo dia, caderno 7 azul, páginas 27–28; gabaritos D, E e A conferidos no gabarito oficial. A 167 apresenta transcrição acessível dos gráficos, incluindo os rendimentos a 60 km/h: 10 km/m³ para GNV e 8 km/L para gasolina. A 168 preserva todos os valores do quadro de preços. A 169 preserva a tabela das safras e transcreve, em ordem cronológica, os valores dos cinco gráficos alternativos; a adaptação é explicitamente indicada no enunciado.
+
+Resoluções conferidas: 120/8×3−120/10×2=21; totais das autoescolas I=1.400, II=1.300 e III=1.200; produção em toneladas=área×produtividade×50/1.000. Total integrado: 20 questões oficiais, mantendo os blocos anteriores disponíveis.
+
+Conferência por cliques: desktop 3/3; celular emulado 2/3 com um erro proposital. Atualização após conclusão sem reinício automático em ambos; sem rolagem horizontal na largura móvel testada.

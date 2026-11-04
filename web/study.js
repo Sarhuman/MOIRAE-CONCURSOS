@@ -23,6 +23,7 @@ function render(value) {
   $('#official-second').hidden=Boolean(value);
   $('#official-third').hidden=Boolean(value);
   $('#official-fourth').hidden=Boolean(value);
+  $('#official-fifth').hidden=Boolean(value);
   $('#question-panel').hidden=!value || !value.question;
   if (!value) return;
   if(value.status==='completed') { $('#question-panel').hidden=true; $('#complete').hidden=false; $('#summary').textContent=`Atividade concluída: ${value.answered} de ${value.total} questões respondidas. Escolha Fazer outra atividade para iniciar um novo bloco.`; return; }
@@ -44,6 +45,7 @@ $('#auth-form').addEventListener('submit',event=>{event.preventDefault();const m
 $('#logout').addEventListener('click',()=>action(async()=>{await api('/auth/logout',{});showAuth();message('Você saiu da conta.');}));
 async function start() { await action(async()=>{render(await api('/practice/start',{}));}); }
 $('#refresh').addEventListener('click',()=>action(resume));
+$('#official-fifth').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/batch-5/start',{}));}));
 $('#official-fourth').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/batch-4/start',{}));}));
 $('#official-third').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/batch-3/start',{}));}));
 $('#official-second').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/batch-2/start',{}));}));

@@ -37,6 +37,7 @@ ROOT=Path(__file__).resolve().parents[2]
 class CouponDraw(BaseModel):
     model_config=ConfigDict(extra='forbid')
     campaign: str = Field(min_length=1,max_length=80)
+    accepted_rules: Literal[True]
 
 
 class CouponQuote(BaseModel):
@@ -129,7 +130,7 @@ class EssayDraft(BaseModel):
     revision: int=Field(ge=0)
 
 
-class EssaySubmission(BaseModel):
+class EssayText(BaseModel):
     model_config=ConfigDict(extra='forbid')
     key: uuid.UUID
     theme: str=Field(min_length=3,max_length=200)
@@ -144,6 +145,10 @@ class EssaySubmission(BaseModel):
         except UnicodeEncodeError:raise ValueError('Texto inválido.')
         return value
 
+class EssaySubmission(EssayText):
+    funding: Literal['plan_demo','sandbox_wallet']='plan_demo'
+
+
 class PlannedSessionInput(BaseModel):
     model_config=ConfigDict(extra='forbid',strict=True)
     minutes: Literal[15,30,60]
@@ -152,7 +157,7 @@ class FavoriteInput(BaseModel):
     model_config=ConfigDict(extra='forbid',strict=True)
     enabled: bool
 
-class RealEssaySubmission(EssaySubmission):
+class RealEssaySubmission(EssayText):
     accept_external: bool=Field(strict=True)
     @field_validator('accept_external')
     @classmethod
@@ -185,9 +190,9 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
             raise ValueError('Configuração sandbox incompleta; verifique credenciais e origem HTTPS.')
         billing_provider=MercadoPagoSandbox(token)
     billing=Billing(store,billing_provider,billing_collector,billing_secret,origin)
-    essays=Essays(store, enabled=(os.getenv('MOIRAE_ESSAY_DEMO','false').lower()=='true') if essay_demo is None else essay_demo)
-    real_essays=EssayJobs(store,enabled=os.getenv('MOIRAE_ESSAY_AI','false').lower()=='true' and os.getenv('MOIRAE_ESSAY_AI_REVIEWED','false').lower()=='true',model=os.getenv('MOIRAE_ESSAY_MODEL',''))
     wallet=SandboxWallet(store,enabled=os.getenv("MOIRAE_COMMERCE_SANDBOX","false").lower()=="true")
+    essays=Essays(store, wallet=wallet, enabled=(os.getenv('MOIRAE_ESSAY_DEMO','false').lower()=='true') if essay_demo is None else essay_demo)
+    real_essays=EssayJobs(store,enabled=os.getenv('MOIRAE_ESSAY_AI','false').lower()=='true' and os.getenv('MOIRAE_ESSAY_AI_REVIEWED','false').lower()=='true',model=os.getenv('MOIRAE_ESSAY_MODEL',''))
     coupons=SandboxCoupons(store,enabled=wallet.enabled)
     practice=Practice(store)
     exams=Exams(store)
@@ -375,6 +380,19 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     def exam_finish(exam_id:uuid.UUID,auth=Depends(student)):
         return exams.finish(auth['user_id'],str(exam_id))
 
+    @app.get('/carteira')
+    def wallet_page():return FileResponse(ROOT/'web'/'wallet.html')
+
+    @app.get('/api/coupon-experience')
+    def coupon_experience():
+        campaign=os.getenv('MOIRAE_COUPON_CAMPAIGN','').strip()
+        rules=None
+        if campaign and coupons.enabled:
+            try:rules=coupons.rules(campaign)
+            except HTTPException as exc:
+                if exc.status_code!=404:raise
+        return JSONResponse(dict(mode='sandbox' if rules else 'demonstration',rules=rules),headers={'Cache-Control':'no-store'})
+
     @app.get('/api/sandbox/wallet')
     def wallet_snapshot(auth=Depends(student)):
         return wallet.snapshot(auth['user_id'])
@@ -558,7 +576,7 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     @app.post('/api/essays',status_code=201)
     def essay_submit(body:EssaySubmission,request:Request,auth=Depends(student)):
         rate(request,'essay:'+auth['user_id'])
-        return essays.submit(auth['user_id'],str(body.key),body.theme,body.text)
+        return essays.submit(auth['user_id'],str(body.key),body.theme,body.text,body.funding)
 
     @app.get('/api/essays/{essay_id}')
     def essay_detail(essay_id:uuid.UUID,auth=Depends(student)):

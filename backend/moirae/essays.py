@@ -56,8 +56,9 @@ class DemoEvaluator:
 
 
 class Essays:
-    def __init__(self, store, enabled=False, evaluator=None, clock=time.time):
+    def __init__(self, store, enabled=False, evaluator=None, clock=time.time, wallet=None):
         self.store, self.enabled, self.evaluator, self.clock = store, enabled, evaluator or DemoEvaluator(), clock
+        self.wallet = wallet
 
     def guard(self):
         if not self.enabled:
@@ -73,22 +74,32 @@ class Essays:
         grant = db.execute("SELECT * FROM access_grants WHERE user_id=? AND status='active' AND starts_at<=? AND ends_at>? ORDER BY starts_at DESC LIMIT 1", (uid, int(self.clock()), int(self.clock()))).fetchone()
         if not grant:
             raise HTTPException(403, 'O envio exige plano pago ativo no piloto. Correção real ainda indisponível.')
-        used = db.execute("SELECT count(*) FROM essay_submissions WHERE grant_id=? AND status IN ('received','processing','completed')", (grant['order_id'],)).fetchone()[0]
+        used = db.execute("SELECT count(*) FROM essay_submissions WHERE grant_id=? AND status IN ('received','processing','completed') AND NOT EXISTS (SELECT 1 FROM sandbox_essay_credits w WHERE w.essay_id=essay_submissions.id)", (grant['order_id'],)).fetchone()[0]
         return grant, max(0, grant['essay_credits'] - used)
 
-    def submit(self, uid, key, theme, text):
+    def submit(self, uid, key, theme, text, funding="plan_demo"):
         self.guard()
+        if funding not in ('plan_demo','sandbox_wallet'):
+            raise HTTPException(422,'Fonte de crédito inválida.')
+        if funding=='sandbox_wallet':
+            if self.wallet is None:raise HTTPException(503,'Carteira sandbox indisponível.')
+            self.wallet.guard()
         with self.store.connect(write=True) as db:
             old = db.execute('SELECT * FROM essay_submissions WHERE user_id=? AND request_key=?', (uid,key)).fetchone()
             if old:
-                if old['theme'] != theme or old['text'] != text:
+                old_wallet=bool(db.execute('SELECT 1 FROM sandbox_essay_credits WHERE essay_id=?',(old['id'],)).fetchone())
+                if old['theme'] != theme or old['text'] != text or old_wallet != (funding=='sandbox_wallet'):
                     raise HTTPException(409, 'Identificador já usado com outro texto.')
                 return dict(id=old['id'],status=old['status'],mode='demonstration')
             grant, remaining = self.balance(db,uid)
-            if not remaining:
+            if funding=='plan_demo' and not remaining:
                 raise HTTPException(409, 'Créditos de demonstração esgotados neste acesso.')
             eid = str(uuid.uuid4())
             db.execute("INSERT INTO essay_submissions(id,user_id,grant_id,request_key,theme,text,status,created_at) VALUES(?,?,?,?,?,?,'received',?)", (eid,uid,grant['order_id'],key,theme,text,int(self.clock())))
+            if funding=='sandbox_wallet':
+                reservation=self.wallet.reserve(uid,'essay:'+eid,db=db)
+                if reservation['status']!='reserved':raise HTTPException(409,'Reserva já encerrada.')
+                db.execute('INSERT INTO sandbox_essay_credits VALUES(?,?)',(eid,reservation['id']))
             return dict(id=eid,status='received',mode='demonstration')
 
     def process(self, uid, eid):
@@ -99,16 +110,31 @@ class Essays:
             row = self.own(db,uid,eid)
             if row['status'] != 'received':
                 return dict(id=eid,status=row['status'])
+            funding=db.execute('SELECT reservation_id FROM sandbox_essay_credits WHERE essay_id=?',(eid,)).fetchone()
+            if funding:
+                if self.wallet is None:raise HTTPException(503,'Carteira sandbox indisponível.')
+                self.wallet.guard()
+            def release():
+                if funding:self.wallet.settle(uid,funding['reservation_id'],'release',db=db)
             grant = db.execute("SELECT 1 FROM access_grants WHERE order_id=? AND status='active' AND ends_at>?", (row['grant_id'],int(self.clock()))).fetchone()
             if not grant:
+                release()
                 db.execute("UPDATE essay_submissions SET status='failed',error='access_expired' WHERE id=?", (eid,))
                 return dict(id=eid,status='failed')
             db.execute("UPDATE essay_submissions SET status='processing' WHERE id=?", (eid,))
             try:
                 result = validate_result(self.evaluator.evaluate(row['theme'],row['text']), row['text'])
             except Exception:
+                release()
                 db.execute("UPDATE essay_submissions SET status='failed',error='evaluation_unavailable' WHERE id=?", (eid,))
                 return dict(id=eid,status='failed')
+            if funding:
+                try:self.wallet.settle(uid,funding['reservation_id'],'consume',db=db)
+                except HTTPException as exc:
+                    if exc.status_code!=409:raise
+                    release()
+                    db.execute("UPDATE essay_submissions SET status='failed',error='sandbox_credit_unavailable' WHERE id=?",(eid,))
+                    return dict(id=eid,status='failed')
             db.execute("UPDATE essay_submissions SET status='completed',result=? WHERE id=?", (json.dumps(result,ensure_ascii=False),eid))
         return dict(id=eid,status='completed')
 
@@ -116,8 +142,9 @@ class Essays:
         self.guard()
         with self.store.connect() as db:
             row=dict(self.own(db,uid,eid))
+            wallet_funded=bool(db.execute('SELECT 1 FROM sandbox_essay_credits WHERE essay_id=?',(eid,)).fetchone())
             rewrites=[dict(r) for r in db.execute('SELECT id,annotation_id,text,created_at FROM essay_rewrites WHERE essay_id=? ORDER BY created_at,id',(eid,))]
-        return dict(id=eid,theme=row['theme'],text=row['text'],status=row['status'],created_at=row['created_at'],
+        return dict(funding='sandbox_wallet' if wallet_funded else 'plan_demo',id=eid,theme=row['theme'],text=row['text'],status=row['status'],created_at=row['created_at'],
                     result=json.loads(row['result']) if row['result'] else None,error=row['error'],rewrites=rewrites,mode='demonstration')
 
     def history(self,uid):
@@ -126,7 +153,9 @@ class Essays:
             rows=[dict(r) for r in db.execute('SELECT id,theme,status,created_at FROM essay_submissions WHERE user_id=? ORDER BY created_at DESC,id DESC LIMIT 100',(uid,))]
             try: _, remaining=self.balance(db,uid)
             except HTTPException: remaining=0
-        return dict(items=rows,remaining=remaining,mode='demonstration',notice='Créditos de teste separados das futuras correções reais. Histórico mostra até 100 envios recentes.')
+        wallet_enabled=bool(self.wallet and self.wallet.enabled)
+        wallet_remaining=self.wallet.snapshot(uid)['available'] if wallet_enabled else 0
+        return dict(wallet_enabled=wallet_enabled,wallet_remaining=wallet_remaining,items=rows,remaining=remaining,mode='demonstration',notice='Créditos de teste separados das futuras correções reais. Histórico mostra até 100 envios recentes.')
 
     def rewrite(self,uid,eid,key,annotation,text):
         self.guard()

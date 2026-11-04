@@ -50,3 +50,7 @@ A CI passa a executar backend em Windows e Ubuntu. Isso verifica portabilidade a
 Faltam política comercial aprovada, integração da roleta a campanhas reais, adaptador de pedidos/pagamentos/refundos, carteira na interface e integração ao consumo do worker. Nada disso está anunciado como ativo.
 
 A primeira execução Windows revelou dependência de CP1252 em leituras JSON sem codificação explícita. Catálogo comercial, comparador de redações e leituras de fixtures agora usam UTF-8 explícito. Isso mantém acentos e os intervalos UTF-16 de anotações consistentes entre plataformas.
+
+## Integração posterior
+
+A entrega v7 acrescenta schema v13, tela `/carteira`, financiamento explícito da oficina demonstrativa e roleta conectável ao sorteio sandbox. Consulte `wallet-essay-flow-v7.md` para o estado atualizado e comandos Windows. Compra e correção real continuam separadas.

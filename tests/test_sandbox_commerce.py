@@ -152,9 +152,9 @@ def test_sandbox_endpoints_auth_csrf_and_account_export(tmp_path,monkeypatch):
     with app.state.store.connect() as db:
         uid=db.execute('SELECT id FROM users WHERE email=?',('sandbox@example.test',)).fetchone()[0]
     app.state.wallet.grant(uid,'local-only',2,9999999999)
-    assert c.post('/api/sandbox/coupons/draw',json={'campaign':'test'},headers={'X-CSRF-Token':'bad'}).status_code==403
-    assert c.post('/api/sandbox/coupons/draw',json={'campaign':'test'},headers={'Origin':'https://other.test'}).status_code==403
-    draw=c.post('/api/sandbox/coupons/draw',json={'campaign':'test'})
+    assert c.post('/api/sandbox/coupons/draw',json={'campaign':'test','accepted_rules':True},headers={'X-CSRF-Token':'bad'}).status_code==403
+    assert c.post('/api/sandbox/coupons/draw',json={'campaign':'test','accepted_rules':True},headers={'Origin':'https://other.test'}).status_code==403
+    draw=c.post('/api/sandbox/coupons/draw',json={'campaign':'test','accepted_rules':True})
     assert draw.status_code==200
     assert c.post('/api/sandbox/coupons/quote',json={'code':draw.json()['code'],'product':'essencial','total_cents':1}).status_code==422
     exported=c.post('/api/account/export',json={'password':password}).json()

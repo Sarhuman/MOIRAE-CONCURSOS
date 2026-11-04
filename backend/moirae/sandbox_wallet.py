@@ -1,12 +1,22 @@
 """Sandbox-only lots. No purchase endpoint and no connection to real essay credits."""
 import time
 import uuid
+from contextlib import contextmanager
 from fastapi import HTTPException
 
 
 class SandboxWallet:
     def __init__(self, store, enabled=False, clock=time.time):
         self.store, self.enabled, self.clock = store, enabled, clock
+
+    @contextmanager
+    def transaction(self, existing=None):
+        # Caller-owned transactions make essay insertion and reservation atomic.
+        if existing is not None:
+            yield existing
+        else:
+            with self.store.connect(write=True) as db:
+                yield db
 
     def guard(self):
         if not self.enabled:
@@ -33,12 +43,12 @@ class SandboxWallet:
     def event(db, uid, lid, kind, reference, units, now):
         db.execute('INSERT INTO sandbox_wallet_events(user_id,lot_id,kind,reference,units,created_at) VALUES(?,?,?,?,?,?)', (uid, lid, kind, reference, units, now))
 
-    def reserve(self, uid, key):
+    def reserve(self, uid, key, db=None):
         self.guard()
         if not isinstance(key, str) or not 1 <= len(key) <= 120:
             raise ValueError('Identificador inválido.')
         now = int(self.clock())
-        with self.store.connect(write=True) as db:
+        with self.transaction(db) as db:
             old = db.execute('SELECT * FROM sandbox_credit_reservations WHERE user_id=? AND request_key=?', (uid, key)).fetchone()
             if old:
                 return dict(old)
@@ -51,14 +61,14 @@ class SandboxWallet:
             self.event(db, uid, lot['id'], 'reserve', rid, 1, now)
             return dict(db.execute('SELECT * FROM sandbox_credit_reservations WHERE id=?', (rid,)).fetchone())
 
-    def settle(self, uid, rid, action):
+    def settle(self, uid, rid, action, db=None):
         self.guard()
         if action not in ('consume', 'release', 'refund'):
             raise ValueError('Operação inválida.')
         target = {'consume': 'consumed', 'release': 'released', 'refund': 'refunded'}[action]
         expected = 'consumed' if action == 'refund' else 'reserved'
         now = int(self.clock())
-        with self.store.connect(write=True) as db:
+        with self.transaction(db) as db:
             r = db.execute('SELECT * FROM sandbox_credit_reservations WHERE id=? AND user_id=?', (rid, uid)).fetchone()
             if not r:
                 raise HTTPException(404, 'Reserva não encontrada.')
@@ -106,4 +116,4 @@ class SandboxWallet:
         for lot in lots:
             lot['status'] = 'revoked' if lot['revoked_at'] is not None else 'expired' if lot['expires_at'] <= now else 'active'
         return dict(sandbox=True, available=sum(l['available'] for l in lots if l['status'] == 'active'), lots=lots, events=events,
-                    notice='Créditos de teste separados da franquia real e das redações. Não representam compra ou direito a serviço.')
+                    notice='Créditos de teste para a oficina demonstrativa. Não representam compra, avaliação por IA ou correção real.')

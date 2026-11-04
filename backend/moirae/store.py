@@ -87,6 +87,10 @@ CREATE INDEX IF NOT EXISTS sandbox_event_owner ON sandbox_wallet_events(user_id,
 CREATE INDEX IF NOT EXISTS sandbox_reservation_lot ON sandbox_credit_reservations(lot_id,status);
 CREATE INDEX IF NOT EXISTS sandbox_coupon_usage ON sandbox_coupon_redemptions(campaign_id);
 INSERT OR IGNORE INTO schema_version VALUES(11);
+CREATE TABLE IF NOT EXISTS sandbox_essay_credits(
+ essay_id TEXT PRIMARY KEY REFERENCES essay_submissions(id) ON DELETE CASCADE,
+ reservation_id TEXT NOT NULL UNIQUE REFERENCES sandbox_credit_reservations(id) ON DELETE CASCADE);
+INSERT OR IGNORE INTO schema_version VALUES(13);
 CREATE TABLE IF NOT EXISTS idempotency(user_id TEXT NOT NULL REFERENCES users(id),key TEXT NOT NULL,payload TEXT NOT NULL,response TEXT NOT NULL,PRIMARY KEY(user_id,key));
 '''
 

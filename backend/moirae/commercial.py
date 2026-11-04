@@ -4,7 +4,7 @@ from pathlib import Path
 from fastapi import HTTPException
 
 PATH=Path(__file__).resolve().parents[2]/'web'/'portfolio-offers.json'
-def catalog():return json.loads(PATH.read_text())
+def catalog():return json.loads(PATH.read_text(encoding='utf-8'))
 
 def quote(product,cycles=1,installments=1):
     data=catalog();plans={p['id']:p for p in data['plans']};packs={p['id']:p for p in data['credit_packs']}

@@ -25,7 +25,7 @@ def compare(rows):
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('corpus');args=parser.parse_args()
-    try:report=compare(json.loads(Path(args.corpus).read_text()))
+    try:report=compare(json.loads(Path(args.corpus).read_text(encoding='utf-8')))
     except (ValueError,OSError,TypeError):parser.error('Corpus inválido. Confira o formato documentado; conteúdo não será exibido.')
     print(json.dumps(report,ensure_ascii=False,indent=2))
 if __name__=='__main__':main()

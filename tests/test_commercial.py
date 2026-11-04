@@ -39,7 +39,7 @@ def test_public_simulation_is_read_only_and_cannot_checkout(tmp_path):
 
 def test_library_has_complete_authored_exercises_separate_from_practice_catalog():
     from backend.moirae.catalog import BY_ID
-    data=json.loads(Path('web/learning-library.json').read_text());ids=[]
+    data=json.loads(Path('web/learning-library.json').read_text(encoding='utf-8'));ids=[]
     assert len(data['tracks'])==6
     for track in data['tracks']:
         assert track['status']=='pilot_editorial_review' and len(track['lessons'])==3

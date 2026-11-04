@@ -48,3 +48,5 @@ Testes cobrem vencimento, FEFO, idempotência, reserva concorrente, disputa cons
 A CI passa a executar backend em Windows e Ubuntu. Isso verifica portabilidade automatizada, não substitui teste manual no Windows do Henrique.
 
 Faltam política comercial aprovada, integração da roleta a campanhas reais, adaptador de pedidos/pagamentos/refundos, carteira na interface e integração ao consumo do worker. Nada disso está anunciado como ativo.
+
+A primeira execução Windows revelou dependência de CP1252 em leituras JSON sem codificação explícita. Catálogo comercial, comparador de redações e leituras de fixtures agora usam UTF-8 explícito. Isso mantém acentos e os intervalos UTF-16 de anotações consistentes entre plataformas.

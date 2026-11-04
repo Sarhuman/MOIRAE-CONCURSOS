@@ -37,7 +37,7 @@ def test_pdf_to_draft_end_to_end(fixture):
     assert report['candidate_count']==4 and report['published_count']==0
     assert len(report['sources'])==4
     assert all(len(s['sha256'])==64 for s in report['sources'])
-    rows=json.loads((out/'candidates.json').read_text())
+    rows=json.loads((out/'candidates.json').read_text(encoding='utf-8'))
     assert all(r['status']=='draft' and not r['editorial_review'] and not r['rights_review'] for r in rows)
     assert rows[0]['answer']=='a'
     assert rows[1]['key_status']=='annulled' and rows[1]['answer'] is None

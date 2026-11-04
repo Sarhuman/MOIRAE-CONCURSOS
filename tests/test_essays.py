@@ -137,6 +137,6 @@ def test_additive_schema_reopen(setup):
 
 def test_committed_schema_and_fixture():
     from pathlib import Path
-    assert json.loads(Path('data/essay-demo-schema.json').read_text())==Evaluation.model_json_schema()
-    fixture=json.loads(Path('data/essay-demo-fixture.json').read_text())
+    assert json.loads(Path('data/essay-demo-schema.json').read_text(encoding='utf-8'))==Evaluation.model_json_schema()
+    fixture=json.loads(Path('data/essay-demo-fixture.json').read_text(encoding='utf-8'))
     assert validate_result(fixture['result'],fixture['text'])

@@ -96,7 +96,7 @@ class SandboxCoupons:
             db.execute('INSERT INTO sandbox_coupons VALUES(?,?,?,?,?,?)', (code, uid, cid, bps, expires, now))
             return self.draw_result(dict(code=code,discount_bps=bps,expires_at=expires))
 
-    def validated(self, db, uid, code, product, now):
+    def validated(self, db, uid, code, product, now, order_reference=None):
         coupon = db.execute('SELECT * FROM sandbox_coupons WHERE code=? AND user_id=?', (code, uid)).fetchone()
         if not coupon or coupon['expires_at'] <= now:
             raise HTTPException(409, 'Cupom indisponível para esta conta.')
@@ -109,11 +109,44 @@ class SandboxCoupons:
             raise HTTPException(409, 'Produto não elegível.')
         if db.execute('SELECT 1 FROM sandbox_coupon_redemptions WHERE code=?', (code,)).fetchone():
             raise HTTPException(409, 'Cupom já utilizado.')
-        if c['used_count'] >= c['max_uses']:
+        hold=db.execute("SELECT * FROM sandbox_coupon_holds WHERE code=? AND status='reserved' AND expires_at>?",(code,now)).fetchone()
+        if hold and hold['order_id']!=order_reference:
+            raise HTTPException(409,'Cupom reservado por outro pedido.')
+        reserved=db.execute("SELECT count(*) FROM sandbox_coupon_holds WHERE campaign_id=? AND status='reserved' AND expires_at>? AND order_id!=?",(c['id'],now,order_reference or '')).fetchone()[0]
+        if c['used_count']+reserved >= c['max_uses']:
             raise HTTPException(409, 'Limite de usos da campanha atingido.')
         base = PLANS[product]['price_cents']
         discount = base*coupon['discount_bps']//10000
         return dict(sandbox=True, product=product, catalog_version=PLANS[product]['catalog_version'], amount_cents=base, discount_cents=discount, total_cents=base-discount, currency='BRL', checkout_available=False)
+
+    def hold(self, db, uid, code, product, order_reference, expires_at):
+        """Caller-owned transaction coordinates capacity and the immutable order."""
+        self.guard()
+        result=self.validated(db,uid,code,product,int(self.clock()))
+        coupon=db.execute('SELECT * FROM sandbox_coupons WHERE code=?',(code,)).fetchone()
+        expires_at=min(expires_at,coupon['expires_at'])
+        db.execute("INSERT INTO sandbox_coupon_holds VALUES(?,?,?,?,?,'reserved') ON CONFLICT(code) DO UPDATE SET order_id=excluded.order_id,user_id=excluded.user_id,campaign_id=excluded.campaign_id,expires_at=excluded.expires_at,status='reserved'",(code,order_reference,uid,coupon['campaign_id'],expires_at))
+        return result,expires_at
+
+    def commit_hold(self, db, uid, code, product, order_reference, snapshot):
+        self.guard()
+        old=db.execute('SELECT * FROM sandbox_coupon_redemptions WHERE order_reference=?',(order_reference,)).fetchone()
+        if old:
+            if (old['user_id'],old['code'],old['product'],json.loads(old['snapshot']))!=(uid,code,product,snapshot):
+                raise HTTPException(409,'Contrato de cupom divergente.')
+            return
+        now=int(self.clock())
+        self.validated(db,uid,code,product,now,order_reference)
+        hold=db.execute("SELECT * FROM sandbox_coupon_holds WHERE code=? AND order_id=? AND user_id=? AND status='reserved' AND expires_at>?",(code,order_reference,uid,now)).fetchone()
+        if not hold:raise HTTPException(409,'Reserva de cupom encerrada; pagamento requer análise.')
+        # The receipt uses the frozen price, never a new catalog quotation.
+        db.execute('INSERT INTO sandbox_coupon_redemptions VALUES(?,?,?,?,?,?,?,?)',(order_reference,uid,code,hold['campaign_id'],product,json.dumps(snapshot),now,'sandbox'))
+        db.execute('UPDATE sandbox_coupon_campaigns SET used_count=used_count+1 WHERE id=?',(hold['campaign_id'],))
+        db.execute("UPDATE sandbox_coupon_holds SET status='redeemed' WHERE code=?",(code,))
+
+    @staticmethod
+    def release_hold(db, order_reference):
+        db.execute("UPDATE sandbox_coupon_holds SET status='released' WHERE order_id=? AND status='reserved'",(order_reference,))
 
     def quote(self, uid, code, product):
         self.guard()

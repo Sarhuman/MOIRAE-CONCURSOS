@@ -92,6 +92,17 @@ CREATE TABLE IF NOT EXISTS sandbox_essay_credits(
  reservation_id TEXT NOT NULL UNIQUE REFERENCES sandbox_credit_reservations(id) ON DELETE CASCADE);
 INSERT OR IGNORE INTO schema_version VALUES(13);
 CREATE TABLE IF NOT EXISTS idempotency(user_id TEXT NOT NULL REFERENCES users(id),key TEXT NOT NULL,payload TEXT NOT NULL,response TEXT NOT NULL,PRIMARY KEY(user_id,key));
+CREATE TABLE IF NOT EXISTS sandbox_order_contracts(
+ order_id TEXT PRIMARY KEY REFERENCES billing_orders(id),user_id TEXT NOT NULL REFERENCES users(id),
+ kind TEXT NOT NULL CHECK(kind IN ('plan','credit_pack')),snapshot TEXT NOT NULL,expires_at INTEGER NOT NULL,
+ state TEXT NOT NULL CHECK(state IN ('pending','fulfilled','expired','cancelled','revoked','needs_review')),
+ lot_id TEXT UNIQUE REFERENCES sandbox_credit_lots(id),coupon_code TEXT REFERENCES sandbox_coupons(code),review_reason TEXT);
+CREATE TABLE IF NOT EXISTS sandbox_coupon_holds(
+ code TEXT PRIMARY KEY REFERENCES sandbox_coupons(code),order_id TEXT NOT NULL UNIQUE REFERENCES billing_orders(id),
+ user_id TEXT NOT NULL REFERENCES users(id),campaign_id TEXT NOT NULL REFERENCES sandbox_coupon_campaigns(id),
+ expires_at INTEGER NOT NULL,status TEXT NOT NULL CHECK(status IN ('reserved','redeemed','released')));
+CREATE INDEX IF NOT EXISTS sandbox_hold_capacity ON sandbox_coupon_holds(campaign_id,status,expires_at);
+INSERT OR IGNORE INTO schema_version VALUES(15);
 '''
 
 

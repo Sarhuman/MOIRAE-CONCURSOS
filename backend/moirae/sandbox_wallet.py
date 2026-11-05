@@ -1,4 +1,4 @@
-"""Sandbox-only lots. No purchase endpoint and no connection to real essay credits."""
+"""Sandbox-only lots, isolated from real essay credits."""
 import time
 import uuid
 from contextlib import contextmanager
@@ -22,13 +22,13 @@ class SandboxWallet:
         if not self.enabled:
             raise HTTPException(503, 'Carteira sandbox desativada. Nenhum crédito real foi alterado.')
 
-    def grant(self, uid, source, units, expires_at):
-        """Trusted local provisioning only. Never expose as an HTTP top-up route."""
+    def grant(self, uid, source, units, expires_at, db=None):
+        """Trusted provisioning/payment reconciliation; never accept client balance input."""
         self.guard()
         now = int(self.clock())
         if not isinstance(source, str) or not 1 <= len(source) <= 120 or type(units) is not int or not 1 <= units <= 10000 or type(expires_at) is not int or expires_at <= now:
             raise ValueError('Lote inválido.')
-        with self.store.connect(write=True) as db:
+        with self.transaction(db) as db:
             old = db.execute('SELECT * FROM sandbox_credit_lots WHERE source=?', (source,)).fetchone()
             if old:
                 if (old['user_id'], old['units'], old['expires_at']) != (uid, units, expires_at):
@@ -89,11 +89,11 @@ class SandboxWallet:
             self.event(db, uid, lot['id'], action, rid, 1, now)
             return dict(db.execute('SELECT * FROM sandbox_credit_reservations WHERE id=?', (rid,)).fetchone())
 
-    def revoke(self, uid, lid):
+    def revoke(self, uid, lid, db=None):
         """Trusted sandbox refund/chargeback signal; never revives expired credits."""
         self.guard()
         now = int(self.clock())
-        with self.store.connect(write=True) as db:
+        with self.transaction(db) as db:
             lot = db.execute('SELECT * FROM sandbox_credit_lots WHERE id=? AND user_id=?', (lid, uid)).fetchone()
             if not lot:
                 raise HTTPException(404, 'Lote não encontrado.')
@@ -116,4 +116,4 @@ class SandboxWallet:
         for lot in lots:
             lot['status'] = 'revoked' if lot['revoked_at'] is not None else 'expired' if lot['expires_at'] <= now else 'active'
         return dict(sandbox=True, available=sum(l['available'] for l in lots if l['status'] == 'active'), lots=lots, events=events,
-                    notice='Créditos de teste para a oficina demonstrativa. Não representam compra, avaliação por IA ou correção real.')
+                    notice='Créditos de teste para a oficina demonstrativa, sem valor monetário. Não representam avaliação por IA ou correção real. A oficina exige plano ativo no piloto.')

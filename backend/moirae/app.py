@@ -23,6 +23,7 @@ from .billing import Billing
 from .mercadopago import MercadoPagoSandbox, verify_signature
 from .sandbox_wallet import SandboxWallet
 from .sandbox_coupons import SandboxCoupons
+from .sandbox_orders import SandboxOrders
 from .plans import entitlement
 from .catalog import BY_ID
 from .essays import Essays
@@ -100,6 +101,13 @@ class CheckoutInput(BaseModel):
     model_config=ConfigDict(extra='forbid')
     plan: Literal['essencial','avancado']
     key: uuid.UUID
+    coupon_code: str | None=Field(default=None,min_length=1,max_length=80)
+
+
+class CreditPackCheckout(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    product: Literal['creditos-5','creditos-10','creditos-30']
+    key: uuid.UUID
 
 
 class Answer(BaseModel):
@@ -172,7 +180,7 @@ class EssayRewrite(BaseModel):
     text: str=Field(min_length=20,max_length=1200)
 
 
-def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider=None,billing_collector=None,billing_secret=None,essay_demo=None):
+def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider=None,billing_collector=None,billing_secret=None,essay_demo=None,sandbox_pack_validity_days=None):
     origin=origin or os.getenv('MOIRAE_ORIGIN','http://127.0.0.1:8000')
     secure=(os.getenv('MOIRAE_SECURE_COOKIE','true').lower()=='true') if secure is None else secure
     if not origin.startswith(('http://127.0.0.1:','http://localhost:','http://terminal.local:','https://')):
@@ -194,6 +202,9 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     essays=Essays(store, wallet=wallet, enabled=(os.getenv('MOIRAE_ESSAY_DEMO','false').lower()=='true') if essay_demo is None else essay_demo)
     real_essays=EssayJobs(store,enabled=os.getenv('MOIRAE_ESSAY_AI','false').lower()=='true' and os.getenv('MOIRAE_ESSAY_AI_REVIEWED','false').lower()=='true',model=os.getenv('MOIRAE_ESSAY_MODEL',''))
     coupons=SandboxCoupons(store,enabled=wallet.enabled)
+    if sandbox_pack_validity_days is None and os.getenv('MOIRAE_SANDBOX_PACK_VALIDITY_DAYS'):
+        sandbox_pack_validity_days=int(os.environ['MOIRAE_SANDBOX_PACK_VALIDITY_DAYS'])
+    billing.sandbox_orders=SandboxOrders(wallet,coupons,sandbox_pack_validity_days)
     practice=Practice(store)
     exams=Exams(store)
     app=FastAPI(title='MOIRAE — piloto',docs_url=None,redoc_url=None,openapi_url=None)
@@ -429,7 +440,24 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     @app.post('/api/billing/checkout')
     def checkout(body:CheckoutInput,request:Request,auth=Depends(student)):
         rate(request,'checkout:'+auth['user_id'])
-        return billing.start(auth['user_id'],body.plan,str(body.key))
+        return billing.start(auth['user_id'],body.plan,str(body.key),coupon_code=body.coupon_code)
+
+    @app.get('/api/sandbox/credit-packs')
+    def credit_packs():
+        enabled=billing.ready() and wallet.enabled and billing.sandbox_orders.pack_validity_days is not None
+        return dict(sandbox=True,checkout_enabled=enabled,validity_days=billing.sandbox_orders.pack_validity_days,
+                    packs=[dict(id=p['id'],credits=p['credits'],price_cents=commercial_quote(p['id'])['product_total_cents']) for p in commercial_catalog()['credit_packs']],
+                    notice='Somente créditos de teste. Checkout exige provedor sandbox e validade explicitamente configurados; 90 dias continuam sendo proposta comercial. Pagamento externo ainda requer homologação.')
+
+    @app.post('/api/sandbox/credit-packs/checkout')
+    def credit_pack_checkout(body:CreditPackCheckout,request:Request,auth=Depends(student)):
+        rate(request,'checkout:'+auth['user_id'])
+        return billing.start(auth['user_id'],body.product,str(body.key),kind='credit_pack')
+
+    @app.post('/api/sandbox/orders/{order_id}/cancel')
+    def sandbox_cancel(order_id:uuid.UUID,request:Request,auth=Depends(student)):
+        rate(request,'checkout:'+auth['user_id'])
+        return billing.cancel_sandbox(auth['user_id'],str(order_id))
 
     @app.post('/api/billing/orders/{order_id}/refund-request')
     def refund_request(order_id:uuid.UUID,body:Reauthenticate,request:Request,auth=Depends(user)):

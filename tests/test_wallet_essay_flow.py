@@ -165,3 +165,55 @@ def test_wallet_expiry_does_not_restore_available_balance(env):
     assert process(c,eid).json()['status']=='failed'
     assert balance(c)['available']==0
     assert balance(c)['lots'][0]['reserved']==0
+
+def test_wallet_essay_and_reservation_are_isolated_between_accounts(env):
+    app,owner=env
+    eid=send(owner).json()['id']
+    other=TestClient(app,base_url=BASE,headers={'Origin':BASE})
+    created=other.post('/api/auth/register',json={'email':'isolated@example.test','password':'synthetic-isolation-password','accept_terms':True,'adult_pilot':True})
+    assert created.status_code==201
+    other.headers['X-CSRF-Token']=created.json()['csrf']
+    token=app.state.mailer.messages[-1]['link'].split('#token=')[1]
+    assert other.post('/api/auth/verify-email',json={'token':token}).status_code==200
+    assert other.get('/api/essays/'+eid).status_code==404
+    assert process(other,eid).status_code==404
+    assert balance(other)['available']==0 and balance(other)['lots']==[]
+    assert balance(owner)['lots'][0]['reserved']==1
+    assert balance(owner)['lots'][0]['consumed']==0
+    assert process(owner,eid).json()['status']=='completed'
+    assert balance(owner)['lots'][0]['consumed']==1
+
+
+def test_approved_coupon_policy_over_authenticated_api(env,monkeypatch):
+    # Dates and cap here are isolated test fixtures, never an operational campaign.
+    from test_approved_coupon_policy import stamp
+    app,winner=env
+    now=[stamp(2026,11,4)]
+    app.state.coupons.clock=lambda:now[0]
+    app.state.coupons.configure_approved('approved-api-fixture',now[0]-1,now[0]+60,10)
+    monkeypatch.setenv('MOIRAE_COUPON_CAMPAIGN','approved-api-fixture')
+    loser=TestClient(app,base_url=BASE,headers={'Origin':BASE})
+    created=loser.post('/api/auth/register',json={'email':'loser@example.test','password':'synthetic-loser-password','accept_terms':True,'adult_pilot':True})
+    assert created.status_code==201
+    loser.headers['X-CSRF-Token']=created.json()['csrf']
+    token=app.state.mailer.messages[-1]['link'].split('#token=')[1]
+    assert loser.post('/api/auth/verify-email',json={'token':token}).status_code==200
+    tickets=iter([0,1])
+    monkeypatch.setattr('backend.moirae.sandbox_coupons.secrets.randbelow',lambda limit:next(tickets))
+    rules=winner.get('/api/coupon-experience').json()['rules']
+    assert rules['valid_months']==3 and rules['products']==['avancado']
+    body={'campaign':'approved-api-fixture','accepted_rules':True}
+    won=winner.post('/api/sandbox/coupons/draw',json=body).json()
+    lost=loser.post('/api/sandbox/coupons/draw',json=body).json()
+    assert won['won'] and won['discount_bps']==500
+    assert not lost['won'] and lost['code'] is None
+    assert winner.post('/api/sandbox/coupons/draw',json=body).json()==won
+    assert loser.post('/api/sandbox/coupons/draw',json=body).json()==lost
+    quote={'code':won['code'],'product':'avancado'}
+    assert loser.post('/api/sandbox/coupons/quote',json=quote).status_code==409
+    assert winner.post('/api/sandbox/coupons/quote',json={**quote,'product':'essencial'}).status_code==409
+    now[0]+=3600
+    r=winner.post('/api/sandbox/coupons/quote',json=quote)
+    assert r.status_code==200 and r.json()['total_cents']==10450
+    now[0]=won['expires_at']
+    assert winner.post('/api/sandbox/coupons/quote',json=quote).status_code==409

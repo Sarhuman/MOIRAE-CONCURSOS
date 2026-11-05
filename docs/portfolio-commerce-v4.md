@@ -30,7 +30,7 @@ Decisão do usuário: Mercado Pago será o provedor; juros do parcelamento ficam
 | 10 créditos avulsos | R$45 | R$49,50 | Compra única; validade proposta 90 dias |
 | 30 créditos avulsos | R$120 | R$132 | Compra única; validade proposta 90 dias |
 
-Os preços de 6/12 ciclos e os avulsos são propostas, sem checkout. O desconto de pacote é 10%/15% sobre repetir o preço mensal já reajustado. Ciclo tem 30 dias: 12 ciclos são 360 dias, sem chamar esse período de um ano civil. Franquias não são liberadas todas no início e não acumulam. A validade de avulsos ainda precisa integrar termos e operação; não há carteira avulsa funcional nesta entrega.
+Os produtos de 6/12 ciclos continuam sem checkout. Avulsos têm contrato e concessão de lote implementados em sandbox, com checkout desativado por padrão até configurar validade e provedor; ver [ciclo atual](sandbox-orders-v10.md). O desconto de pacote é 10%/15% sobre repetir o preço mensal já reajustado. Ciclo tem 30 dias: 12 ciclos são 360 dias, sem chamar esse período de um ano civil. Franquias não são liberadas todas no início e não acumulam. A validade de avulsos ainda precisa integrar termos e operação; a carteira sandbox é funcional para a oficina demonstrativa; não financia correções reais.
 
 ## Tarifa Mercado Pago e parcelamento
 

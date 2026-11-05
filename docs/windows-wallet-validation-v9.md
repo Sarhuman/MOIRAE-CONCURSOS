@@ -1,3 +1,5 @@
+> Registro histórico da rodada anterior. Consulte [validação e ciclo sandbox v10](sandbox-orders-v10.md) para as mudanças posteriores em pedidos e cupons.
+
 # Validação de carteira e cupons — Windows, 04/11/2026
 
 Base: `f37b8c3`, PR #8. Checkout isolado: `work/moirae-wallet-review`; o checkout anterior e suas alterações locais não foram modificados. Sem WSL, merge, deploy, campanha operacional ou cobrança real.

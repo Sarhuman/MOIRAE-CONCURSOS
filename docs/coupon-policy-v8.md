@@ -1,3 +1,5 @@
+> **Estado atual:** consulte [pedidos sandbox v10](sandbox-orders-v10.md). Este documento registra a entrega anterior; as limitações de integração de pedidos foram parcialmente resolvidas com testes de provedor falso, sem homologação externa ou venda real.
+
 # Política de cupom aprovada em 04/11/2026
 
 Definição do Henrique, registrada em `data/coupon-policies/avancado-5-v1.json`:

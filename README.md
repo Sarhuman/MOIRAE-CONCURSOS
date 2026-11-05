@@ -1,10 +1,12 @@
+> **Ciclo financeiro sandbox:** [contratos, reserva de cupom, lotes e limites atuais](docs/sandbox-orders-v10.md). Não homologado externamente; sem cobrança real.
+
 # MOIRAE
 
-> **Revisão comercial atual:** catálogo mensal sandbox v3 — Essencial R$44 e Avançado R$110 por 30 dias, preservando 10/30 correções. Acréscimo de 10% solicitado pelo usuário. Pacotes de 6/12 ciclos e avulsos são simulações, com juros pagos pelo comprador e confirmação final no Mercado Pago. [Portfólio, tarifas e limites](docs/portfolio-commerce-v4.md).
+> **Revisão comercial atual:** catálogo mensal sandbox v3 — Essencial R$44 e Avançado R$110 por 30 dias, preservando 10/30 correções. Acréscimo de 10% solicitado pelo usuário. Pacotes de 6/12 ciclos seguem como simulações. Avulsos têm ciclo transacional sandbox, bloqueado por padrão até configurar validade e provedor de teste; integração externa não homologada. [Portfólio, tarifas e limites](docs/portfolio-commerce-v4.md).
 
 ### Sua preparação para o ENEM começa aqui.
 
-> **Plano revisado em 03/11/2026:** [estratégia competitiva e próximas entregas](docs/competitive-plan.md). Priorizar direção de arte, prática orientada e evolução em redação. Oferta planejada: Essencial R$40/30 dias com 10 correções IA e Avançado R$100/30 dias com 30. Sem videoaulas. O catálogo sandbox versão 2 usa os novos valores para novos pedidos; condições anteriores são preservadas. Experiência atual no celular aprovada pelo usuário; verificar regressões nas próximas mudanças.
+> **Plano revisado em 03/11/2026:** [estratégia competitiva e próximas entregas](docs/competitive-plan.md). Priorizar direção de arte, prática orientada e evolução em redação. Catálogo mensal sandbox v3: Essencial R$44/30 dias e Avançado R$110/30 dias, com 10/30 créditos previstos. Correção real indisponível. Sem videoaulas. Snapshots anteriores são preservados. Validação visual desta rodada está pendente pelo bloqueio da plataforma.
 
 
 Plataforma web de estudos com questões comentadas, simulados e prática de redação. O ENEM é o foco inicial; concursos são uma possibilidade futura, fora do escopo do primeiro lançamento.
@@ -28,9 +30,9 @@ O site deve funcionar bem no celular e no computador, com navegação por teclad
 
 ## Planos propostos
 
-Decisão comercial: Essencial **R$40 por 30 dias** e Avançado **R$100 por 30 dias**, sem renovação automática. A proposta abaixo define o escopo a implementar; compras reais seguem desabilitadas e os recursos futuros só serão anunciados como disponíveis após validação.
+Decisão comercial: Essencial **R$44 por 30 dias** e Avançado **R$110 por 30 dias**, sem renovação automática. A proposta abaixo define o escopo a implementar; compras reais seguem desabilitadas e os recursos futuros só serão anunciados como disponíveis após validação.
 
-| Recurso planejado | Free | Essencial — R$40/30 dias | Avançado — R$100/30 dias |
+| Recurso planejado | Free | Essencial — R$44/30 dias | Avançado — R$110/30 dias |
 |---|---|---|---|
 | Questões comentadas nas quatro áreas | 30/mês | Sem limite diário comercial | Sem limite diário comercial |
 | Histórico e desempenho | Resultado da atividade | Histórico e evolução por área | Também análise por assunto/habilidade |
@@ -84,7 +86,7 @@ Começar com um **monólito modular**, com responsabilidades claras e uma aplica
 
 Módulos sugeridos: identidade, conteúdo, prática, desempenho, assinaturas e redação. Regras de negócio independentes dos provedores de pagamento e correção.
 
-A stack deste repositório ainda não foi escolhida. O backend do MOIRAE anterior é candidato a reaproveitamento após auditoria de contratos, segurança e manutenção; não copiar todo o sistema automaticamente.
+Este piloto usa FastAPI e SQLite em instância única, com frontend HTML/CSS/JavaScript. O repositório Flutter anterior é independente; não houve migração de stack nesta rodada.
 
 ### Segurança e integridade
 
@@ -125,7 +127,7 @@ A etapa 3 pode usar direitos de acesso de teste; não vender assinaturas antes d
 
 ## Decisões pendentes
 
-- Stack web e quanto reaproveitar do backend anterior.
+- Operação do piloto FastAPI/SQLite de instância única; reaproveitamento adicional exige auditoria.
 - Seleção e avaliação do modelo OpenAI; custo, prazo e rubrica versionada.
 - Catálogo versionado implementado no sandbox; validar custos por aluno antes da venda.
 - Tamanho dos simulados e regras para interrupção e repetição.
@@ -172,7 +174,7 @@ Os links são gravados na caixa de saída local privada, sem envio de e-mail pel
 
 ## Planos e Mercado Pago em teste
 
-Catálogo sandbox versão 2: Essencial **R$ 40,00 / 30 dias / 10 créditos previstos** e Avançado **R$ 100,00 / 30 dias / 30 créditos previstos**. Pedidos antigos reconhecidos mantêm preço e franquia anteriores. Sem renovação automática. `/planos` consulta pedidos próprios e inicia checkout sandbox somente se configurado; `/painel` apresenta acompanhamento básico para acesso pago ativo.
+Catálogo sandbox versão 3: Essencial **R$ 44,00 / 30 dias / 10 créditos previstos** e Avançado **R$ 110,00 / 30 dias / 30 créditos previstos**. Pedidos antigos reconhecidos mantêm preço e franquia anteriores. Sem renovação automática. `/planos` consulta pedidos próprios e inicia checkout sandbox somente se configurado; `/painel` apresenta acompanhamento básico para acesso pago ativo.
 
 O webhook autentica a assinatura e consulta o provedor para conferir valor, moeda, vendedor, pedido e ambiente antes de conceder acesso uma única vez. Uso pago não debita a cota Free; expiração/revogação volta ao Free. O processamento é restrito a testes e não foi validado com uma compra real de sandbox.
 
@@ -203,10 +205,10 @@ Oito questões autorais adicionais estão em `data/content-drafts/authorial-batc
 
 ## Testar agora
 
-[Guia para WSL/Linux com conta Avançado e banco isolado](docs/next-local-test.md). O comando local_playtest cria apenas banco novo, pede senha sem exibi-la e não executa compra ou chamadas externas. Inclui preflight sem exposição de segredos e comparação offline de notas humanas/preditas; nenhuma dessas ferramentas aprova automaticamente a correção por IA.
+[Guia Windows nativo com conta de teste e banco isolado](docs/windows-wallet-validation-v9.md). O comando local_playtest cria apenas banco novo, pede senha sem exibi-la e não executa compra ou chamadas externas. Inclui preflight sem exposição de segredos e comparação offline de notas humanas/preditas; nenhuma dessas ferramentas aprova automaticamente a correção por IA.
 
 ## Biblioteca de amostras e propostas comerciais
 
 `/biblioteca` ou `/biblioteca.html`: seis trilhas escritas e 18 lições autorais introdutórias, em revisão editorial. Progresso apenas no navegador. Nova página pública com portfólio filtrável, comparação de ciclos e créditos avulsos propostos. Sem videoaulas.
 
-GET `/api/commercial/catalog` e `/api/commercial/quote` são somente leitura; estimativas não criam pedidos ou acesso. A tabela acima de propostas históricas deve ser interpretada conforme a revisão v3 e o documento de portfólio. Carteira avulsa, alocações de pacotes longos e cotação efetiva de parcelamento ainda não habilitadas.
+GET `/api/commercial/catalog` e `/api/commercial/quote` são somente leitura; estimativas não criam pedidos ou acesso. A tabela acima de propostas históricas deve ser interpretada conforme a revisão v3 e o documento de portfólio. Carteira avulsa funciona apenas em sandbox demonstrativo; checkout exige configuração explícita e homologação externa. Alocações de pacotes longos e cotação efetiva de parcelamento continuam indisponíveis.

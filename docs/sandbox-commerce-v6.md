@@ -1,3 +1,5 @@
+> **Estado atual:** consulte [pedidos sandbox v10](sandbox-orders-v10.md). Este documento registra a entrega anterior; as limitações de integração de pedidos foram parcialmente resolvidas com testes de provedor falso, sem homologação externa ou venda real.
+
 # Carteira por lote e cupons — infraestrutura sandbox
 
 Esta entrega não ativa vendas, não muda preços e não altera os créditos de redação existentes. É uma camada de domínio testável, separada das tabelas e do worker de correção real. A roleta pública continua sendo demonstração visual e não chama esses endpoints.

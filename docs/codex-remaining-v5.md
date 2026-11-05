@@ -1,3 +1,5 @@
+> **Estado atual:** consulte [pedidos sandbox v10](sandbox-orders-v10.md). Este documento registra a entrega anterior; as limitações de integração de pedidos foram parcialmente resolvidas com testes de provedor falso, sem homologação externa ou venda real.
+
 # Prompt de continuidade — somente pendências
 
 Trabalhe em Sarhuman/MOIRAE-CONCURSOS, branch feat/persistent-essay-demo, PR #8. Confira o HEAD e leia docs/review-fixes-v5.md antes de alterar. Ambiente do Henrique: Windows nativo, PowerShell, .venv-win; sem WSL. Preserve mudanças locais. Não faça merge nem deploy.

@@ -1,0 +1,24 @@
+.venv/
+__pycache__/
+.pytest_cache/
+var/
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+.env
+node_modules/
+
+# PDFs originais e saídas de revisão ficam fora do repositório público.
+imports/
+
+# Ambiente Windows e configuração privada local.
+.venv-win/
+.env.*
+!.env.example
+
+# Bancos e relatórios operacionais nunca devem acompanhar código público.
+*.sqlite
+*.db
+*.db-wal
+*.db-shm
+outputs/

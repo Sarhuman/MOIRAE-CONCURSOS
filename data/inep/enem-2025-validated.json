@@ -1,0 +1,738 @@
+[
+  {
+    "id": "enem-2025-d2-cd7-q136",
+    "area": "Matemática",
+    "subject": "Proporção e consumo",
+    "prompt": "Uma pessoa pretende instalar um kit de gás natural veicular (GNV) em seu carro. Na loja que escolheu para realizar a compra e instalação desse kit, havia cinco modelos de cilindro para armazenamento do gás, cujas capacidades, em metro cúbico, eram, respectivamente: 10, 14, 17, 21 e 25. O preço do cilindro é proporcional à sua capacidade. Esse carro rodará 30 km diariamente, 7 dias por semana, e o consumo do GNV é de 1 m³ a cada 13 km rodados. A pessoa escolherá o modelo de cilindro de menor preço e que garanta apenas um abastecimento semanal. Nessas condições, qual será a capacidade, em metro cúbico, do cilindro escolhido por essa pessoa?",
+    "options": [
+      "10",
+      "14",
+      "17",
+      "21",
+      "25"
+    ],
+    "answer": "c",
+    "explanation": "Em uma semana são 30 × 7 = 210 km. O consumo é 210 ÷ 13 ≈ 16,15 m³. A menor capacidade suficiente é 17 m³.",
+    "alternative_explanations": [
+      "10 m³ permitem 130 km, menos que os 210 km semanais.",
+      "14 m³ permitem 182 km, insuficientes.",
+      "Em uma semana são 30 × 7 = 210 km. O consumo é 210 ÷ 13 ≈ 16,15 m³. A menor capacidade suficiente é 17 m³.",
+      "21 m³ atendem, mas custam mais que o cilindro de 17 m³.",
+      "25 m³ atendem, mas não representam o menor preço."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 136,
+      "page": 16,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE."
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q137",
+    "area": "Matemática",
+    "subject": "Probabilidade",
+    "prompt": "A reportagem de uma revista abordou o uso de redes sociais pelos internautas brasileiros. Alguns dos dados apurados pela reportagem estão apresentados no infográfico.\n\nTranscrição acessível do infográfico “Perfil dos brasileiros nas redes sociais”: 90% dos internautas brasileiros acessam redes sociais; 60% da quantidade de internautas brasileiros que acessam redes sociais são mulheres. Fonte do infográfico: revistagalileu.globo.com, acesso em 22 out. 2015 (adaptado).\n\nSegundo os dados do infográfico, ao se escolher aleatoriamente um internauta brasileiro no período ao qual se refere a reportagem, a probabilidade de ele ser um homem que acessa alguma rede social é",
+    "options": [
+      "30/90",
+      "36/100",
+      "40/100",
+      "40/90",
+      "46/90"
+    ],
+    "answer": "b",
+    "explanation": "Dos usuários de redes sociais, 40% são homens. Assim, 90% × 40% = 36% de todos os internautas, ou 36/100.",
+    "alternative_explanations": [
+      "O numerador 30 não corresponde à quantidade proporcional de homens nas redes.",
+      "Dos usuários de redes sociais, 40% são homens. Assim, 90% × 40% = 36% de todos os internautas, ou 36/100.",
+      "40% é a proporção de homens entre usuários de redes, não entre todos os internautas.",
+      "40/90 não representa a composição de probabilidades solicitada.",
+      "46 não é obtido da distribuição informada."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 137,
+      "page": 16,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE."
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q144",
+    "area": "Matemática",
+    "subject": "Geometria espacial",
+    "prompt": "Uma fábrica utilizou uma impressora 3D para produzir o protótipo de uma peça. O protótipo tem forma de um poliedro convexo, obtido pela justaposição de dois sólidos distintos, um com a forma de um prisma hexagonal regular reto e o outro com a forma de um tronco de pirâmide hexagonal reta. A base maior do tronco de pirâmide coincide com uma das bases do prisma. Após a impressão do protótipo, ele foi encaminhado ao setor de customização para realização da pintura de sua superfície. O critério definido para realização da pintura considera que faces congruentes entre si devem ser pintadas com uma mesma cor, e faces não congruentes entre si devem apresentar cores distintas. Qual é a quantidade de cores utilizadas para pintar o protótipo?",
+    "options": [
+      "9",
+      "8",
+      "6",
+      "4",
+      "3"
+    ],
+    "answer": "d",
+    "explanation": "As faces externas formam quatro grupos: retângulos laterais do prisma, trapézios laterais do tronco, base hexagonal do prisma e base menor do tronco. As duas bases externas têm tamanhos diferentes. A face de contato é interna e não recebe pintura.",
+    "alternative_explanations": [
+      "Não se conta uma cor por conjunto arbitrário de faces: agrupam-se faces congruentes.",
+      "O número de faces não determina diretamente a quantidade de cores.",
+      "As seis faces laterais congruentes de cada sólido compartilham uma cor.",
+      "As faces externas formam quatro grupos: retângulos laterais do prisma, trapézios laterais do tronco, base hexagonal do prisma e base menor do tronco. As duas bases externas têm tamanhos diferentes. A face de contato é interna e não recebe pintura.",
+      "As duas bases hexagonais externas têm tamanhos diferentes e precisam de cores distintas."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 144,
+      "page": 19,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE."
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q146",
+    "area": "Matemática",
+    "subject": "Números decimais",
+    "prompt": "No atletismo, um grande desafio da prova de 100 metros rasos é a sua conclusão num tempo abaixo da marca de referência dos 10,00 segundos. Vários atletas já alcançaram esse feito. Em 2009, o jamaicano Usain Bolt estabeleceu o recorde mundial masculino dessa prova, com o tempo de 9,58 segundos. Qual é a diferença, em segundo, entre a marca de referência e a marca estabelecida por Usain Bolt em 2009?",
+    "options": [
+      "0,02",
+      "0,42",
+      "0,52",
+      "1,02",
+      "1,42"
+    ],
+    "answer": "b",
+    "explanation": "A diferença é 10,00 − 9,58 = 0,42 segundo.",
+    "alternative_explanations": [
+      "0,02 não é a diferença entre 10,00 e 9,58.",
+      "A diferença é 10,00 − 9,58 = 0,42 segundo.",
+      "O empréstimo na subtração deve resultar em 42 centésimos, não 52.",
+      "A diferença é menor que um segundo.",
+      "A diferença é menor que um segundo."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 146,
+      "page": 19,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE."
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q150",
+    "area": "Matemática",
+    "subject": "Proporcionalidade composta",
+    "prompt": "Uma fábrica de tijolos ecológicos com 3 funcionários, cada um trabalhando 6 horas diárias, produz 720 unidades por dia. Para atender ao crescimento da demanda por esse tipo de tijolo, essa fábrica passou a ter 5 funcionários, cada um trabalhando 9 horas por dia, aumentando, assim, sua capacidade de produção. Todos os funcionários produzem igual quantidade de tijolos a cada hora, independentemente de trabalharem 6 ou 9 horas diárias. O número de tijolos fabricados diariamente após o aumento da capacidade de produção é",
+    "options": [
+      "800",
+      "1 080",
+      "1 200",
+      "1 800",
+      "2 520"
+    ],
+    "answer": "d",
+    "explanation": "A produção por funcionário-hora é 720 ÷ (3 × 6) = 40 tijolos. A nova produção é 5 × 9 × 40 = 1 800 tijolos.",
+    "alternative_explanations": [
+      "800 não corresponde à produção em 45 horas de trabalho somadas.",
+      "1 080 considera apenas o aumento de horas diárias.",
+      "1 200 considera apenas o aumento do número de funcionários.",
+      "A produção por funcionário-hora é 720 ÷ (3 × 6) = 40 tijolos. A nova produção é 5 × 9 × 40 = 1 800 tijolos.",
+      "2 520 não corresponde ao produto dos dois fatores de crescimento."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 150,
+      "page": 21,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 2
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q151",
+    "area": "Matemática",
+    "subject": "Sistemas de numeração",
+    "prompt": "Para acompanhar o fluxo de visitantes em seu prédio, uma empresa estabeleceu um código de identificação para a visitação. De acordo com a regra estabelecida, cada visitante será identificado com um código sequencial numérico com 7 dígitos, determinado, da esquerda para a direita, da seguinte forma:\n• o primeiro dígito indica o andar ao qual o visitante se dirige, que é um número de 1 a 4;\n• os dois próximos dígitos correspondem ao número do setor da empresa ao qual o visitante se destina. Esse número varia de 01 a 20;\n• os três dígitos seguintes correspondem ao número do funcionário da empresa com quem o visitante irá se reunir. Esse número varia de 001 a 135;\n• o último dígito indica se o visitante chegou à empresa pela manhã, dígito 0, ou à tarde, dígito 1.\nUm visitante chegou à empresa às 10 horas da manhã para se reunir com o funcionário identificado pelo número 109, que trabalha no setor 08 da empresa, localizado no 2º andar. O código de identificação desse visitante é",
+    "options": [
+      "0109082",
+      "0281090",
+      "1010982",
+      "2081090",
+      "2810910"
+    ],
+    "answer": "d",
+    "explanation": "Concatene na ordem definida: andar 2, setor 08, funcionário 109, manhã 0. Resultado: 2|08|109|0 = 2081090.",
+    "alternative_explanations": [
+      "A sequência não começa pelo andar 2.",
+      "O primeiro dígito deve ser 2, não 0.",
+      "O primeiro dígito deve ser 2, não 1.",
+      "Concatene na ordem definida: andar 2, setor 08, funcionário 109, manhã 0. Resultado: 2|08|109|0 = 2081090.",
+      "O setor deve ocupar dois dígitos: 08; não se pode retirar o zero."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 151,
+      "page": 21,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 2
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q152",
+    "area": "Matemática",
+    "subject": "Probabilidade e permutações",
+    "prompt": "Quatro candidatos se apresentaram para realizar a prova de um concurso. Antes de iniciar a prova, os celulares dos quatro candidatos foram recolhidos pelo aplicador, que os guardou, cada um, dentro de um envelope preto. Ao término da prova, o aplicador devolveu os quatro envelopes com os celulares aos quatro candidatos, de maneira aleatória, já que não havia feito a identificação dos envelopes. A probabilidade de que todos os candidatos tenham recebido de volta os envelopes com os seus respectivos celulares é",
+    "options": [
+      "1/2",
+      "1/10",
+      "1/16",
+      "1/24",
+      "1/256"
+    ],
+    "answer": "d",
+    "explanation": "Existem 4! = 24 distribuições equiprováveis dos quatro envelopes. Apenas uma devolve todos os celulares aos donos. A probabilidade é 1/24.",
+    "alternative_explanations": [
+      "Há mais de duas distribuições possíveis.",
+      "O total de distribuições é 24, não 10.",
+      "As escolhas são sem reposição: não há quatro escolhas independentes com dois resultados.",
+      "Existem 4! = 24 distribuições equiprováveis dos quatro envelopes. Apenas uma devolve todos os celulares aos donos. A probabilidade é 1/24.",
+      "4⁴ conta escolhas com repetição; cada envelope é entregue uma única vez."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 152,
+      "page": 21,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 2
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q154",
+    "area": "Matemática",
+    "subject": "Leitura de gráficos",
+    "prompt": "Uma livraria comercializa livros dos seguintes gêneros literários: ficção científica, autoajuda, romance e biografia. O gráfico apresenta o estoque dos livros que essa livraria tem, por gênero literário e por nacionalidade do autor, bem como a demanda por gênero literário, obtida por meio de uma enquete feita com seus clientes habituais.\n\nTranscrição acessível do gráfico “Estoque e demanda por livros”, na ordem estoque de autor brasileiro; estoque de autor estrangeiro; demanda:\nFicção: 80; 120; 160.\nAutoajuda: 50; 80; 135.\nRomance: 40; 105; 140.\nBiografia: 45; 50; 80.\n\nO gerente da livraria fará a encomenda de novos exemplares somente do gênero cuja quantidade em estoque seja insuficiente para atender à demanda constatada pela enquete. O gênero de livro do qual o gerente deverá encomendar mais exemplares é",
+    "options": [
+      "ficção, pois é o que apresenta maior demanda.",
+      "biografia, pois é o gênero que tem a menor demanda.",
+      "autoajuda, pois a quantidade em estoque é inferior à demanda.",
+      "biografia, pois é o gênero que tem a menor quantidade de livros em estoque.",
+      "romance, pois é o que apresenta o menor estoque de livros de autores brasileiros."
+    ],
+    "answer": "c",
+    "explanation": "Some os estoques das duas origens: ficção 200, autoajuda 130, romance 145 e biografia 95. Somente autoajuda tem estoque abaixo da demanda: faltam 5 livros para atender 135 pedidos.",
+    "alternative_explanations": [
+      "Ficção tem 200 livros para demanda de 160: não há falta.",
+      "Menor demanda não implica falta; biografia tem 95 livros para demanda de 80.",
+      "Some os estoques das duas origens: ficção 200, autoajuda 130, romance 145 e biografia 95. Somente autoajuda tem estoque abaixo da demanda: faltam 5 livros para atender 135 pedidos.",
+      "Biografia tem estoque suficiente, mesmo com total menor.",
+      "É preciso somar os livros brasileiros e estrangeiros; romance tem 145 para demanda de 140."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 154,
+      "page": 22,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 2
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q155",
+    "area": "Matemática",
+    "subject": "Análise combinatória",
+    "prompt": "Dez casais fundaram um grupo de dança e decidiram constituir uma diretoria com três cargos: presidente, secretário e tesoureiro. Para maior representatividade, decidiu-se que no máximo uma pessoa por casal poderá ocupar um cargo nessa diretoria. Quantas diretorias diferentes podem ser constituídas por esses 10 casais?",
+    "options": [
+      "10 × 9 × 8",
+      "20 × 18 × 16",
+      "20 × 19 × 18",
+      "10 × 9 × 8 × 2",
+      "20 × 18 × 16 × 2"
+    ],
+    "answer": "b",
+    "explanation": "Há 20 escolhas para presidente. Excluindo seu casal, restam 18 para secretário. Excluindo os dois casais escolhidos, restam 16 para tesoureiro: 20 × 18 × 16.",
+    "alternative_explanations": [
+      "Escolher apenas casais não distingue qual integrante ocupa cada cargo.",
+      "Há 20 escolhas para presidente. Excluindo seu casal, restam 18 para secretário. Excluindo os dois casais escolhidos, restam 16 para tesoureiro: 20 × 18 × 16.",
+      "19 e 18 não excluem os cônjuges das pessoas já escolhidas.",
+      "É preciso considerar duas pessoas possíveis em cada um dos três casais, não apenas em um.",
+      "O fator 2 adicional conta possibilidades que já estão incluídas em 20, 18 e 16."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 155,
+      "page": 23,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 3
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q156",
+    "area": "Matemática",
+    "subject": "Escalas",
+    "prompt": "Um artista, que costuma fazer desenhos com areia na praia, pediu a um banhista que fizesse um pequeno desenho, que serviria de esboço para uma grande obra de arte a ser feita na areia. Esse desenho está representado na figura.\n\nTranscrição acessível da figura: um sol estilizado formado por um disco e oito raios triangulares; a largura total e a altura total indicadas são, ambas, 20 cm.\n\nApós a conclusão, a obra de arte obtida manteve as mesmas proporções do desenho feito pelo banhista, sendo que as medidas indicadas na figura foram ampliadas para 30 m. Em qual escala esse desenho representa a obra de arte?",
+    "options": [
+      "1 : 1,5",
+      "1 : 2,25",
+      "1 : 10",
+      "1 : 100",
+      "1 : 150"
+    ],
+    "answer": "e",
+    "explanation": "Converta 30 m em 3 000 cm. A escala desenho:obra é 20:3 000 = 1:150.",
+    "alternative_explanations": [
+      "Comparar 20 e 30 sem igualar as unidades produz uma escala incorreta.",
+      "Escala linear não é a razão de áreas.",
+      "A razão entre medidas na mesma unidade é 150, não 10.",
+      "20 cm para 30 m corresponde a fator 150.",
+      "Converta 30 m em 3 000 cm. A escala desenho:obra é 20:3 000 = 1:150."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 156,
+      "page": 23,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 3
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q157",
+    "area": "Matemática",
+    "subject": "Razões e proporções",
+    "prompt": "O cortisol é um hormônio produzido pelas glândulas adrenais e pode ser considerado um importante marcador do estresse fisiológico. Em um estudo desenvolvido com enfermeiros, foi verificado que a concentração de cortisol salivar em um dia de trabalho, denotada por T, era, em média, 1,59 vezes a concentração de cortisol salivar em um dia de folga, denotada por F.\nROCHA, M. C. P. et al. Estresse em enfermeiros: o uso do cortisol salivar no dia de trabalho e de folga. Rev. Esc. Enferm. USP, n. 5, 2013 (adaptado).\nNesse estudo, a relação obtida entre T e F foi",
+    "options": [
+      "T = 1,59 + F",
+      "F = 1,59 + T",
+      "T/F = 1,59",
+      "F/T = 1,59",
+      "F · T = 1,59"
+    ],
+    "answer": "c",
+    "explanation": "Ser 1,59 vezes significa T = 1,59F. Dividindo por F, obtém-se T/F = 1,59.",
+    "alternative_explanations": [
+      "O enunciado estabelece multiplicação, não soma.",
+      "Além de usar soma, a expressão coloca a concentração de folga como maior.",
+      "Ser 1,59 vezes significa T = 1,59F. Dividindo por F, obtém-se T/F = 1,59.",
+      "A razão foi invertida: F/T é 1/1,59.",
+      "O valor informado é uma razão, não o produto das concentrações."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 157,
+      "page": 23,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 3
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q158",
+    "area": "Matemática",
+    "subject": "Custos e porcentagens",
+    "prompt": "Um estacionamento possui 120 vagas para veículos, e todas essas vagas estão ocupadas. Cada cliente paga uma mensalidade para utilizar uma vaga, que é calculada com base nas despesas mensais do estacionamento e no lucro pretendido. As despesas mensais do estacionamento são: R$ 14 240,00 com manutenção mais R$ 36,00 de seguro por veículo. O lucro do estacionamento é determinado pela diferença do valor arrecadado com as mensalidades pelas despesas efetuadas. A partir do mês seguinte, o valor do seguro por veículo aumentará em 20%, e as despesas com manutenção permanecerão sem alterações. Com isso, o dono do estacionamento reajustará as mensalidades para obter um lucro mensal de R$ 10 000,00. Apesar desse reajuste, todas as vagas continuarão ocupadas. O valor, em real, da mensalidade reajustada será",
+    "options": [
+      "185,60",
+      "226,09",
+      "245,20",
+      "268,93",
+      "285,60"
+    ],
+    "answer": "c",
+    "explanation": "O seguro passa a 36 × 1,20 = 43,20 por veículo, totalizando 5 184. A receita necessária é 14 240 + 5 184 + 10 000 = 29 424. Dividindo por 120 vagas: R$ 245,20.",
+    "alternative_explanations": [
+      "Esse valor não cobre simultaneamente as despesas reajustadas e o lucro pretendido.",
+      "A divisão da receita necessária por 120 resulta em 245,20.",
+      "O seguro passa a 36 × 1,20 = 43,20 por veículo, totalizando 5 184. A receita necessária é 14 240 + 5 184 + 10 000 = 29 424. Dividindo por 120 vagas: R$ 245,20.",
+      "O aumento de 20% incide apenas sobre o seguro, não sobre todos os custos.",
+      "Esse valor excede a mensalidade necessária para o lucro indicado."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 158,
+      "page": 23,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 3
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q159",
+    "area": "Matemática",
+    "subject": "Conversão de volume",
+    "prompt": "O dono de uma sorveteria armazena sorvete em potes de 20 000 cm³. Ele serve o sorvete em taças, em porções de 250 mL. A quantidade de taças que ele consegue servir a partir de um pote cheio de sorvete é",
+    "options": [
+      "5",
+      "8",
+      "50",
+      "80",
+      "800"
+    ],
+    "answer": "d",
+    "explanation": "Como 1 cm³ = 1 mL, o pote contém 20 000 mL. Dividindo por 250 mL por taça, obtêm-se 80 taças.",
+    "alternative_explanations": [
+      "20 000 dividido por 250 não resulta em 5.",
+      "8 taças consumiriam apenas 2 000 mL.",
+      "50 taças consumiriam 12 500 mL, deixando sorvete no pote.",
+      "Como 1 cm³ = 1 mL, o pote contém 20 000 mL. Dividindo por 250 mL por taça, obtêm-se 80 taças.",
+      "800 taças exigiriam 200 000 mL, dez vezes o volume disponível."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 159,
+      "page": 23,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 3
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q162",
+    "area": "Matemática",
+    "subject": "Inequações e custos",
+    "prompt": "Uma empresa produziu, em um determinado mês, 110 toneladas de plástico a partir de derivados de petróleo e 80 toneladas a partir de plásticos reciclados. O custo para reciclar uma tonelada de plástico é de R$ 500,00, que equivale a 5% do custo para produzir a mesma quantidade de plástico a partir de derivados de petróleo. Para o mês seguinte, a meta dessa empresa é produzir a mesma quantidade de plástico que foi produzida nesse mês, mas com redução de, pelo menos, 50% no custo de produção. Para que no mês seguinte a empresa atinja a meta, a quantidade mínima de toneladas de plástico que devem ser produzidas a partir de reciclagem deverá ser",
+    "options": [
+      "135",
+      "140",
+      "155",
+      "160",
+      "175"
+    ],
+    "answer": "b",
+    "explanation": "O custo por tonelada de plástico de petróleo é 500/0,05 = 10 000. O custo inicial é 110×10 000 + 80×500 = 1 140 000. Para manter 190 toneladas e gastar no máximo 570 000: 500x + 10 000(190−x) ≤ 570 000. Assim, x ≥ 140.",
+    "alternative_explanations": [
+      "135 toneladas recicladas ainda custariam 617 500, acima da meta.",
+      "O custo por tonelada de plástico de petróleo é 500/0,05 = 10 000. O custo inicial é 110×10 000 + 80×500 = 1 140 000. Para manter 190 toneladas e gastar no máximo 570 000: 500x + 10 000(190−x) ≤ 570 000. Assim, x ≥ 140.",
+      "155 atende, mas não é a quantidade mínima.",
+      "160 atende, mas não é a quantidade mínima.",
+      "175 atende, mas não é a quantidade mínima."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 162,
+      "page": 24,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "no_image",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 4
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q163",
+    "area": "Matemática",
+    "subject": "Gráficos e proporcionalidade",
+    "prompt": "Em uma escola, todos os estudantes do ensino médio praticam uma das três modalidades esportivas oferecidas como atividade física, e cada um deles pratica somente uma dessas atividades. Os gráficos trazem alguns dados relativos aos quantitativos de estudantes que praticam essas modalidades esportivas nessa escola, apesar de algumas quantidades não terem sido informadas.\n\nTranscrição acessível dos gráficos: no gráfico de barras por série, as alturas, em intervalos iguais da grade sem valores numéricos no eixo vertical, são, na ordem futebol, vôlei e basquete: 1ª série: 7, 3 e 1; 2ª série: 6, 3 e 3; 3ª série: 5, 4 e 4. Esses números descrevem alturas relativas, não quantidades de estudantes. No gráfico de setores, futebol ocupa metade do círculo; o setor de basquete informa 80 estudantes; o setor restante representa vôlei.\n\nQual é a quantidade de estudantes no ensino médio dessa escola?",
+    "options": [
+      "720",
+      "360",
+      "320",
+      "288",
+      "240"
+    ],
+    "answer": "b",
+    "explanation": "As alturas de basquete somam 1+3+4=8 unidades, equivalentes a 80 estudantes; cada unidade vale 10. As alturas das três modalidades somam 36 unidades, portanto são 360 estudantes. Como conferência, futebol soma 18 unidades e representa metade do total.",
+    "alternative_explanations": [
+      "720 dobra indevidamente o total obtido pela escala.",
+      "As alturas de basquete somam 1+3+4=8 unidades, equivalentes a 80 estudantes; cada unidade vale 10. As alturas das três modalidades somam 36 unidades, portanto são 360 estudantes. Como conferência, futebol soma 18 unidades e representa metade do total.",
+      "320 não corresponde à soma de 36 unidades na escala de 10 estudantes.",
+      "288 não utiliza corretamente a equivalência de 8 unidades a 80 estudantes.",
+      "240 não corresponde ao total das três modalidades."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 163,
+      "page": 25,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 4
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q165",
+    "area": "Matemática",
+    "subject": "Estatística e dispersão",
+    "prompt": "Em um estudo clínico, 55 mulheres foram distribuídas, aleatoriamente, em 5 grupos de 11 pessoas. Para testar uma nova medicação, será escolhido um grupo no qual a maioria das mulheres tenha idades entre 20 e 30 anos. Os demais grupos tomarão placebo ou medicações já existentes no mercado. O quadro, parcialmente preenchido, informa alguns dados relativos às idades das mulheres desses grupos.\n\nTranscrição acessível do quadro (campos não mencionados estão em branco): grupo 1: média 25, desvio padrão 10; grupo 2: mediana 25, desvio padrão 9; grupo 3: moda 25; grupo 4: média 25, desvio padrão 1; grupo 5: menor idade 20 e maior idade 35.\n\nMesmo com o quadro incompleto, foi possível selecionar um desses grupos porque, apenas com os dados apresentados no quadro, foi identificado um grupo que, certamente, atendia ao critério de escolha. O grupo escolhido foi o",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "answer": "d",
+    "explanation": "No grupo 4, a média é 25 e o desvio padrão é 1. Para 11 pessoas, a soma dos quadrados dos desvios é 11 (ou 10 pela definição amostral); uma única idade a 5 anos da média já contribuiria 25. Assim, as idades estão entre 20 e 30. Os outros dados não garantem maioria nesse intervalo.",
+    "alternative_explanations": [
+      "Média 25 com desvio 10 permite idades bastante afastadas do intervalo.",
+      "Mediana 25, sozinha, não garante maioria entre 20 e 30.",
+      "Moda 25 não significa que a maioria das pessoas tenha essa idade.",
+      "No grupo 4, a média é 25 e o desvio padrão é 1. Para 11 pessoas, a soma dos quadrados dos desvios é 11 (ou 10 pela definição amostral); uma única idade a 5 anos da média já contribuiria 25. Assim, as idades estão entre 20 e 30. Os outros dados não garantem maioria nesse intervalo.",
+      "Mínimo 20 e máximo 35 não informam quantas mulheres têm mais de 30."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 165,
+      "page": 26,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 4
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q166",
+    "area": "Matemática",
+    "subject": "Média e ritmo de corrida",
+    "prompt": "Pace é um termo usado por um corredor para denominar o seu ritmo médio em uma corrida. Representa o tempo médio, em segundo, que esse corredor leva para percorrer 1 km. O esquema apresenta o tempo, em segundo, que um corredor levou para cruzar as marcas que definem os quatro primeiros trechos de 1 km, em uma corrida de 5 km, e o tempo gasto para percorrer cada trecho de 1 km.\n\nTranscrição acessível do esquema: tempos acumulados em 0, 1, 2, 3 e 4 km: 0 s, 272 s, 556 s, 844 s e 1 132 s. Tempos dos quatro primeiros trechos de 1 km: 272 s, 284 s, 288 s e 288 s. O quinto trecho vai de 4 a 5 km.\n\nO melhor pace que esse corredor alcançou em corridas de 5 km foi 281 s/km. Para que consiga repetir nessa corrida seu melhor pace em corridas de 5 km, seu tempo, no 5º trecho, deve ser quantos segundos menor do que o que ele gastou para percorrer o 4º trecho?",
+    "options": [
+      "1",
+      "2",
+      "8",
+      "9",
+      "15"
+    ],
+    "answer": "e",
+    "explanation": "O tempo total desejado é 5×281 = 1 405 s. Após 4 km, passaram-se 1 132 s; faltam 273 s para o quinto trecho. A diferença em relação ao quarto trecho é 288−273 = 15 s.",
+    "alternative_explanations": [
+      "A diferença calculada é 15 s, não 1 s.",
+      "A diferença calculada é 15 s, não 2 s.",
+      "É necessário comparar 273 s com os 288 s do quarto trecho.",
+      "É necessário usar o tempo total de 1 405 s para os cinco quilômetros.",
+      "O tempo total desejado é 5×281 = 1 405 s. Após 4 km, passaram-se 1 132 s; faltam 273 s para o quinto trecho. A diferença em relação ao quarto trecho é 288−273 = 15 s."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 166,
+      "page": 26,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 4
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q167",
+    "area": "Matemática",
+    "subject": "Consumo e leitura de gráficos",
+    "prompt": "Uma pessoa tem um carro bicombustível, que funciona a gás natural veicular (GNV) e a gasolina. O rendimento do carro, medido em km/m³, no caso do gás, ou medido em km/L, no caso da gasolina, depende, entre outros fatores, da velocidade, em km/h, em que o carro trafega. Essa relação está em conformidade com estes gráficos.\n\nTranscrição acessível dos gráficos: os dois gráficos têm velocidade no eixo horizontal e rendimento no eixo vertical. No gráfico do GNV, a curva passa por 8 km/m³ a 20 km/h e 10 km/m³ a 60 km/h, atinge cerca de 12 km/m³ a 100 km/h e termina em 10 km/m³ a 140 km/h. No gráfico da gasolina, a curva passa por 6 km/L a 20 km/h e 8 km/L a 60 km/h, atinge cerca de 11 km/L a 100 km/h e termina em 9 km/L a 140 km/h.\n\nDurante um feriado, essa pessoa realizou uma viagem de 240 km. Para obter uma estimativa de gasto com combustível, assuma que em todo o trajeto se manteve uma velocidade constante de 60 km/h. Considere que, durante metade do caminho, foi utilizado apenas GNV e, na outra metade, apenas gasolina. O que foi pago pelo metro cúbico de GNV e pelo litro de gasolina correspondeu, respectivamente, a R$ 2,00 e a R$ 3,00. Qual foi a diferença, em real, entre os gastos totais com gasolina e com GNV?",
+    "options": [
+      "4",
+      "8",
+      "14",
+      "21",
+      "30"
+    ],
+    "answer": "d",
+    "explanation": "Cada combustível foi usado por 120 km. A 60 km/h, o GNV rende 10 km/m³: 120/10×2 = R$ 24. A gasolina rende 8 km/L: 120/8×3 = R$ 45. A diferença é R$ 21.",
+    "alternative_explanations": [
+      "A diferença entre os gastos é 45−24, não 4.",
+      "É preciso converter distância em consumo e multiplicar pelo preço de cada combustível.",
+      "14 não corresponde à diferença entre R$ 45 e R$ 24.",
+      "Cada combustível foi usado por 120 km. A 60 km/h, o GNV rende 10 km/m³: 120/10×2 = R$ 24. A gasolina rende 8 km/L: 120/8×3 = R$ 45. A diferença é R$ 21.",
+      "30 não corresponde à diferença entre os custos dos dois trechos."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 167,
+      "page": 27,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 5
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q168",
+    "area": "Matemática",
+    "subject": "Comparação de custos",
+    "prompt": "Em um país, a primeira etapa para obtenção da carteira de motorista é a contratação de três produtos:\n• pacote com 20 aulas teóricas;\n• pacote com 10 aulas práticas;\n• aluguel do veículo para realização das aulas práticas.\nUma pessoa que pretende obter a carteira de motorista pesquisou o valor do aluguel do veículo e os valores de cada aula teórica e de cada aula prática em três autoescolas. O quadro apresenta esses valores.\n\nTranscrição acessível do quadro, na ordem valor de cada aula teórica; valor de cada aula prática; aluguel do veículo (em reais): autoescola I: 10; 80; 400. Autoescola II: 30; 50; 200. Autoescola III: 20; 40; 400.\n\nEla contratará os três produtos numa mesma autoescola de modo que o custo total nessa primeira etapa seja o menor possível. A autoescola que será contratada é a",
+    "options": [
+      "I, com o custo total de R$ 1 400,00.",
+      "II, com o custo total de R$ 280,00.",
+      "II, com o custo total de R$ 1 300,00.",
+      "III, com o custo total de R$ 460,00.",
+      "III, com o custo total de R$ 1 200,00."
+    ],
+    "answer": "e",
+    "explanation": "Multiplique as aulas pelos respectivos preços e acrescente o aluguel: I = 20×10+10×80+400 = 1 400; II = 20×30+10×50+200 = 1 300; III = 20×20+10×40+400 = 1 200. O menor custo é o da III.",
+    "alternative_explanations": [
+      "O custo de I está correto, mas não é o menor.",
+      "280 soma apenas uma aula de cada tipo ao aluguel; são 20 teóricas e 10 práticas.",
+      "O custo de II está correto, mas III é mais barata.",
+      "460 considera só uma aula de cada tipo, não os dois pacotes.",
+      "Multiplique as aulas pelos respectivos preços e acrescente o aluguel: I = 20×10+10×80+400 = 1 400; II = 20×30+10×50+200 = 1 300; III = 20×20+10×40+400 = 1 200. O menor custo é o da III."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 168,
+      "page": 27,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 5
+    }
+  },
+  {
+    "id": "enem-2025-d2-cd7-q169",
+    "area": "Matemática",
+    "subject": "Produção e conversão de unidades",
+    "prompt": "A produtividade de soja em uma área cultivada é a média da quantidade de sacas de 50 quilogramas que são produzidas por hectare. O quadro apresenta a área cultivada e a produtividade de soja em certa propriedade, ao longo de cinco safras, com períodos de um ano, de 2011 a 2016.\n\nTranscrição acessível do quadro, na ordem safra; área em hectares; produtividade em sacas de 50 kg por hectare:\n11–12: 200; 40.\n12–13: 220; 30.\n13–14: 250; 45.\n14–15: 250; 45.\n15–16: 200; 50.\n\nO gráfico de linhas que representa a produção de soja dessa propriedade, em tonelada, nessas cinco safras é\n\nAs alternativas abaixo transcrevem os valores marcados nos cinco gráficos, na ordem cronológica das safras. Em todos, o eixo horizontal é Safra e o vertical é Produção (tonelada).",
+    "options": [
+      "400; 330; 562,5; 562,5; 500.",
+      "40; 30; 45; 45; 50.",
+      "200; 220; 250; 250; 200.",
+      "240; 250; 295; 295; 250.",
+      "8; 6,6; 11,25; 11,25; 10."
+    ],
+    "answer": "a",
+    "explanation": "A produção em toneladas é área×produtividade×50/1 000. As cinco produções são 400, 330, 562,5, 562,5 e 500 toneladas.",
+    "alternative_explanations": [
+      "A produção em toneladas é área×produtividade×50/1 000. As cinco produções são 400, 330, 562,5, 562,5 e 500 toneladas.",
+      "Esses valores são produtividades em sacas por hectare, não produções em toneladas.",
+      "Esses valores são áreas cultivadas em hectares.",
+      "Somar área e produtividade não fornece a produção.",
+      "Esses valores multiplicam área e produtividade e dividem por 1 000, mas omitem os 50 kg por saca."
+    ],
+    "source": {
+      "edition": 2025,
+      "day": 2,
+      "booklet": 7,
+      "number": 169,
+      "page": 28,
+      "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf",
+      "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf",
+      "exam_sha256": "39af0f0eaf3e30a3cd211bc19db9029204703965a2c76ff232fb3109181fa7c8",
+      "key_sha256": "9e2d470af35378df532173414ec7077c3ce4df38c084a5f1258579fdf9270aef",
+      "visual_review": true,
+      "image_mode": "accessible_transcription",
+      "review_scope": "Enunciado, alternativas e gabarito conferidos visualmente; resolução MOIRAE.",
+      "batch": 5
+    }
+  }
+]

@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "currency": "BRL",
+  "mode": "proposal",
+  "checkout_enabled": false,
+  "cycle_days": 30,
+  "cycles": [
+    1,
+    6,
+    12
+  ],
+  "plans": [
+    {
+      "id": "essencial",
+      "name": "Essencial",
+      "credits_per_cycle": 10,
+      "monthly_cents": 4000,
+      "cycle_prices": {
+        "1": 4000,
+        "6": 3600,
+        "12": 3400
+      }
+    },
+    {
+      "id": "avancado",
+      "name": "Avançado",
+      "credits_per_cycle": 30,
+      "monthly_cents": 10000,
+      "cycle_prices": {
+        "1": 10000,
+        "6": 9000,
+        "12": 8500
+      }
+    }
+  ],
+  "credit_packs": [
+    {
+      "id": "creditos-5",
+      "credits": 5,
+      "price_cents": 2500,
+      "max_installments": 1
+    },
+    {
+      "id": "creditos-10",
+      "credits": 10,
+      "price_cents": 4500,
+      "max_installments": 1
+    },
+    {
+      "id": "creditos-30",
+      "credits": 30,
+      "price_cents": 12000,
+      "max_installments": 3
+    }
+  ],
+  "credit_validity_days_proposal": 90,
+  "notice": "Simulação comercial. Produto com acréscimo de 10%; juros do parcelamento cobrados do comprador pelo Mercado Pago. O total parcelado depende da cotação do provedor. Não cria pedido ou concede acesso.",
+  "markup_basis_points": 1000,
+  "installment_payer": "buyer",
+  "fee_reference": {
+    "checked_at": "2026-11-03",
+    "source": "https://www.mercadopago.com.br/ferramentas-para-vender/check-out",
+    "processing_basis_points": {
+      "pix": 99,
+      "credit_d0": 498,
+      "credit_d14": 448,
+      "credit_d30": 295
+    },
+    "boleto_fixed_cents": 399,
+    "scope": "Referência pública do bloco Taxas, consultado em 03/11/2026. Valores de processamento e parcelamento são distintos. A própria página contém FAQ com números divergentes; confirmar condições na conta antes de cobrar.",
+    "installment_basis_points": {
+      "2": 253,
+      "3": 462,
+      "4": 669,
+      "5": 866,
+      "6": 996,
+      "7": 1124,
+      "8": 1250,
+      "9": 1373,
+      "10": 1493,
+      "11": 1612,
+      "12": 1728,
+      "13": 1862,
+      "14": 1980,
+      "15": 2079,
+      "16": 2207,
+      "17": 2316,
+      "18": 2428
+    }
+  }
+}

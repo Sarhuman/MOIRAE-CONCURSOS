@@ -1,0 +1,9 @@
+{
+  "edition": 2025,
+  "application": "regular",
+  "source_page": "https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos/2025",
+  "booklets": [
+    {"day": 1, "booklet": 1, "color": "azul", "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D1_CD1.pdf", "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D1_CD1.pdf"},
+    {"day": 2, "booklet": 7, "color": "azul", "exam_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf", "key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD7.pdf"}
+  ]
+}

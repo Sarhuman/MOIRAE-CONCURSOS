@@ -1,0 +1,45 @@
+{
+  "text": "🌱 Educação e participação social. 🌱 Educação e participação social. 🌱 Educação e participação social. 🌱 Educação e participação social. 🌱 Educação e participação social. 🌱 Educação e participação social. 🌱 Educação e participação social. 🌱 Educação e participação social. 🌱 Educação e participação social. 🌱 Educação e participação social. 🌱 Educação e participação social. 🌱 Educação e participação social. ",
+  "result": {
+    "mode": "demonstration",
+    "rubric_version": "enem-demo-v1",
+    "notice": "Demonstração: notas fixas e orientação ilustrativa. Seu texto não foi avaliado por IA.",
+    "competencies": [
+      {
+        "id": 1,
+        "score": 120,
+        "explanation": "Nota fixa de exemplo; não avalia esta competência no seu texto."
+      },
+      {
+        "id": 2,
+        "score": 120,
+        "explanation": "Nota fixa de exemplo; não avalia esta competência no seu texto."
+      },
+      {
+        "id": 3,
+        "score": 120,
+        "explanation": "Nota fixa de exemplo; não avalia esta competência no seu texto."
+      },
+      {
+        "id": 4,
+        "score": 120,
+        "explanation": "Nota fixa de exemplo; não avalia esta competência no seu texto."
+      },
+      {
+        "id": 5,
+        "score": 120,
+        "explanation": "Nota fixa de exemplo; não avalia esta competência no seu texto."
+      }
+    ],
+    "annotations": [
+      {
+        "id": "demo-opening",
+        "competency": 3,
+        "start": 0,
+        "end": 83,
+        "quote": "🌱 Educação e participação social. 🌱 Educação e participação social. 🌱 Educação e",
+        "guidance": "Exercício demonstrativo: reescreva este trecho deixando sua ideia principal mais clara. A reescrita não receberá nota."
+      }
+    ]
+  }
+}

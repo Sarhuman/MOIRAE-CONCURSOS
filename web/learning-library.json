@@ -1,0 +1,330 @@
+{
+  "version": 1,
+  "notice": "Piloto autoral introdutório, em revisão editorial. Não são questões oficiais do ENEM. Exercícios abertos não geram nota, créditos nem tentativas da área autenticada.",
+  "tracks": [
+    {
+      "id": "matematica",
+      "title": "Matemática essencial",
+      "subtitle": "Da base ao raciocínio, sem decorar atalhos.",
+      "format": "Leitura + exemplo + exercício comentado",
+      "status": "pilot_editorial_review",
+      "lessons": [
+        {
+          "id": "matematica-1",
+          "title": "Descontos sucessivos",
+          "concept": "Percentuais sucessivos incidem sobre bases diferentes. Um desconto de 10% mantém 90% do valor; o desconto seguinte de 20% mantém 80% do que restou. Multiplicar os fatores evita somar percentuais incorretamente.",
+          "example": "Em R$100, o primeiro desconto leva a R$90. O segundo retira R$18, resultando em R$72. A redução total é de 28%.",
+          "question": "Qual é o preço final de um produto de R$200 com descontos sucessivos de 10% e 20%?",
+          "options": [
+            "R$140",
+            "R$144",
+            "R$150",
+            "R$160"
+          ],
+          "answer": 1,
+          "explanation": "200 × 0,9 × 0,8 = 144. Somar 10% e 20% ignoraria que a segunda base já diminuiu."
+        },
+        {
+          "id": "matematica-2",
+          "title": "Proporção inversa",
+          "concept": "Quando uma tarefa fixa é dividida entre trabalhadores com a mesma produtividade, aumentar a equipe pode reduzir o tempo. A relação inversa só vale se o trabalho for divisível, não houver perdas de coordenação e a produtividade individual permanecer constante.",
+          "example": "Se 4 pessoas concluem um trabalho em 6 dias, são 24 pessoa-dias. Sob essas hipóteses, 8 pessoas precisariam de 3 dias.",
+          "question": "Se 6 trabalhadores concluem uma tarefa em 10 dias, em quanto tempo 3 trabalhadores igualmente produtivos concluem a mesma tarefa?",
+          "options": [
+            "5 dias",
+            "10 dias",
+            "15 dias",
+            "20 dias"
+          ],
+          "answer": 3,
+          "explanation": "O trabalho total equivale a 6 × 10 = 60 pessoa-dias. Com 3 trabalhadores, 60 ÷ 3 = 20 dias. As hipóteses de produtividade devem ser mantidas."
+        },
+        {
+          "id": "matematica-3",
+          "title": "Média ponderada",
+          "concept": "Uma média ponderada considera a importância de cada valor. Multiplique cada nota pelo peso, some esses produtos e divida pela soma dos pesos. A divisão não é necessariamente pela quantidade de notas.",
+          "example": "Notas 4 e 8, com pesos 1 e 3, produzem (4 + 24) ÷ 4 = 7. A nota de peso maior influencia mais o resultado.",
+          "question": "Uma nota 6 tem peso 1 e uma nota 9 tem peso 2. Qual é a média ponderada?",
+          "options": [
+            "7",
+            "7,5",
+            "8",
+            "9"
+          ],
+          "answer": 2,
+          "explanation": "(6 × 1 + 9 × 2) ÷ (1 + 2) = 24 ÷ 3 = 8."
+        }
+      ]
+    },
+    {
+      "id": "redacao",
+      "title": "Oficina de redação",
+      "subtitle": "Construa argumentos e revise escolhas do texto.",
+      "format": "Leitura + exemplo + exercício comentado",
+      "status": "pilot_editorial_review",
+      "lessons": [
+        {
+          "id": "redacao-1",
+          "title": "Norma-padrão e revisão",
+          "concept": "Revisar não é apenas procurar palavras difíceis. Observe concordância, pontuação e clareza da relação entre as partes da frase. Em expressões de tempo decorrido, o verbo fazer é impessoal e fica no singular.",
+          "example": "Na norma-padrão, escrevemos “Faz dois anos que a biblioteca abriu”. O termo “dois anos” não transforma esse uso de fazer em um verbo no plural.",
+          "question": "Qual frase segue a norma-padrão nesse uso de tempo decorrido?",
+          "options": [
+            "Fazem dois anos que estudo.",
+            "Faz dois anos que estudo.",
+            "Fazem muito tempo que estudo.",
+            "Fazem um ano que estudo."
+          ],
+          "answer": 1,
+          "explanation": "O verbo fazer, ao indicar tempo decorrido, fica na terceira pessoa do singular: faz dois anos. Esse ponto isolado não representa uma avaliação completa de C1."
+        },
+        {
+          "id": "redacao-2",
+          "title": "Do argumento genérico à explicação",
+          "concept": "Um argumento precisa mostrar a ligação entre uma afirmação e a tese defendida. Depois de afirmar que uma dificuldade existe, explique o mecanismo: quem é afetado, como isso acontece e qual consequência é relevante. Um exemplo ajuda, mas não substitui essa explicação.",
+          "example": "“Falta internet e isso é ruim” é genérico. “Sem conexão em casa, o aluno pode ter dificuldade para acessar atividades online; por isso, oferta de equipamentos deve vir acompanhada de acesso” explicita uma relação.",
+          "question": "Qual complemento desenvolve melhor o argumento “A falta de conexão pode prejudicar o estudo”?",
+          "options": [
+            "Porque é um grande problema.",
+            "Porque todos sabem disso.",
+            "Pois limita o acesso a atividades online, quando elas são exigidas pela escola.",
+            "Porque a internet existe."
+          ],
+          "answer": 2,
+          "explanation": "O terceiro complemento explica um mecanismo e delimita a condição em que o prejuízo ocorre. Os outros apenas repetem a afirmação ou não a justificam."
+        },
+        {
+          "id": "redacao-3",
+          "title": "Intervenção com ações concretas",
+          "concept": "Uma proposta de intervenção pode indicar agente, ação, meio e finalidade, além de detalhamento pertinente ao argumento. Evite atribuir tudo a um “governo” abstrato sem explicar a medida. A proposta deve respeitar os direitos humanos e não garante nota máxima por conter uma lista de elementos.",
+          "example": "Uma secretaria municipal pode ampliar o horário de bibliotecas, por meio de contratação e reorganização de equipes, para facilitar o acesso de estudantes que trabalham. O texto ainda precisa ligar essa medida ao problema discutido.",
+          "question": "Qual proposta apresenta uma ação mais executável?",
+          "options": [
+            "Todos precisam melhorar tudo.",
+            "Alguém deve resolver a educação.",
+            "É necessário acabar com os problemas.",
+            "A secretaria municipal pode ampliar os horários das bibliotecas com equipes em turnos, para atender estudantes trabalhadores."
+          ],
+          "answer": 3,
+          "explanation": "A última opção apresenta agente, ação, meio e finalidade. A pertinência ao tema e ao desenvolvimento do texto precisa ser analisada em uma redação completa."
+        }
+      ]
+    },
+    {
+      "id": "linguagens",
+      "title": "Linguagens na prática",
+      "subtitle": "Leia relações, intenções e evidências.",
+      "format": "Leitura + exemplo + exercício comentado",
+      "status": "pilot_editorial_review",
+      "lessons": [
+        {
+          "id": "linguagens-1",
+          "title": "O sentido no contexto",
+          "concept": "O sentido de uma expressão depende da situação em que ela aparece. Na ironia, pode existir distância entre o significado literal e a avaliação que o contexto sugere. Não basta identificar uma palavra positiva: observe o acontecimento que motiva a fala.",
+          "example": "Sob chuva forte, alguém sem guarda-chuva diz: “Que ótimo dia para esquecer o guarda-chuva!”. A palavra ótimo pode sinalizar ironia, pois a situação é desfavorável.",
+          "question": "Nesse exemplo, a fala provavelmente expressa:",
+          "options": [
+            "Uma previsão meteorológica neutra.",
+            "Uma avaliação irônica de uma situação inconveniente.",
+            "A certeza de que não está chovendo.",
+            "Uma instrução para abandonar guarda-chuvas."
+          ],
+          "answer": 1,
+          "explanation": "O contraste entre chuva forte e “ótimo dia” sustenta a leitura irônica. A interpretação é apoiada no contexto fornecido, não na palavra isolada."
+        },
+        {
+          "id": "linguagens-2",
+          "title": "Conectivos e relações",
+          "concept": "Conectivos ajudam a indicar relações entre ideias. Contudo e porém costumam marcar oposição ou quebra de expectativa; portanto indica conclusão. A escolha deve refletir a relação que o autor quer construir, e não apenas evitar repetir uma palavra.",
+          "example": "“O acervo aumentou; contudo, o horário de atendimento foi reduzido” contrapõe uma melhora a uma limitação. “O acervo aumentou; portanto, o horário foi reduzido” sugeriria uma conclusão que precisa de justificativa.",
+          "question": "Qual conectivo preserva a oposição em “O transporte é gratuito; ____, não atende todos os bairros”?",
+          "options": [
+            "portanto",
+            "porque",
+            "contudo",
+            "logo"
+          ],
+          "answer": 2,
+          "explanation": "Contudo marca a oposição entre gratuidade e cobertura limitada. Portanto e logo indicariam conclusão; porque introduziria uma explicação."
+        },
+        {
+          "id": "linguagens-3",
+          "title": "Afirmação verificável e opinião",
+          "concept": "Uma afirmação verificável pode ser confrontada com evidências, embora ainda precise de fonte e contexto. Uma opinião apresenta uma avaliação. Números não tornam uma conclusão automaticamente confiável: é preciso saber como foram obtidos.",
+          "example": "“A biblioteca abre às 8h” pode ser conferido no horário oficial. “Essa é a melhor biblioteca da cidade” expressa uma avaliação e exige critérios se for apresentada como comparação fundamentada.",
+          "question": "Qual frase expressa mais claramente uma opinião?",
+          "options": [
+            "A biblioteca fica na Rua A.",
+            "A biblioteca abre às 8h.",
+            "O catálogo informa 500 livros.",
+            "Esta é a biblioteca mais agradável da cidade."
+          ],
+          "answer": 3,
+          "explanation": "“Mais agradável” é uma avaliação, dependente de critérios e experiências. As demais afirmações podem ser verificadas em registros, embora também possam estar erradas."
+        }
+      ]
+    },
+    {
+      "id": "natureza",
+      "title": "Ciências da natureza",
+      "subtitle": "Use modelos, unidades e comparação de hipóteses.",
+      "format": "Leitura + exemplo + exercício comentado",
+      "status": "pilot_editorial_review",
+      "lessons": [
+        {
+          "id": "natureza-1",
+          "title": "Potência e energia",
+          "concept": "Potência é uma taxa de transferência ou transformação de energia. Para uma potência constante, a energia consumida é potência multiplicada pelo tempo. Usando quilowatt e hora, o resultado é quilowatt-hora, uma unidade de energia.",
+          "example": "Um aparelho de 0,5 kW ligado por 4 horas utiliza 2 kWh. Não confunda o valor da potência com o consumo acumulado ao longo do tempo.",
+          "question": "Um aparelho de 1 kW funciona durante 2 horas. Qual energia utiliza?",
+          "options": [
+            "0,5 kWh",
+            "1 kWh",
+            "2 kWh",
+            "3 kWh"
+          ],
+          "answer": 2,
+          "explanation": "E = P × t = 1 × 2 = 2 kWh. O cálculo pressupõe potência constante durante o intervalo."
+        },
+        {
+          "id": "natureza-2",
+          "title": "Decomposição e oxigênio",
+          "concept": "Em um ambiente aquático, o aumento de nutrientes pode favorecer crescimento excessivo de algas. Quando há grande quantidade de matéria orgânica em decomposição, microrganismos aeróbios podem consumir mais oxigênio dissolvido. Isso pode afetar outros organismos.",
+          "example": "A morte de peixes após enriquecimento de nutrientes pode estar associada à redução de oxigênio. É necessário analisar o conjunto de evidências; a presença de algas, sozinha, não determina todas as causas.",
+          "question": "Qual processo pode contribuir diretamente para reduzir o oxigênio dissolvido nesse cenário?",
+          "options": [
+            "Respiração de decompositores aeróbios.",
+            "Criação espontânea de oxigênio.",
+            "Eliminação de toda respiração.",
+            "Desaparecimento das moléculas de água."
+          ],
+          "answer": 0,
+          "explanation": "A respiração aeróbia dos decompositores consome oxigênio. Um aumento da demanda pode diminuir sua disponibilidade na água."
+        },
+        {
+          "id": "natureza-3",
+          "title": "Comparação em experimentos",
+          "concept": "Para investigar o efeito de um fator, tente manter os demais comparáveis. Isso ajuda a reduzir explicações alternativas. Repetições, tamanho da amostra e medidas consistentes também importam; controlar uma variável não resolve todos os problemas do experimento.",
+          "example": "Ao estudar o efeito de luz no crescimento, mantenha espécies, solo e oferta de água comparáveis e altere a exposição luminosa. Assim, diferenças ficam mais interpretáveis.",
+          "question": "Qual desenho ajuda a investigar especificamente o efeito da luz?",
+          "options": [
+            "Mudar luz, água, solo e espécie juntos.",
+            "Usar plantas de espécies diferentes sem registro.",
+            "Comparar a mesma espécie com água e solo semelhantes, variando a luz.",
+            "Não medir o crescimento."
+          ],
+          "answer": 2,
+          "explanation": "Variar a luz e manter os outros fatores comparáveis reduz algumas explicações alternativas. Repetições e acompanhamento das medidas continuam necessários."
+        }
+      ]
+    },
+    {
+      "id": "humanas",
+      "title": "Humanas e leitura crítica",
+      "subtitle": "Conecte fontes, território e participação.",
+      "format": "Leitura + exemplo + exercício comentado",
+      "status": "pilot_editorial_review",
+      "lessons": [
+        {
+          "id": "humanas-1",
+          "title": "Crítica das fontes",
+          "concept": "Fontes históricas devem ser analisadas considerando autoria, época, finalidade e condições de produção. Um documento institucional não é automaticamente neutro, assim como um relato pessoal não é automaticamente inválido. Comparar fontes ajuda a construir interpretações fundamentadas.",
+          "example": "Um relatório empresarial e um diário de uma operária podem apresentar a mesma fábrica de formas diferentes. A divergência deve motivar investigação, não a escolha automática do relato mais conveniente.",
+          "question": "Qual procedimento é mais adequado?",
+          "options": [
+            "Aceitar sempre a fonte oficial.",
+            "Descartar sempre relatos pessoais.",
+            "Escolher a fonte mais curta.",
+            "Analisar contexto e finalidade e confrontar outras evidências."
+          ],
+          "answer": 3,
+          "explanation": "A análise crítica considera a produção das fontes e seu confronto com outras evidências. Divergências não tornam a pesquisa impossível."
+        },
+        {
+          "id": "humanas-2",
+          "title": "Escala cartográfica",
+          "concept": "Uma escala numérica relaciona distância no mapa e no terreno usando a mesma unidade. Na escala 1:50.000, um centímetro no mapa corresponde a 50.000 centímetros no terreno. Só depois converta a unidade para metros ou quilômetros.",
+          "example": "50.000 cm correspondem a 500 m. Logo, 2 cm em um mapa nessa escala representam 1.000 m, ou 1 km.",
+          "question": "Em um mapa 1:50.000, uma linha de 4 cm representa qual distância em linha reta no terreno?",
+          "options": [
+            "200 m",
+            "500 m",
+            "2 km",
+            "20 km"
+          ],
+          "answer": 2,
+          "explanation": "4 × 50.000 cm = 200.000 cm = 2.000 m = 2 km. Trata-se da distância representada, não necessariamente do percurso por ruas."
+        },
+        {
+          "id": "humanas-3",
+          "title": "Participação e transparência",
+          "concept": "O controle social envolve acompanhar e questionar decisões públicas. Critérios divulgados, acesso à informação e espaços de participação podem tornar esse acompanhamento possível. A existência de participação não elimina divergências nem substitui as regras institucionais.",
+          "example": "Quando um conselho publica critérios para selecionar demandas de bairro e explica sua aplicação, moradores podem comparar decisões e solicitar justificativas.",
+          "question": "Qual medida favorece esse acompanhamento?",
+          "options": [
+            "Manter os critérios em segredo.",
+            "Publicar critérios e justificativas das decisões.",
+            "Proibir pedidos de informação.",
+            "Impedir discussão de prioridades."
+          ],
+          "answer": 1,
+          "explanation": "Transparência sobre critérios e justificativas cria condições para acompanhamento e questionamento. Isso não garante, por si só, que toda decisão seja adequada."
+        }
+      ]
+    },
+    {
+      "id": "estrategia",
+      "title": "Estratégia de estudo e prova",
+      "subtitle": "Transforme tentativas em decisões de estudo.",
+      "format": "Leitura + exemplo + exercício comentado",
+      "status": "pilot_editorial_review",
+      "lessons": [
+        {
+          "id": "estrategia-1",
+          "title": "Revisar o tipo de erro",
+          "concept": "Depois de uma questão, investigue se o erro veio de conceito, interpretação, cálculo ou gestão de tempo. A resposta orienta a próxima ação. Repetir muitas questões sem entender o motivo pode reforçar o mesmo equívoco.",
+          "example": "Se você somou percentuais sucessivos, revise a mudança de base e explique um exemplo. Se conhecia a conta, mas copiou um número errado, inclua uma etapa de conferência.",
+          "question": "Qual ação aproveita melhor um erro por desconhecimento de conceito?",
+          "options": [
+            "Copiar apenas a letra correta.",
+            "Ignorar a resolução.",
+            "Revisar o conceito e testar a explicação em outro exemplo.",
+            "Apenas resolver mais rápido."
+          ],
+          "answer": 2,
+          "explanation": "Rever o conceito e aplicá-lo em outro contexto ajuda a verificar se a compreensão mudou. A alternativa correta, sozinha, não mostra como raciocinar."
+        },
+        {
+          "id": "estrategia-2",
+          "title": "Estudo ativo",
+          "concept": "Tentar recuperar uma explicação da memória e resolver problemas permite identificar lacunas. Releitura pode ajudar, mas sensação de familiaridade não é a mesma coisa que conseguir explicar ou aplicar o conteúdo. Alterne tentativa, conferência e correção.",
+          "example": "Depois de ler uma resolução, feche o material e explique os passos em voz própria. Reabra para verificar o que faltou. A dificuldade da recuperação é informação útil para ajustar o estudo.",
+          "question": "Qual atividade verifica melhor se você consegue aplicar o que estudou?",
+          "options": [
+            "Reconhecer o título do capítulo.",
+            "Resolver um novo problema e justificar os passos.",
+            "Deixar o livro aberto sem ler.",
+            "Copiar o texto sem compreendê-lo."
+          ],
+          "answer": 1,
+          "explanation": "Resolver e justificar exige usar o conteúdo. Isso oferece evidência mais direta de aplicação do que reconhecer títulos ou copiar passivamente."
+        },
+        {
+          "id": "estrategia-3",
+          "title": "Tempo e prioridade",
+          "concept": "Um plano de prova precisa considerar tempo disponível, instruções, pontos de atenção e estratégia de retorno. Uma questão difícil não deve consumir todo o tempo sem decisão consciente. As regras oficiais de cada prova devem ser conferidas no edital e no caderno correspondente.",
+          "example": "Em um treino, registre quanto tempo leva para ler, resolver e revisar. Use esse histórico para testar quando vale marcar uma questão e voltar depois, sem transformar a estratégia em regra universal.",
+          "question": "Ao ficar travado em uma questão durante um treino cronometrado, qual decisão pode ajudar?",
+          "options": [
+            "Gastar todo o tempo restante nela sem avaliar alternativas.",
+            "Abandonar sempre todas as questões longas.",
+            "Ignorar o relógio até o fim.",
+            "Avaliar o tempo disponível, marcar para retorno e seguir conforme a estratégia testada."
+          ],
+          "answer": 3,
+          "explanation": "A decisão considera o custo de insistir e o restante do treino. Ela precisa ser ajustada ao seu desempenho e às instruções da prova, sem garantir resultado."
+        }
+      ]
+    }
+  ]
+}

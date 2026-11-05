@@ -2,10 +2,10 @@
 
 Execute na pasta do projeto no PowerShell, preferencialmente dentro da sua pasta de usuário, fora de System32. O Python precisa estar instalado no Windows; a venv do Linux não é reutilizável.
 
-Use um checkout separado deste PR para evitar misturar alterações suas. Sem merge ou publicação.
+Use um checkout separado e atualizado da `main` para evitar misturar alterações suas. Este roteiro executa apenas o piloto local, sem publicação.
 
 ```powershell
-git clone --branch feat/persistent-essay-demo https://github.com/Sarhuman/MOIRAE-CONCURSOS.git MOIRAE-PLAYTEST
+git clone --branch main https://github.com/Sarhuman/MOIRAE-CONCURSOS.git MOIRAE-PLAYTEST
 cd MOIRAE-PLAYTEST
 python -m venv .venv-win
 .\.venv-win\Scripts\python.exe -m pip install -r requirements-dev.lock

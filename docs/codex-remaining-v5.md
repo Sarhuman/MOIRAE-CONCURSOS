@@ -1,3 +1,5 @@
+> **Registro histórico:** a base foi consolidada na `main`. Para nova execução, consulte [o índice atual](README.md), [pedidos v10](sandbox-orders-v10.md) e [triagem v11](order-review-v11.md). Não trate a branch/draft abaixo como estado atual após a integração.
+
 > **Estado atual:** consulte [pedidos sandbox v10](sandbox-orders-v10.md). Este documento registra a entrega anterior; as limitações de integração de pedidos foram parcialmente resolvidas com testes de provedor falso, sem homologação externa ou venda real.
 
 # Prompt de continuidade — somente pendências

@@ -1,55 +1,45 @@
-# Desenvolvimento da página pública
+# Desenvolvimento do MOIRAE web
 
-## Executar
+O projeto é um piloto FastAPI/SQLite com frontend HTML/CSS/JavaScript. O caminho principal de teste é **Windows nativo, PowerShell e `.venv-win`**, sem WSL. A instalação completa está no [README](README.md#executar-no-windows--powershell-sem-wsl).
 
-Requer Python 3 apenas para servir os arquivos, sem dependências de aplicação:
+## Backend e banco
 
-```sh
-python3 -m http.server 8080 --directory web
+Instale `requirements-dev.lock` usando o Python da venv Windows. Execute `backend.moirae.app:create_app` com `--factory`, origem local e cookie de desenvolvimento conforme README. Use banco novo somente no primeiro preparo; não sobrescreva bancos existentes nem copie um SQLite em uso. Preserve os arquivos WAL/SHM e a caixa de saída quando aplicável.
+
+O atalho existente `scripts/start-local.ps1` prepara apenas um banco que ainda não existe e recusa iniciar após erro de configuração. Não altera a verificação, termos ou acesso de contas já existentes. Para a carteira e integração sandbox, prefira o roteiro explícito de [wallet-essay-flow-v7.md](docs/wallet-essay-flow-v7.md).
+
+`MOIRAE_SECURE_COOKIE=false` é exclusivo do piloto HTTP local. Pagamentos externos de teste exigem origem HTTPS e configuração privada; não remova validações para forçar homologação. `.env.example` não é carregado automaticamente. Não crie ou comite chaves reais.
+
+## Página pública estática
+
+Para inspecionar somente as amostras públicas, na raiz:
+
+```powershell
+.\.venv-win\Scripts\python.exe -m http.server 8080 --directory web
 ```
 
-Abra http://localhost:8080. A pasta `web` contém somente HTML, CSS e JavaScript estáticos. Nenhum serviço externo, rastreador, fonte remota ou segredo é necessário.
+Abra http://127.0.0.1:8080. Esse servidor **não executa a API**, não fornece login, carteira ou processamento de redações e não reproduz os mounts `/assets` do FastAPI para páginas autenticadas. A roleta usa somente animação demonstrativa quando não consegue consultar a campanha. Não use a prévia estática como evidência de funcionamento do backend.
 
-## Limites desta entrega
+Artes originais estão em `web/art`. A biblioteca escrita e exercícios abertos são amostras, separados das tentativas/cotas do aluno. Oficinas públicas usam fixtures, sem análise de texto ou envio à OpenAI.
 
-A questão é autoral e demonstrativa, com correção no navegador. Não há cadastro, armazenamento de respostas, enforcement de cotas, dashboard, pagamento ou correção de redação. O gabarito local é adequado somente à demonstração; questões reais devem ter resposta validada no servidor conforme o README.
+## Verificar mudanças
 
-Os planos são propostas sem preços ou checkout. Os links de disponibilidade levam à explicação do estado do produto, sem captar dados pessoais.
+```powershell
+.\.venv-win\Scripts\python.exe -m pytest -q
+node --test (Get-ChildItem tests\*.test.cjs | ForEach-Object FullName)
+.\.venv-win\Scripts\python.exe -m compileall -q backend
+```
 
-## Validação
+A CI também verifica sintaxe de todos os scripts `web/*.js`, com backend em Windows e Ubuntu. Use testes de comportamento para cotas, créditos, autorização, concorrência, migração e integração. Provedores falsos e MockTransport não constituem homologação externa.
 
-Executar `node --check web/app.js` para sintaxe. Conferir no navegador em 360, 768 e 1440 pixels: navegação, ausência de rolagem horizontal, teclado, respostas certas/erradas, tentativa vazia, reset e abertura das dúvidas. Testar zoom de 200% e preferência por movimento reduzido.
+Para QA visual real: desktop e 360/390/430 px, Tab/Shift+Tab, Escape/retorno de foco, zoom 200%, contraste, movimento reduzido, conclusão/retomada e erros. Registre dados sintéticos, largura e modo de execução. Diferencie celular físico de emulação e fixtures de navegação autenticada. Não contorne bloqueios do navegador.
 
-## Próxima etapa
+## Operação e continuidade
 
-Definir stack e contratos da API antes de adicionar autenticação e prática com cotas. Manter a página pública independente de dependências da área autenticada. Não liberar recursos premium por flags no navegador.
+- Estado financeiro: [sandbox-orders-v10.md](docs/sandbox-orders-v10.md).
+- Triagem sem escrita: [order-review-v11.md](docs/order-review-v11.md).
+- Política do cupom: [coupon-policy-v8.md](docs/coupon-policy-v8.md).
+- Correção real, bloqueada por padrão: [real-essay-evaluation.md](docs/real-essay-evaluation.md).
+- Documentos históricos: consulte o [índice](docs/README.md) antes de tratar limitações antigas como pendências atuais.
 
-## Atualização: oficina e sessões demonstrativas
-
-A identidade usa azul-escuro e verde-lima. Seletor de 15/30/60 minutos muda apenas exemplos fixos. A oficina inclui três marcações, comentários orientadores, rascunhos separados em memória e comparação textual segura. Não representa uma chamada à OpenAI.
-
-Verificação adicional: selecionar as três durações; trocar C3/C4/C5; comparar reescrita; voltar ao comentário e conferir preservação; limpar; recarregar e conferir descarte. Texto HTML digitado deve aparecer literalmente. Espaços sozinhos não são uma reescrita válida.
-
-A integração OpenAI é futura e está especificada em docs/essay-workshop.md. Nenhuma variável de chave é necessária para executar esta demonstração.
-
-Fixtures: web/essay-fixture.js é compartilhado entre demonstração e testes. Execute `node --test tests/essay-fixture.test.cjs` na raiz do repositório. Os testes não acessam a OpenAI.
-
-
-## Primeiro percurso funcional
-
-Para usar cadastro, login, retomada e cota mensal Free real, siga [docs/mvp.md](docs/mvp.md). O servidor estático descrito acima continua servindo só as demonstrações. Execute FastAPI para testar /estudar e /api. Instale requirements-dev.lock para reproduzir o ambiente validado.
-
-
-## Simulados cronometrados
-
-Execute o backend para acessar /simulados. Detalhes de prazo, consumo compartilhado e redação estão em [docs/timed-exams.md](docs/timed-exams.md). A página hospedada continua demonstrativa; somente os textos dos planos são atualizados nela.
-
-
-## Conta, e-mail e direitos no piloto
-
-Após criar uma conta de teste, use o link em var/mail-outbox no servidor para confirmar o e-mail. Os arquivos são privados e contêm tokens: não expor por HTTP ou Git. /conta permite recuperação, exportação e exclusão. Ver [docs/accounts-privacy.md](docs/accounts-privacy.md). Nenhuma entrega real de e-mail foi configurada.
-
-
-## Pagamentos e painel em teste
-
-Consulte [docs/billing-sandbox.md](docs/billing-sandbox.md). As novas páginas /planos e /painel dependem do backend. Nenhuma credencial de produção está configurada; testes usam provedor fake. Habilitar sandbox requer origem HTTPS e configuração secreta no servidor, nunca no navegador.
+Novas alterações devem partir da `main` atualizada, em branch própria, preservando o checkout antigo e alterações locais. Verifique `git status` antes de trocar de branch. Integração na `main` não equivale a deploy, ativação comercial ou autorização para chamar provedores reais.

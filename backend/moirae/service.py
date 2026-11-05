@@ -59,7 +59,16 @@ class Practice:
     def current(self,user):
         with self.store.connect() as db:
             row=db.execute("SELECT * FROM practice_sessions WHERE user_id=? AND status='active'",(user,)).fetchone()
-            return dict(session=self.snapshot(db,user,row) if row else None,quota=self.quota(db,user))
+            completed=None
+            if row is None:
+                last=db.execute("SELECT * FROM practice_sessions WHERE user_id=? AND status='completed' ORDER BY created_at DESC,rowid DESC LIMIT 1",(user,)).fetchone()
+                if last:
+                    completed=self.snapshot(db,user,last)
+                    correct=db.execute('SELECT coalesce(sum(correct),0) FROM attempts WHERE session_id=?',(last['id'],)).fetchone()[0]
+                    completed['summary']=dict(correct=correct,total=completed['total'])
+            # Keep session reserved for active work. Returning the latest result
+            # separately restores completion after reload without creating attempts.
+            return dict(session=self.snapshot(db,user,row) if row else None,completed=completed,quota=self.quota(db,user))
 
     def answer(self,user,sid,question_id,choice,key):
         payload=json.dumps([sid,question_id,choice],separators=(',',':'))

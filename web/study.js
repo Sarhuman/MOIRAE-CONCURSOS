@@ -15,18 +15,17 @@ async function api(path, body) {
 function showAuth() { csrf=''; session=null; pending=null; $('#auth-panel').hidden=false; $('#practice-panel').hidden=true; $('#logout').hidden=true; }
 function showPractice() { $('#auth-panel').hidden=true; $('#practice-panel').hidden=false; $('#logout').hidden=false; }
 function quota(value) { const planLabel=document.querySelector("#study-plan"); if(planLabel)planLabel.textContent="Piloto · Plano "+(value.plan || "Free"); if(value.unlimited){$('#quota').textContent=`Plano ${value.plan}: questões sem cota durante o acesso.`;return;} $('#quota').textContent = `${value.used} de ${value.limit} questões usadas neste mês · ${value.remaining} disponíveis`; }
+function officialStarts(hidden) {
+  for(const id of ['#official-start','#official-second','#official-third','#official-fourth','#official-fifth'])$(id).hidden=hidden;
+}
 function render(value) {
   session=value; pending=null;
   $('#answer-feedback').hidden=true; $('#next').hidden=true; $('#complete').hidden=true;
   $('#start').hidden=Boolean(value);
-  $('#official-start').hidden=Boolean(value);
-  $('#official-second').hidden=Boolean(value);
-  $('#official-third').hidden=Boolean(value);
-  $('#official-fourth').hidden=Boolean(value);
-  $('#official-fifth').hidden=Boolean(value);
+  officialStarts(value?.status==='active');
   $('#question-panel').hidden=!value || !value.question;
   if (!value) return;
-  if(value.status==='completed') { $('#question-panel').hidden=true; $('#complete').hidden=false; $('#summary').textContent=`Atividade concluída: ${value.answered} de ${value.total} questões respondidas. Escolha Fazer outra atividade para iniciar um novo bloco.`; return; }
+  if(value.status==='completed') { $('#question-panel').hidden=true; $('#complete').hidden=false; $('#summary').textContent=value.summary?`Você acertou ${value.summary.correct} de ${value.summary.total} questões nesta atividade. Escolha outra atividade para continuar.`:`Atividade concluída: ${value.answered} de ${value.total} questões respondidas. Escolha Fazer outra atividade para iniciar um novo bloco.`; return; }
   quota(value.quota);
   if (!value.question) { $('#complete').hidden=false; return; }
   const q=value.question;
@@ -39,7 +38,7 @@ function render(value) {
   const options=q.options.map(option=>{const label=document.createElement('label');const input=document.createElement('input');input.type='radio';input.name='choice';input.value=option.id;input.required=true;label.append(input,document.createTextNode(option.id.toUpperCase()+'. '+option.text));return label;});
   $('#options').replaceChildren(...options);
 }
-async function resume() { const result=await api('/practice/current');showPractice();quota(result.quota);render(result.session); }
+async function resume() { const result=await api('/practice/current');showPractice();quota(result.quota);render(result.session || result.completed); }
 async function action(work) { if(busy)return;lock(true);message('');try{await work();}catch(error){message(error.message || 'Não foi possível concluir. Tente novamente.');}finally{lock(false);} }
 $('#auth-form').addEventListener('submit',event=>{event.preventDefault();const mode=event.submitter?.value || 'login';if(mode==='register'&&(!$('#register-terms').checked||!$('#register-adult').checked)){message('Para criar a conta de teste, aceite os termos e confirme que tem 18 anos ou mais.');return;}action(async()=>{const result=await api('/auth/'+mode,{email:$('#email').value,password:$('#password').value,...(mode==='register'?{accept_terms:$('#register-terms').checked,adult_pilot:$('#register-adult').checked}:{})});csrf=result.csrf;$('#password').value='';if(mode==='register'){message('Conta criada. Abra Minha conta para confirmar seu e-mail.');return;}await resume();message(mode==='register'?'Conta criada. Confirme seu e-mail na área Minha conta para começar.':'Você entrou. Vamos continuar?');});});
 $('#logout').addEventListener('click',()=>action(async()=>{await api('/auth/logout',{});showAuth();message('Você saiu da conta.');}));
@@ -67,7 +66,7 @@ $('#answer-form').addEventListener('submit',event=>{event.preventDefault();actio
   if(result.alternatives?.length)$('#answer-feedback').append(detail);
   $('#answer-feedback').hidden=false;$('#answer-feedback').focus();
   $('#next').hidden=session.status==='completed';
-  if(session.status==='completed'){$('#choices').hidden=true;$('#complete').hidden=false;$('#summary').textContent=`Você acertou ${result.summary.correct} de ${result.summary.total} questões nesta atividade. Se este foi seu diagnóstico, consulte o resultado no link acima.`;}
+  if(session.status==='completed'){officialStarts(false);$('#choices').hidden=true;$('#complete').hidden=false;$('#summary').textContent=`Você acertou ${result.summary.correct} de ${result.summary.total} questões nesta atividade. Se este foi seu diagnóstico, consulte o resultado no link acima.`;}
 });});
 $('#next').addEventListener('click',()=>{render(session);$('#question-title').scrollIntoView({block:'center'});});
 action(async()=>{try{const result=await api('/auth/me');csrf=result.csrf;await resume();}catch(error){showAuth();if(!error.message.includes('Entre na sua conta'))throw error;}});

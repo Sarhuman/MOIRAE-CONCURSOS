@@ -10,7 +10,7 @@ Este repositório contém o **piloto web local** do MOIRAE: FastAPI, SQLite de i
 
 **Estado: desenvolvimento e sandbox.** A integração interna de pagamentos usa testes automatizados; não houve homologação externa com comprador Mercado Pago. Correção real por IA e vendas reais permanecem desativadas. Integrar código à `main` não publica o site nem libera o serviço comercial.
 
-**Acesso às questões:** cadastro e login são obrigatórios, tanto no Free quanto nos planos pagos. Não é necessário assinar para usar o Free. A página pública apresenta o produto; perguntas, exercícios, biblioteca e acervo ficam na área cadastrada, com confirmação de e-mail e políticas do piloto. [Regra e evidências](docs/registered-access-v13.md).
+**Acesso às questões:** cadastro e login são obrigatórios, tanto no Free quanto nos planos pagos. Não é necessário assinar para usar o Free. A página pública apresenta o produto; perguntas, exercícios, biblioteca e acervo ficam na área cadastrada, com confirmação de e-mail e políticas do piloto. [Regra e evidências](docs/registered-access-v13.md). [Cadastro, login e benefícios dos acessos](docs/account-experience-v14.md).
 
 ## O que já funciona no piloto
 

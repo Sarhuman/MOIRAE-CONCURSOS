@@ -11,7 +11,7 @@ async function request(path,body){
 async function act(work){if(busy)return;busy=true;document.querySelectorAll('button').forEach(b=>b.disabled=true);try{await work();}catch(e){say(e.message||'Não foi possível concluir. Tente novamente.');}finally{busy=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);}}
 async function profile(){
   const me=await request('/auth/me');csrf=me.csrf;$('#profile-panel').hidden=false;
-  $('#profile-email').textContent=me.email;$('#verification-state').textContent=me.email_verified?'E-mail confirmado.':'Seu e-mail ainda precisa de confirmação.';
+  const names={free:'Free',essencial:'Essencial',avancado:'Avançado'};$('#account-plan').textContent='Conta '+(names[me.plan]||'Free')+(me.plan==='free'?'':' · acesso de teste');$('#account-access-copy').textContent=!me.email_verified||!me.policy_accepted?'Conclua a confirmação desta conta para liberar questões e biblioteca. O cadastro não exige assinatura.':me.plan==='free'?'Você pode estudar sem assinar: 30 questões mensais de prática, biblioteca e acervo. Painel, revisão e planejamento exigem acesso pago ativo.':'Seu acesso ativo inclui questões sem cota, painel, erros/favoritos e planejamento. Correção real por IA e vendas continuam desativadas.';$('#profile-email').textContent=me.email;$('#verification-state').textContent=me.email_verified?'E-mail confirmado.':'Seu e-mail ainda precisa de confirmação.';
   $('#resend').hidden=me.email_verified;$('#accept-panel').hidden=me.policy_accepted;
 }
 $('#verify-panel').hidden=!(token&&location.pathname==='/verificar-email');
@@ -24,3 +24,7 @@ $('#accept-form').addEventListener('submit',event=>{event.preventDefault();act(a
 $('#export-form').addEventListener('submit',event=>{event.preventDefault();act(async()=>{const result=await request('/account/export',{password:$('#export-password').value});$('#export-password').value='';const url=URL.createObjectURL(new Blob([JSON.stringify(result,null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='moirae-dados.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);say('Arquivo preparado para download.');});});
 $('#delete-form').addEventListener('submit',event=>{event.preventDefault();act(async()=>{const result=await request('/account/delete',{password:$('#delete-password').value,confirmation:$('#delete-confirmation').value});$('#delete-password').value='';$('#profile-panel').hidden=true;csrf='';say(result.message);});});
 act(async()=>{try{await profile();}catch(error){if(!token)say('Entre na área de estudo para gerenciar sua conta. A recuperação de senha também funciona sem login.');}});
+
+// Never restore account content from the browser back/forward cache.
+window.addEventListener('pagehide',()=>{$('#profile-panel').hidden=true;});
+window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});

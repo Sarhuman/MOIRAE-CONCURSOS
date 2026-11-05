@@ -1,8 +1,8 @@
 'use strict';
 const $ = selector => document.querySelector(selector);
-let csrf = '', session = null, pending = null, busy = false;
+let csrf = '', session = null, pending = null, busy = false, authMode = 'login';
 function message(text) { $('#status').textContent = text; }
-function lock(value) { busy = value; document.querySelectorAll('button').forEach(button => { button.disabled = value; }); }
+function lock(value) { busy = value; document.querySelectorAll('button').forEach(button => { button.disabled = value; }); $('#auth-submit').textContent=value?(authMode==='register'?'Criando sua conta…':'Entrando…'):(authMode==='register'?'Criar minha conta Free':'Entrar na minha conta'); }
 async function api(path, body) {
   const response = await fetch('/api' + path, {method: body === undefined ? 'GET' : 'POST', credentials: 'same-origin', headers: body === undefined ? {} : {'Content-Type':'application/json', 'X-CSRF-Token':csrf}, ...(body === undefined ? {} : {body:JSON.stringify(body)})});
   const result = await response.json();
@@ -12,9 +12,40 @@ async function api(path, body) {
   }
   return result;
 }
-function showAuth() { csrf=''; session=null; pending=null; $('#auth-panel').hidden=false; $('#practice-panel').hidden=true; $('#logout').hidden=true; }
-function showPractice() { $('#auth-panel').hidden=true; $('#practice-panel').hidden=false; $('#logout').hidden=false; }
-function quota(value) { const planLabel=document.querySelector("#study-plan"); if(planLabel)planLabel.textContent="Piloto · Plano "+(value.plan || "Free"); if(value.unlimited){$('#quota').textContent=`Plano ${value.plan}: questões sem cota durante o acesso.`;return;} $('#quota').textContent = `${value.used} de ${value.limit} questões usadas neste mês · ${value.remaining} disponíveis`; }
+function showAuth() { $('#password').value='';$('#register-terms').checked=false;$('#register-adult').checked=false;csrf=''; session=null; pending=null; $('#auth-panel').hidden=false; $('#onboarding-panel').hidden=true; $('#practice-panel').hidden=true; $('#logout').hidden=true; $('#study-plan').textContent='Área do aluno'; }
+function showPractice() { $('#auth-panel').hidden=true; $('#onboarding-panel').hidden=true; $('#practice-panel').hidden=false; $('#logout').hidden=false; }
+const planNames={free:'Free',essencial:'Essencial',avancado:'Avançado'};
+function quota(value) {
+  const name=planNames[value.plan]||'Free';$('#study-plan').textContent='Piloto · '+name;
+  const paid=Boolean(value.unlimited);$('#member-access').classList.toggle('is-paid',paid);
+  $('#member-eyebrow').textContent=paid?'ACESSO PAGO DE TESTE':'SUA CONTA GRATUITA';
+  $('#member-title').textContent=paid?`Seu acesso ${name}.`:'Seu Free está pronto para estudar.';
+  $('#member-description').textContent=paid?'Pratique sem cota de questões durante o acesso e acompanhe suas respostas.':`${value.remaining} de ${value.limit} questões disponíveis neste mês. Você pode continuar sem contratar um plano.`;
+  const benefits=paid?['Questões sem cota durante o acesso ativo.','Painel, erros/favoritos e sessões planejadas.','Biblioteca e acervo na sua conta.']:[`Prática e simulados compartilham as ${value.limit} questões mensais.`,'Diagnóstico inicial, explicações e último resultado.','Biblioteca introdutória e acervo após login.'];
+  $('#member-benefits').replaceChildren(...benefits.map(text=>{const li=document.createElement('li');li.textContent=text;return li;}));
+  $('#member-next').href=paid?'/painel':'/planos';$('#member-next').textContent=paid?'Abrir meu painel ↗':'Conhecer os acessos pagos de teste ↗';
+  $('#quota-help').textContent=paid?'Seu progresso fica salvo no servidor. Painel, caderno e planejamento acompanham seu acesso pago ativo.':'O Free permite 30 questões por mês, compartilhadas com os simulados. O saldo renova no primeiro dia do mês, no horário de Brasília. Seu progresso fica salvo no servidor.';
+  $('#quota').textContent=paid?`${name}: questões sem cota durante o acesso.`:`${value.used} de ${value.limit} questões usadas neste mês · ${value.remaining} disponíveis`;
+}
+function setAuthMode(mode,focus=false){
+  if(busy)return;authMode=mode;
+  const register=mode==='register';$('#auth-login-mode').setAttribute('aria-pressed',String(!register));$('#auth-register-mode').setAttribute('aria-pressed',String(register));
+  $('#auth-title').textContent=register?'Sua conta Free começa aqui.':'Bom ter você de volta.';
+  $('#auth-description').textContent=register?'Cadastro gratuito, sem assinatura. Confirme seu e-mail depois para liberar o conteúdo.':'Entre com seu e-mail e senha para continuar de onde parou.';
+  $('#password').autocomplete=register?'new-password':'current-password';$('#password-help').textContent=register?'Crie uma senha exclusiva de 12 a 128 caracteres.':'Use sua senha de 12 a 128 caracteres.';
+  $('#registration-consents').hidden=!register;for(const id of ['#register-terms','#register-adult']){$(id).disabled=!register;$(id).required=register;}
+  $('#login-help').hidden=register;$('#auth-submit').textContent=register?'Criar minha conta Free':'Entrar na minha conta';message('');if(focus)$('#email').focus();
+}
+function showPending(me){
+  $('#auth-panel').hidden=true;$('#practice-panel').hidden=true;$('#onboarding-panel').hidden=false;$('#logout').hidden=false;$('#study-plan').textContent='Conta · confirmação pendente';
+  $('#onboarding-title').textContent=me.policy_accepted?'Confirme seu e-mail para começar.':'Revise os termos para continuar.';
+  $('#onboarding-description').textContent=me.policy_accepted?'Seu cadastro foi salvo. Em Minha conta você pode solicitar um novo link. No piloto local, o responsável pelo servidor acessa a caixa de saída privada para abrir a confirmação. Não é necessário contratar um plano.':'Seu cadastro está preservado. Confira as políticas e a confirmação do e-mail em Minha conta; as questões ficam bloqueadas até concluir essa etapa.';
+}
+async function openAccount(){
+  const me=await api('/auth/me');csrf=me.csrf;
+  if(!me.email_verified||!me.policy_accepted){showPending(me);return false;}
+  await resume();return true;
+}
 function officialStarts(hidden) {
   for(const id of ['#official-start','#official-second','#official-third','#official-fourth','#official-fifth'])$(id).hidden=hidden;
 }
@@ -39,8 +70,19 @@ function render(value) {
   $('#options').replaceChildren(...options);
 }
 async function resume() { const result=await api('/practice/current');showPractice();quota(result.quota);render(result.session || result.completed); }
-async function action(work) { if(busy)return;lock(true);message('');try{await work();}catch(error){message(error.message || 'Não foi possível concluir. Tente novamente.');}finally{lock(false);} }
-$('#auth-form').addEventListener('submit',event=>{event.preventDefault();const mode=event.submitter?.value || 'login';if(mode==='register'&&(!$('#register-terms').checked||!$('#register-adult').checked)){message('Para criar a conta de teste, aceite os termos e confirme que tem 18 anos ou mais.');return;}action(async()=>{const result=await api('/auth/'+mode,{email:$('#email').value,password:$('#password').value,...(mode==='register'?{accept_terms:$('#register-terms').checked,adult_pilot:$('#register-adult').checked}:{})});csrf=result.csrf;$('#password').value='';if(mode==='register'){message('Conta criada. Abra Minha conta para confirmar seu e-mail.');return;}await resume();message(mode==='register'?'Conta criada. Confirme seu e-mail na área Minha conta para começar.':'Você entrou. Vamos continuar?');});});
+async function action(work) { if(busy)return;lock(true);message('');try{await work();}catch(error){message(error.message || 'Não foi possível concluir. Tente novamente.');$('#status').focus();}finally{lock(false);} }
+$('#auth-login-mode').addEventListener('click',()=>setAuthMode('login',true));
+$('#auth-register-mode').addEventListener('click',()=>setAuthMode('register',true));
+$('#check-access').addEventListener('click',()=>action(openAccount));
+$('#auth-form').addEventListener('submit',event=>{
+  event.preventDefault();const mode=authMode;
+  if(mode==='register'&&(!$('#register-terms').checked||!$('#register-adult').checked)){message('Para criar a conta Free do piloto, aceite os termos e confirme que tem 18 anos ou mais.');$('#status').focus();return;}
+  action(async()=>{
+    const result=await api('/auth/'+mode,{email:$('#email').value,password:$('#password').value,...(mode==='register'?{accept_terms:$('#register-terms').checked,adult_pilot:$('#register-adult').checked}:{})});
+    csrf=result.csrf;$('#password').value='';
+    const ready=await openAccount();message(mode==='register'?'Conta Free criada. Confirme seu e-mail para começar.':ready?'Você entrou. Seu próximo passo está abaixo.':'Você entrou. Conclua a confirmação da conta para acessar as questões.');
+  });
+});
 $('#logout').addEventListener('click',()=>action(async()=>{await api('/auth/logout',{});showAuth();message('Você saiu da conta.');}));
 async function start() { await action(async()=>{render(await api('/practice/start',{}));}); }
 $('#refresh').addEventListener('click',()=>action(resume));
@@ -69,4 +111,9 @@ $('#answer-form').addEventListener('submit',event=>{event.preventDefault();actio
   if(session.status==='completed'){officialStarts(false);$('#choices').hidden=true;$('#complete').hidden=false;$('#summary').textContent=`Você acertou ${result.summary.correct} de ${result.summary.total} questões nesta atividade. Se este foi seu diagnóstico, consulte o resultado no link acima.`;}
 });});
 $('#next').addEventListener('click',()=>{render(session);$('#question-title').scrollIntoView({block:'center'});});
-action(async()=>{try{const result=await api('/auth/me');csrf=result.csrf;await resume();}catch(error){showAuth();if(!error.message.includes('Entre na sua conta'))throw error;}});
+setAuthMode(new URLSearchParams(location.search).get('cadastro')==='1'?'register':'login');
+action(async()=>{try{await openAccount();}catch(error){showAuth();if(!error.message.includes('Entre na sua conta'))throw error;}});
+
+// Never restore account content from the browser back/forward cache.
+window.addEventListener('pagehide',()=>{$('#practice-panel').hidden=true;$('#onboarding-panel').hidden=true;$('#password').value='';});
+window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});

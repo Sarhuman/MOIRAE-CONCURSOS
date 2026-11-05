@@ -2,6 +2,8 @@
 
 Este índice separa o estado atual dos registros de entregas anteriores. O piloto integrado à `main` continua local/sandbox; páginas históricas podem mencionar branches, preços ou limitações já substituídos.
 
+Experiência atual: [cadastro, login e área do aluno v14](account-experience-v14.md).
+
 Regra atual: [questões somente após cadastro v13](registered-access-v13.md). Revisão e evidências anteriores: [v12](review-continuation-v12.md).
 
 ## Começar e testar

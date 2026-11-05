@@ -16,8 +16,8 @@ def register(app,email):
     with app.state.store.connect() as db:uid=db.execute('SELECT id FROM users WHERE email=?',(email,)).fetchone()[0]
     return c,uid
 
-def grant(app,uid):
-    now=int(time.time());oid=str(uuid.uuid4())
+def grant(app,uid,now=None):
+    now=int(time.time()) if now is None else now;oid=str(uuid.uuid4())
     with app.state.store.connect(write=True) as db:
         db.execute("INSERT INTO billing_orders(id,user_id,plan_id,amount_cents,status,created_at,request_key) VALUES(?,?,'essencial',4000,'approved',?,?)",(oid,uid,now,oid))
         db.execute("INSERT INTO access_grants VALUES(?,?,'essencial',?,?,'active',10)",(oid,uid,now-1,now+86400))

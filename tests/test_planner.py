@@ -116,7 +116,10 @@ def test_full_error_review_success_cycle(setup):
     assert session['question']['id']==first
     result=c.post('/api/practice/answer',json=dict(session_id=session['id'],question_id=first,choice=BY_ID[first].answer,key=str(uuid.uuid4()))).json()
     assert result['correct'] and result['review_schedule']['stage']==1
-    assert result['review_schedule']['due_at']>=int(time.time())+3*DAY-2
+    # Scheduling is relative to the recorded answer, not response/CI latency.
+    with app.state.store.connect() as db:
+        recorded=db.execute('SELECT last_answered_at,due_at FROM review_schedule WHERE user_id=? AND question_id=?',(uid,first)).fetchone()
+    assert result['review_schedule']['due_at']==recorded['due_at']==recorded['last_answered_at']+3*DAY
 
 
 def test_all_future_reviews_do_not_create_empty_session(setup):

@@ -111,7 +111,7 @@ def test_daily_cap_and_worker_exclusion(setup):
 def test_jobs_are_private_and_demo_never_appears_in_evolution(setup):
     from fastapi import HTTPException
     app,c,uid,clock,jobs,fake=queue(setup);j=submit(jobs,uid)
-    other,oid=register(app,'other-real@example.test');grant(app,oid)
+    other,oid=register(app,'other-real@example.test');grant(app,oid,now=clock[0])
     assert jobs.history(oid)['items']==[] and jobs.evolution(oid)['groups']==[]
     with pytest.raises(HTTPException) as e:jobs.detail(oid,j['id'])
     assert e.value.status_code==404

@@ -226,7 +226,13 @@ def test_pack_validity_is_not_invented_and_provider_uncertainty_never_retries(en
     with pytest.raises(RuntimeError):start(env,key=key)
     with pytest.raises(HTTPException) as e:start(env,key=key)
     assert e.value.status_code==409
-    assert app.state.billing.current('alice')['orders'][0]['status']=='needs_review'
+    current=app.state.billing.current('alice')['orders'][0]
+    assert current['status']=='needs_review'
+    assert pay(env,current['id'])['review_required'] is True
+    with app.state.store.connect() as db:
+        reconciled=db.execute('SELECT * FROM billing_orders WHERE id=?',(current['id'],)).fetchone()
+        assert reconciled['payment_id']=='100' and reconciled['provider_version'] is not None
+    assert app.state.wallet.snapshot('alice')['available']==0
 
 
 def test_purchased_lot_funds_existing_demo_and_refund_prevents_completion(env):

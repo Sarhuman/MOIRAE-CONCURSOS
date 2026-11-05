@@ -77,6 +77,7 @@ class Billing:
             if str(payment['id'])!=payment_id or payment.get('live_mode') is not False or str(payment['collector_id'])!=self.collector or payment['currency_id']!='BRL':raise ValueError()
             reference=str(uuid.UUID(str(payment['external_reference'])));status=payment['status']
         except (KeyError,ValueError,TypeError,InvalidOperation):raise HTTPException(400,'Pagamento não corresponde ao ambiente de teste esperado.')
+        if status not in ('approved','pending','in_process','authorized','rejected','cancelled','refunded','charged_back'):raise HTTPException(400,'Estado de pagamento não suportado.')
         with self.store.connect(write=True) as db:
             order=db.execute('SELECT * FROM billing_orders WHERE id=?',(reference,)).fetchone()
             if not order or int(cents)!=order['amount_cents']:raise HTTPException(400,'Pagamento não corresponde ao pedido.')
@@ -89,14 +90,17 @@ class Billing:
             # Reembolso parcial/contestação suspende o direito até reconciliação operacional.
             revoked=status in ('refunded','charged_back','cancelled','rejected') or refunded>0 or payment.get('status_detail')=='partially_refunded'
             if order['status'] in ('refunded','charged_back','revoked') and not revoked:return {'ok':True,'ignored':'terminal_state'}
-            if order['status']=='needs_review' and not revoked:return {'ok':True,'review_required':True}
+            if order['status']=='needs_review' and not revoked:
+                # Preserve trusted reconciliation evidence without granting credit
+                # or reopening an uncertain/closed commercial contract.
+                db.execute('UPDATE billing_orders SET payment_id=?,provider_version=? WHERE id=?',(payment_id,version,order['id']))
+                return {'ok':True,'review_required':True}
             if order['plan_id'] in PLANS and status=='approved' and not revoked and not db.execute('SELECT 1 FROM access_grants WHERE order_id=?',(order['id'],)).fetchone() and entitlement(db,order['user_id'],self.clock())['active']:
                 db.execute("UPDATE billing_orders SET status='needs_review',payment_id=?,provider_version=? WHERE id=?",(payment_id,version,order['id']))
                 if self.sandbox_orders and db.execute('SELECT 1 FROM sandbox_order_contracts WHERE order_id=?',(order['id'],)).fetchone():
                     self.sandbox_orders.review(db,order,'Outro acesso já ativo na confirmação; não acumular períodos automaticamente.')
                 return {'ok':True,'review_required':True}
             stored='revoked' if revoked else status
-            if status not in ('approved','pending','in_process','authorized','rejected','cancelled','refunded','charged_back'):raise HTTPException(400,'Estado de pagamento não suportado.')
             db.execute('UPDATE billing_orders SET payment_id=?,provider_version=?,status=? WHERE id=?',(payment_id,version,stored,order['id']))
             if self.sandbox_orders:
                 result=self.sandbox_orders.reconcile(db,order,status,revoked,int(self.clock()),partial=refunded>0 and refunded*100<cents or payment.get('status_detail')=='partially_refunded')

@@ -133,3 +133,69 @@ def test_windows_friendly_paths_with_spaces_and_unicode(tmp_path):
     store=Store(str(folder/'banco #1.sqlite3'))
     report=inspect(store.path)
     assert report['total_matching']==0 and report['items']==[]
+
+
+def test_contract_owner_mismatch_does_not_expose_contract_or_lot(env):
+    app,_,clock=env
+    oid=start(env)['order_id'];pay(env,oid)
+    with app.state.store.connect(write=True) as db:
+        db.execute("UPDATE sandbox_order_contracts SET user_id='bob' WHERE order_id=?",(oid,))
+    before=dump(app.state.store)
+    item=inspect(app.state.store.path,order_id=oid,now=clock[0])['items'][0]
+    assert 'contract_owner_mismatch' in item['anomalies']
+    assert item['requires_review'] and item['automatic_resolution_available'] is False
+    assert item['contract'] is None and item['lot'] is None
+    assert dump(app.state.store)==before
+
+
+@pytest.mark.parametrize('field,value',[
+    ('discount_cents',None),('amount_cents','2750'),('credits',0),('validity_days',False),
+])
+def test_incomplete_or_invalid_contract_numbers_require_review(env,field,value):
+    app,_,clock=env;oid=start(env)['order_id'];pay(env,oid)
+    with app.state.store.connect(write=True) as db:
+        snapshot=json.loads(contract(env,oid)['snapshot']);snapshot[field]=value
+        db.execute('UPDATE sandbox_order_contracts SET snapshot=? WHERE order_id=?',(json.dumps(snapshot),oid))
+    before=dump(app.state.store)
+    item=inspect(app.state.store.path,order_id=oid,now=clock[0])['items'][0]
+    assert 'invalid_contract_numbers' in item['anomalies'] and item['requires_review']
+    assert dump(app.state.store)==before
+
+
+def test_fulfilled_credit_pack_without_lot_requires_review(env):
+    app,_,clock=env;oid=start(env)['order_id'];pay(env,oid)
+    with app.state.store.connect(write=True) as db:
+        db.execute('UPDATE sandbox_order_contracts SET lot_id=NULL WHERE order_id=?',(oid,))
+    before=dump(app.state.store)
+    item=inspect(app.state.store.path,order_id=oid,now=clock[0])['items'][0]
+    assert 'missing_fulfillment_lot' in item['anomalies'] and item['requires_review']
+    assert dump(app.state.store)==before
+
+
+@pytest.mark.parametrize('counter,anomaly',[
+    ('reserved','reservation_balance_mismatch'),('consumed','consumption_balance_mismatch'),
+])
+def test_lot_counters_must_match_existing_reservations(env,counter,anomaly):
+    app,_,clock=env;oid=start(env)['order_id'];pay(env,oid)
+    with app.state.store.connect(write=True) as db:
+        db.execute(f'UPDATE sandbox_credit_lots SET available=available-1,{counter}={counter}+1 WHERE id=?',(contract(env,oid)['lot_id'],))
+    before=dump(app.state.store)
+    item=inspect(app.state.store.path,order_id=oid,now=clock[0])['items'][0]
+    assert anomaly in item['anomalies'] and item['requires_review']
+    assert dump(app.state.store)==before
+
+
+def test_valid_wallet_lifecycle_is_not_flagged_as_counter_corruption(env):
+    app,_,clock=env;oid=start(env)['order_id'];pay(env,oid)
+    def check():
+        before=dump(app.state.store)
+        item=inspect(app.state.store.path,order_id=oid,now=clock[0])['items'][0]
+        assert item['anomalies']==[] and not item['requires_review']
+        assert dump(app.state.store)==before
+    check()
+    first=app.state.wallet.reserve('alice','valid-consumption');check()
+    app.state.wallet.settle('alice',first['id'],'consume');check()
+    app.state.wallet.settle('alice',first['id'],'refund');check()
+    second=app.state.wallet.reserve('alice','valid-release');check()
+    app.state.wallet.settle('alice',second['id'],'release');check()
+    clock[0]+=1;pay(env,oid,status='refunded');check()

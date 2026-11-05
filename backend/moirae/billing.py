@@ -54,8 +54,10 @@ class Billing:
             with self.store.connect(write=True) as db:
                 # A timeout may have created a provider preference. Never silently retry it.
                 protected=kind=='credit_pack' or coupon_code
-                db.execute('UPDATE billing_orders SET status=? WHERE id=?',('needs_review' if protected else 'failed',oid))
-                if protected:self.sandbox_orders.review(db,dict(id=oid),'Resposta do provedor incerta; conferir referência antes de retentar.')
+                changed=db.execute("UPDATE billing_orders SET status=? WHERE id=? AND status='preparing'",('needs_review' if protected else 'failed',oid)).rowcount
+                # An authenticated webhook may already have settled the order while
+                # the preference request was in flight. Never overwrite that state.
+                if protected and changed:self.sandbox_orders.review(db,dict(id=oid),'Resposta do provedor incerta; conferir referência antes de retentar.')
             raise
         with self.store.connect(write=True) as db:
             db.execute("UPDATE billing_orders SET status=CASE WHEN status='preparing' THEN 'pending' ELSE status END,preference_id=?,checkout_url=? WHERE id=?",(result['preference_id'],result['checkout_url'],oid))

@@ -273,3 +273,15 @@ def test_payment_cannot_move_to_another_account_order(env):
     assert exc.value.status_code==409
     assert app.state.wallet.snapshot('bob')['available']==0
     assert contract(env,other)['state']=='pending'
+
+
+def test_verified_webhook_wins_race_with_lost_preference_response(env):
+    app,fake,_=env
+    def preference(order,plan,origin):
+        pay(env,order['id'])
+        raise RuntimeError('synthetic response lost after verified payment')
+    fake.preference=preference
+    with pytest.raises(RuntimeError):start(env)
+    current=app.state.billing.current('alice')['orders'][0]
+    assert current['status']=='approved' and current['contract']['state']=='fulfilled'
+    assert app.state.wallet.snapshot('alice')['available']==5

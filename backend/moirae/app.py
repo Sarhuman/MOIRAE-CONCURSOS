@@ -431,6 +431,13 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     @app.get('/biblioteca')
     def library_page():return FileResponse(ROOT/'web'/'biblioteca.html')
 
+    @app.get('/api/learning-library')
+    def learning_library(auth=Depends(student)):
+        data=json.loads((ROOT/'data'/'learning-library.json').read_text(encoding='utf-8'))
+        # Opaque per-account namespace; no e-mail or raw user ID in local storage.
+        data['progress_key']=digest('library:'+auth['user_id'])
+        return JSONResponse(data,headers={'Cache-Control':'no-store'})
+
     @app.get('/api/billing/plans')
     def plans():return billing.catalog()
 
@@ -510,7 +517,7 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     def archive_page():return FileResponse(ROOT/'web'/'enem-archive.html')
 
     @app.get('/api/enem-archive')
-    def archive_index():
+    def archive_index(auth=Depends(student)):
         rows=json.loads((ROOT/'data'/'inep'/'archive-index.json').read_text(encoding='utf-8'))
         for row in rows:
             for item in row['files']:
@@ -519,14 +526,14 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
         return JSONResponse(rows,headers={'Cache-Control':'no-store'})
 
     @app.get('/acervo-enem/{year}/{name}')
-    def archive_pdf(year:int,name:str):
+    def archive_pdf(year:int,name:str,auth=Depends(student)):
         import json
         rows=json.loads((ROOT/'data'/'inep'/'archive-index.json').read_text(encoding='utf-8'))
         valid=any(row['year']==year and any(f['name']==name and f['status']=='downloaded' for f in row['files']) for row in rows)
         if not valid or Path(name).name!=name:raise HTTPException(404,'Arquivo não encontrado.')
         path=ROOT/'var'/'inep'/'archive'/str(year)/name
         if not path.is_file():raise HTTPException(404,'PDF não instalado nesta instância. Use a fonte oficial.')
-        return FileResponse(path,media_type='application/pdf',filename=name)
+        return FileResponse(path,media_type='application/pdf',filename=name,headers={'Cache-Control':'private, no-store'})
 
     @app.get('/diagnostico')
     def diagnostic_page():return FileResponse(ROOT/'web'/'diagnostic.html')

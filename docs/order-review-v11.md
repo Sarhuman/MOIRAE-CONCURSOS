@@ -49,7 +49,7 @@ O relatório não contém e-mail, ID do titular, URL de checkout, código de cup
 
 ## Inconsistências sinalizadas, sem reparo
 
-Snapshot inválido, moeda/valor/aritmética divergentes, lote ausente ou de outro titular, hold de outro titular, lote ainda gastável em caso em análise e hold ativo em análise. Contadores de lote de outra conta não são exibidos. A ferramenta apenas sinaliza; não altera saldo, vínculo ou estado.
+Snapshot inválido, valores obrigatórios ausentes ou com tipo inválido, moeda/valor/aritmética divergentes, contrato de outro titular, pacote concluído sem lote, lote ausente ou de outro titular, contadores reservados/consumidos divergentes das reservas persistidas, hold de outro titular, lote ainda gastável em caso em análise e hold ativo em análise. Contrato de outro titular não expõe seu snapshot ou lote. Contadores de lote de outra conta não são exibidos. A ferramenta apenas sinaliza; não altera saldo, vínculo ou estado. A listagem padrão continua limitada aos pedidos já sinalizados ou com solicitação de reembolso. Para conferir inconsistências em um pedido ainda não sinalizado, use `--order`; a ferramenta não faz varredura integral automática de todos os pedidos.
 
 Não comprova a correção integral do ledger, a atualidade do pagamento externo ou a conclusão de uma solicitação. Não expira contratos pendentes por conta própria; isso pertence ao fluxo financeiro já existente.
 

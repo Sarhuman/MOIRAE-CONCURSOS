@@ -11,6 +11,7 @@ def test_archive_selects_color_without_duplicate_booklets():
 def test_archive_reports_instance_availability_and_preserves_official_fallback(tmp_path,monkeypatch):
     import json
     from fastapi.testclient import TestClient
+    from test_mvp import register
     import backend.moirae.app as module
     app=module.create_app(str(tmp_path/'test.sqlite3'),origin='http://localhost:8000',secure=False)
     root=tmp_path/'instance';(root/'data'/'inep').mkdir(parents=True)
@@ -18,7 +19,8 @@ def test_archive_reports_instance_availability_and_preserves_official_fallback(t
     url='https://download.inep.gov.br/enem/provas_e_gabaritos/'+name
     (root/'data'/'inep'/'archive-index.json').write_text(json.dumps([dict(year=2025,files=[dict(name=name,status='downloaded',url=url)])]))
     monkeypatch.setattr(module,'ROOT',root)
-    c=TestClient(app)
+    c=TestClient(app,base_url='http://localhost:8000',headers={'Origin':'http://localhost:8000'})
+    register(c)
     index=c.get('/api/enem-archive')
     assert index.headers['cache-control']=='no-store'
     entry=index.json()[0]['files'][0]
@@ -27,5 +29,6 @@ def test_archive_reports_instance_availability_and_preserves_official_fallback(t
     folder=root/'var'/'inep'/'archive'/'2025';folder.mkdir(parents=True)
     (folder/name).write_bytes(b'%PDF-test')
     assert c.get('/api/enem-archive').json()[0]['files'][0]['available_local'] is True
-    assert c.get('/acervo-enem/2025/'+name).content==b'%PDF-test'
+    pdf=c.get('/acervo-enem/2025/'+name)
+    assert pdf.content==b'%PDF-test' and pdf.headers['cache-control']=='private, no-store'
     assert c.get('/acervo-enem/2025/unknown.pdf').status_code==404

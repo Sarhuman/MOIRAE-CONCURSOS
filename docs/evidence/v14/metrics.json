@@ -1,0 +1,77 @@
+[
+  {
+    "page": "conta-free",
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "page": "conta-free",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "page": "conta-free",
+    "scroll": 415,
+    "width": 430
+  },
+  {
+    "page": "conta-free",
+    "scroll": 1351,
+    "width": 1366
+  },
+  {
+    "page": "estudar-pago",
+    "scroll": 1351,
+    "width": 1366
+  },
+  {
+    "page": "estudar-pago",
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "page": "estudar-pago",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "page": "estudar-pago",
+    "scroll": 415,
+    "width": 430
+  },
+  {
+    "page": "painel-pago",
+    "scroll": 1351,
+    "width": 1366
+  },
+  {
+    "page": "painel-pago",
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "page": "painel-pago",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "page": "painel-pago",
+    "scroll": 415,
+    "width": 430
+  },
+  {
+    "page": "login",
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "page": "login",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "page": "login",
+    "scroll": 415,
+    "width": 430
+  }
+]

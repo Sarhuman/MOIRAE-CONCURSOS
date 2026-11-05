@@ -1,0 +1,44 @@
+[
+  {
+    "client": 345,
+    "contentVisible": true,
+    "page": "/biblioteca",
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "client": 375,
+    "contentVisible": true,
+    "page": "/biblioteca",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "client": 415,
+    "contentVisible": true,
+    "page": "/biblioteca",
+    "scroll": 415,
+    "width": 430
+  },
+  {
+    "client": 345,
+    "page": "/",
+    "publicQuestionForm": false,
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "client": 375,
+    "page": "/",
+    "publicQuestionForm": false,
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "client": 415,
+    "page": "/",
+    "publicQuestionForm": false,
+    "scroll": 415,
+    "width": 430
+  }
+]

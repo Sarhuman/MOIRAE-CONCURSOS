@@ -3,10 +3,10 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const vm=require('node:vm');
 const fs=require('node:fs');
-function fixture(mode='sandbox',failDraw=false,losing=false){
+function fixture(mode='sandbox',failDraw=false,losing=false,reduced=true){
   const ids=['coupon-open','coupon-dialog','coupon-spin','coupon-wheel','coupon-result','coupon-rules','coupon-consent','coupon-accept','coupon-outcomes','coupon-title','coupon-close','coupon-plans'];
   const elements=Object.fromEntries(ids.map(id=>['#'+id,{hidden:true,disabled:false,checked:false,textContent:'',style:{},listeners:{},addEventListener(event,fn){this.listeners[event]=fn;},replaceChildren(...children){this.children=children;},showModal(){this.open=true;},close(){this.open=false;}}]));
-  const calls=[];
+  const calls=[],delays=[];
   const rules={id:'campaign-v1',valid_seconds:600,ends_at:2000000000,products:['essencial'],max_uses:5,outcomes:[{discount_bps:1700,weight:1,total_weight:1}],notice:'Sandbox only'};
   if(losing)Object.assign(rules,{valid_months:3,valid_seconds:null,products:['avancado'],outcomes:[{discount_bps:500,weight:1,total_weight:100},{discount_bps:0,weight:99,total_weight:100}]});
   const fetch=async(path,options)=>{calls.push({path,options});let data;
@@ -18,9 +18,9 @@ function fixture(mode='sandbox',failDraw=false,losing=false){
     }else throw Error('Unexpected endpoint');
     return {ok:true,status:200,json:async()=>data};
   };
-  const context={document:{querySelector:s=>elements[s],createElement:()=>({textContent:''})},fetch,window:{matchMedia:()=>({matches:true}),setTimeout:fn=>fn()},Math:mode==='sandbox'?{random(){throw Error('Client cannot draw a sandbox outcome');},floor:Math.floor}:Math,Date,Error};
+  const context={document:{querySelector:s=>elements[s],createElement:()=>({textContent:''})},fetch,window:{matchMedia:()=>({matches:reduced}),setTimeout:(fn,delay)=>{delays.push(delay);fn();}},Math:mode==='sandbox'?{random(){throw Error('Client cannot draw a sandbox outcome');},floor:Math.floor}:Math,Date,Error};
   vm.runInNewContext(fs.readFileSync('web/coupon-demo.js','utf8'),context);
-  return {elements,calls,async open(){elements['#coupon-open'].listeners.click();await new Promise(resolve=>setImmediate(resolve));},async spin(){await elements['#coupon-spin'].listeners.click();}};
+  return {elements,calls,delays,async open(){elements['#coupon-open'].listeners.click();await new Promise(resolve=>setImmediate(resolve));},async spin(){await elements['#coupon-spin'].listeners.click();}};
 }
 test('sandbox wheel displays server result, requires rules and disables repeat',async()=>{
   const f=fixture();await f.open();
@@ -57,4 +57,11 @@ test('approved losing outcome displays no prize and calendar-month rules',async(
   assert.match(f.elements['#coupon-result'].textContent,/não houve prêmio/);
   assert.doesNotMatch(f.elements['#coupon-result'].textContent,/Cupom sandbox:|null/);
   assert.equal(f.elements['#coupon-spin'].disabled,true);
+});
+
+test('reduced motion shows the result without rotation or an animation timer',async()=>{
+ const f=fixture('demonstration');await f.open();await f.spin();assert.equal(f.elements['#coupon-wheel'].style.transform,undefined);assert.deepEqual(f.delays,[]);assert.match(f.elements['#coupon-result'].textContent,/Demonstração concluída/);assert.equal(f.elements['#coupon-spin'].disabled,false);
+});
+test('normal motion keeps the demonstration animation and releases the button after its timer',async()=>{
+ const f=fixture('demonstration',false,false,false);await f.open();await f.spin();assert.match(f.elements['#coupon-wheel'].style.transform,/rotate/);assert.deepEqual(f.delays,[1850]);assert.equal(f.elements['#coupon-spin'].disabled,false);
 });

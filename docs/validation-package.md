@@ -4,17 +4,19 @@ Este pacote permite acompanhar a validação automática e organizar a conferên
 
 ## Usar agora pelo navegador
 
-1. Abra o PR deste pacote e entre em **Checks**. Abra a execução `MVP checks` correspondente ao commit que quer conferir.
+1. Abra **Actions → MVP checks** para a main, ou **Checks** no PR que deseja conferir. Selecione a execução correspondente ao commit.
 2. Na página da execução, leia os resumos de backend Windows, backend Ubuntu e frontend. Cada resumo registra o commit testado, contagens JUnit e resultado de compilação/sintaxe.
 3. Uma suíte ausente, inválida, vazia ou com testes ignorados não recebe aprovação completa pelo resumo. Falhas anteriores não são ocultadas pela etapa de relatório.
 4. Windows e Ubuntu executam a mesma suíte Python; não some seus totais como testes diferentes. Contagens antigas no README são referência da base consolidada, não resultado automático deste pacote.
-5. Depois que esta mudança for integrada à `main`, a aba **Actions → MVP checks → Run workflow** permitirá disparar novamente os mesmos checks. Isso executa testes remotos, não abre o aplicativo, não publica site e não cria campanha.
+5. A aba **Actions → MVP checks → Run workflow** permite disparar novamente os mesmos checks na main. Isso executa testes remotos, não abre o aplicativo, não publica site e não cria campanha.
 6. Use o checklist abaixo para planejar a conferência real. No PC do trabalho, apenas acompanhe os resultados e registre decisões; deixe a execução local para o computador pessoal.
-7. Após a integração, ao encontrar um problema, use **Issues → New issue → Problema encontrado na validação**. Antes disso, o formulário pode ser consultado no PR, sem criar uma issue fictícia. Preencha commit, ambiente, passos e esperado/observado. Não é necessário criar issues para o que não foi testado.
+7. Ao encontrar um problema real, use **Issues → New issue → Problema encontrado na validação**; não crie uma issue fictícia. Preencha commit, ambiente, passos e esperado/observado. Não é necessário criar issues para o que não foi testado.
 
 O resumo não copia mensagens de testes, textos, códigos de cupons ou variáveis de ambiente. Relatórios JUnit ficam no diretório temporário `var/validation` do runner, sem artefato público adicional. Os logs padrão da CI continuam no GitHub; os testes deste piloto usam dados sintéticos. Não publique relatórios operacionais reais para substituir testes.
 
-## Checklist manual — estado inicial: não executado
+## Checklist manual — modelo para cada execução
+
+O registro de navegação real de 05/11/2026 está em [v12](review-continuation-v12.md), com itens comprovados e pendentes. A tabela abaixo é um modelo em branco; não copia aprovação de uma rodada para outra.
 
 Marque cada item somente após observar a aplicação real. Preencha commit, navegador, largura, zoom e evidência. Esta lista não é uma declaração de aprovação.
 
@@ -31,6 +33,7 @@ Marque cada item somente após observar a aplicação real. Preencha commit, nav
 | V09 | Roleta sem campanha provisionada | Apenas demonstração, sem código resgatável ou prêmio real | Não executado |
 | V10 | Desktop, 360/390/430 px, zoom 200% | Sem cortes ou rolagem horizontal; conteúdo e ações acessíveis | Não executado |
 | V11 | Tab/Shift+Tab, Escape, retorno de foco e movimento reduzido | Diálogos utilizáveis e animação respeitando preferência | Não executado |
+| V13 | Visitante abre biblioteca/acervo; depois conta Free entra e sai | Sem perguntas antes do login; Free acessa sem assinatura; logout bloqueia novamente | Não executado |
 | V12 | Carregamento, estado vazio e erro de conexão | Mensagens claras, rascunho preservado e retentativa segura | Não executado |
 
 O preparo local no computador pessoal está em [wallet-essay-flow-v7.md](wallet-essay-flow-v7.md) e [sandbox-orders-v10.md](sandbox-orders-v10.md). Preserve bancos existentes e use banco novo para o saldo inicial de três créditos. Não habilite integrações externas para realizar esse percurso demonstrativo.

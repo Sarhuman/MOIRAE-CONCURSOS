@@ -62,20 +62,30 @@ def case(db, row, now):
     reason=REASONS.get(row['review_reason'],'unclassified_review')
     if reason=='unclassified_review' and row['refund_requested_at'] is not None:
         reason='refund_request_recorded'
+    has_contract=row['contract_state'] is not None
+    trusted_contract=has_contract and row['contract_user_id']==row['user_id']
+    if has_contract and not trusted_contract:anomalies.append('contract_owner_mismatch')
     raw={}
-    if row['snapshot']:
+    if trusted_contract:
         try:
             raw=json.loads(row['snapshot'])
             if not isinstance(raw,dict):raw={};anomalies.append('invalid_contract_snapshot')
         except (ValueError,TypeError):anomalies.append('invalid_contract_snapshot')
     amounts={key:number(raw.get(key)) for key in ('amount_cents','discount_cents','total_cents','credits','validity_days')}
-    if row['contract_state'] is not None:
+    if trusted_contract:
+        required=('amount_cents','discount_cents','total_cents')
+        invalid_numbers=any(amounts[k] is None for k in required)
+        if row['contract_kind']=='credit_pack':
+            invalid_numbers=invalid_numbers or any(amounts[k] is None or amounts[k]<=0 for k in ('credits','validity_days'))
+        if invalid_numbers:anomalies.append('invalid_contract_numbers')
         if raw.get('currency')!='BRL':anomalies.append('invalid_contract_currency')
         if amounts['total_cents']!=number(row['amount_cents']):anomalies.append('contract_order_amount_mismatch')
         if all(amounts[k] is not None for k in ('amount_cents','discount_cents','total_cents')) and amounts['amount_cents']-amounts['discount_cents']!=amounts['total_cents']:
             anomalies.append('invalid_contract_arithmetic')
+        if row['contract_kind']=='credit_pack' and row['contract_state']=='fulfilled' and not row['lot_id']:
+            anomalies.append('missing_fulfillment_lot')
     lot=None
-    if row['lot_id']:
+    if trusted_contract and row['lot_id']:
         record=db.execute('SELECT user_id,available,reserved,consumed,units,expires_at,revoked_at FROM sandbox_credit_lots WHERE id=?',(row['lot_id'],)).fetchone()
         if record is None:anomalies.append('missing_lot')
         elif record['user_id']!=row['user_id']:anomalies.append('lot_owner_mismatch')
@@ -83,6 +93,9 @@ def case(db, row, now):
             lot={k:number(record[k]) for k in ('available','reserved','consumed','units','expires_at')}
             lot['revoked']=record['revoked_at'] is not None
             lot['expired']=lot['expires_at'] is None or lot['expires_at']<=now
+            counts=db.execute("SELECT coalesce(sum(status='reserved'),0) AS reserved,coalesce(sum(status='consumed'),0) AS consumed FROM sandbox_credit_reservations WHERE lot_id=? AND user_id=?",(row['lot_id'],row['user_id'])).fetchone()
+            if lot['reserved']!=counts['reserved']:anomalies.append('reservation_balance_mismatch')
+            if lot['consumed']!=counts['consumed']:anomalies.append('consumption_balance_mismatch')
             if (row['status']=='needs_review' or row['contract_state']=='needs_review') and not lot['revoked'] and not lot['expired'] and (lot['available'] or 0)>0:
                 anomalies.append('review_lot_still_spendable')
     hold=db.execute('SELECT user_id,status,expires_at FROM sandbox_coupon_holds WHERE order_id=?',(row['id'],)).fetchone()
@@ -104,7 +117,7 @@ def case(db, row, now):
         status=row['status'] if row['status'] in STATUSES else 'unknown',
         contract_state=row['contract_state'] if row['contract_state'] in CONTRACT_STATES else None,
         reason=reason,refund_requested=row['refund_requested_at'] is not None,
-        payment_linked=bool(row['payment_id']),amount_cents=number(row['amount_cents']),contract=amounts if row['snapshot'] else None,
+        payment_linked=bool(row['payment_id']),amount_cents=number(row['amount_cents']),contract=amounts if trusted_contract else None,
         lot=lot,coupon_hold=coupon,anomalies=anomalies,required_evidence=EVIDENCE[reason],
         requires_review=requires_review,action='manual_review_only' if requires_review else 'inspection_only',automatic_resolution_available=False)
 
@@ -121,7 +134,7 @@ def inspect(database, order_id=None, limit=100, now=None):
         join='FROM billing_orders b LEFT JOIN sandbox_order_contracts c ON c.order_id=b.id'
         total=db.execute('SELECT count(*) '+join+' WHERE '+where,args).fetchone()[0]
         if order_id and not total:raise ReviewUnavailable('Pedido não encontrado.')
-        rows=db.execute('SELECT b.id,b.user_id,b.plan_id,b.amount_cents,b.status,b.payment_id,b.refund_requested_at,c.state AS contract_state,c.snapshot,c.lot_id,c.review_reason '+join+' WHERE '+where+' ORDER BY b.created_at,b.id LIMIT ?',args+(limit,)).fetchall()
+        rows=db.execute('SELECT b.id,b.user_id,b.plan_id,b.amount_cents,b.status,b.payment_id,b.refund_requested_at,c.state AS contract_state,c.user_id AS contract_user_id,c.kind AS contract_kind,c.snapshot,c.lot_id,c.review_reason '+join+' WHERE '+where+' ORDER BY b.created_at,b.id LIMIT ?',args+(limit,)).fetchall()
         items=[case(db,row,now) for row in rows]
     return dict(read_only=True,sandbox_pilot=True,snapshot_at=now,total_matching=total,returned=len(items),has_more=total>len(items),items=items,
         notice='Triagem local sem consulta ao provedor, migração, concessão, resolução ou estorno. Não comprova homologação externa. IDs de pedidos e valores são dados operacionais; não publique o relatório.')

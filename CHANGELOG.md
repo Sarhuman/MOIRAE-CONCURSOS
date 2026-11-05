@@ -1,6 +1,14 @@
 # Changelog
 
-## Não lançado — consolidação do piloto web
+## Não lançado — revisão após a consolidação
+
+- Cadastro/login obrigatórios para questões, biblioteca e acervo, com acesso Free sem assinatura e bloqueio no servidor. Exemplos interativos anônimos retirados da página pública.
+
+- Triagem somente leitura detecta divergências de titularidade, contrato, lote e reservas, sem reparar saldos.
+- Resultado da última atividade permanece após recarga/reinício, com isolamento entre contas e sem novo débito.
+- Evidências reais do navegador integrado e medidas responsivas registradas em `docs/review-continuation-v12.md`; acessibilidade integral permanece pendente.
+
+## Consolidação do piloto web
 
 - Prática ENEM persistente, diagnóstico das quatro áreas, cota mensal, comentários por alternativa, simulados reduzidos e planejamento/revisão.
 - Contas verificadas no piloto local, recuperação, exportação e controles de exclusão.

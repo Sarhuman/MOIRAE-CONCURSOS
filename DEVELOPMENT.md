@@ -12,7 +12,7 @@ O atalho existente `scripts/start-local.ps1` prepara apenas um banco que ainda n
 
 ## Página pública estática
 
-Para inspecionar somente as amostras públicas, na raiz:
+Para inspecionar somente a apresentação comercial pública, na raiz:
 
 ```powershell
 .\.venv-win\Scripts\python.exe -m http.server 8080 --directory web
@@ -20,7 +20,7 @@ Para inspecionar somente as amostras públicas, na raiz:
 
 Abra http://127.0.0.1:8080. Esse servidor **não executa a API**, não fornece login, carteira ou processamento de redações e não reproduz os mounts `/assets` do FastAPI para páginas autenticadas. A roleta usa somente animação demonstrativa quando não consegue consultar a campanha. Não use a prévia estática como evidência de funcionamento do backend.
 
-Artes originais estão em `web/art`. A biblioteca escrita e exercícios abertos são amostras, separados das tentativas/cotas do aluno. Oficinas públicas usam fixtures, sem análise de texto ou envio à OpenAI.
+Artes originais estão em `web/art`. Questões e exercícios exigem conta, inclusive no Free. A biblioteca usa `/api/learning-library` autenticada e seus dados ficam fora de `web`; não copie o JSON de volta para a raiz estática. A prévia estática não oferece questões nem a biblioteca. A oficina demonstrativa permanece na área autenticada, sem OpenAI. Consulte [acesso cadastrado](docs/registered-access-v13.md).
 
 ## Verificar mudanças
 

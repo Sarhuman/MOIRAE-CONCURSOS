@@ -146,10 +146,38 @@ def test_five_questions_finish_without_restart(env):
     assert session['status']=='completed' and session['question'] is None
     assert result['summary']['total']==5
     for _ in range(2):
-        assert c.get('/api/practice/current').json()['session'] is None
+        current=c.get('/api/practice/current').json()
+        assert current['session'] is None
+        assert current['completed']['id']==original
+        assert current['completed']['status']=='completed' and current['completed']['question'] is None
+        assert current['completed']['summary']==result['summary']
     with app.state.store.connect() as db:
         assert db.execute('SELECT count(*) FROM practice_sessions').fetchone()[0]==1
         assert db.execute('SELECT count(*) FROM attempts WHERE session_id=?',(original,)).fetchone()[0]==5
+
+
+def test_completed_result_survives_restart_and_active_session_takes_priority(env):
+    app,c=env;register(c);finished=complete(c)
+    other=create_app(app.state.store.path,origin='http://localhost:8000',secure=False)
+    reopened=TestClient(other,base_url='http://localhost:8000',cookies=dict(c.cookies),headers=dict(c.headers))
+    result=reopened.get('/api/practice/current').json()
+    assert result['session'] is None and result['completed']['id']==finished['id']
+    assert result['completed']['summary']=={'correct':5,'total':5}
+    assert result['quota']['used']==5
+    fresh=reopened.post('/api/practice/start',json={}).json()
+    assert fresh['id']!=finished['id']
+    result=reopened.get('/api/practice/current').json()
+    assert result['session']['id']==fresh['id'] and result['completed'] is None
+    assert result['quota']['used']==5
+
+
+def test_completed_result_is_private_and_empty_for_a_new_account(env):
+    app,c=env;register(c);finished=complete(c)
+    other=TestClient(app,base_url='http://localhost:8000',headers={'Origin':'http://localhost:8000'})
+    register(other,'other-completed@example.test')
+    result=other.get('/api/practice/current').json()
+    assert result['session'] is None and result['completed'] is None
+    assert finished['id'] not in str(result) and result['quota']['used']==0
 
 def test_initial_diagnostic_is_private_durable_and_covers_four_areas(env):
     app,c=env

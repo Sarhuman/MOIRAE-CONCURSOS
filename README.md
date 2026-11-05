@@ -10,6 +10,8 @@ Este repositório contém o **piloto web local** do MOIRAE: FastAPI, SQLite de i
 
 **Estado: desenvolvimento e sandbox.** A integração interna de pagamentos usa testes automatizados; não houve homologação externa com comprador Mercado Pago. Correção real por IA e vendas reais permanecem desativadas. Integrar código à `main` não publica o site nem libera o serviço comercial.
 
+**Acesso às questões:** cadastro e login são obrigatórios, tanto no Free quanto nos planos pagos. Não é necessário assinar para usar o Free. A página pública apresenta o produto; perguntas, exercícios, biblioteca e acervo ficam na área cadastrada, com confirmação de e-mail e políticas do piloto. [Regra e evidências](docs/registered-access-v13.md).
+
 ## O que já funciona no piloto
 
 | Área | Implementação | Acesso |
@@ -19,8 +21,8 @@ Este repositório contém o **piloto web local** do MOIRAE: FastAPI, SQLite de i
 | Diagnóstico | Cinco itens introdutórios das quatro áreas e primeira recomendação; não prevê nota | `/diagnostico` |
 | Planejamento | Sessões de 15/30/60 minutos, revisão espaçada, erros e favoritos para acesso pago de teste | `/painel`, `/caderno` |
 | Simulados | Seis questões por treino; primeiro dia com redação em 30 min, segundo dia em 15 min; prazo e cota no servidor | `/simulados` |
-| Conteúdo | 20 questões de Matemática do ENEM 2025 com proveniência; seis trilhas/18 lições autorais introdutórias | `/estudar`, `/biblioteca.html` |
-| Acervo | PDFs históricos separados dos itens interativos; fonte oficial quando a cópia local não está instalada | `/acervo-enem` |
+| Conteúdo | 20 questões de Matemática do ENEM 2025 com proveniência; seis trilhas/18 lições introdutórias, após login | `/estudar`, `/biblioteca` |
+| Acervo | PDFs históricos após login, separados dos itens interativos; fonte oficial quando a cópia local não está instalada | `/acervo-enem` |
 | Oficina | Texto, notas fixas ilustrativas, marcações e reescritas persistentes por conta; sem OpenAI | `/redacoes` |
 | Carteira | Lotes sandbox com vencimento, reserva, consumo, liberação, revogação e histórico; integração à oficina demonstrativa | `/carteira` |
 | Pedidos | Contratos/snapshots, pagamento consultado no servidor, concessão única, holds de cupom, cancelamento local e tratamento de estornos em sandbox | `/planos` |

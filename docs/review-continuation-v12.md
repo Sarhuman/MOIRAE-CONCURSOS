@@ -1,3 +1,5 @@
+> A política de acesso foi atualizada depois desta revisão: [v13 — questões somente após cadastro](registered-access-v13.md). As capturas desta rodada documentam seu momento de execução; não autorizam restaurar exercícios públicos.
+
 # Revisão da main e continuidade — 05/11/2026
 
 ## Avaliação da entrega anterior

@@ -33,6 +33,7 @@ Marque cada item somente após observar a aplicação real. Preencha commit, nav
 | V09 | Roleta sem campanha provisionada | Apenas demonstração, sem código resgatável ou prêmio real | Não executado |
 | V10 | Desktop, 360/390/430 px, zoom 200% | Sem cortes ou rolagem horizontal; conteúdo e ações acessíveis | Não executado |
 | V11 | Tab/Shift+Tab, Escape, retorno de foco e movimento reduzido | Diálogos utilizáveis e animação respeitando preferência | Não executado |
+| V13 | Visitante abre biblioteca/acervo; depois conta Free entra e sai | Sem perguntas antes do login; Free acessa sem assinatura; logout bloqueia novamente | Não executado |
 | V12 | Carregamento, estado vazio e erro de conexão | Mensagens claras, rascunho preservado e retentativa segura | Não executado |
 
 O preparo local no computador pessoal está em [wallet-essay-flow-v7.md](wallet-essay-flow-v7.md) e [sandbox-orders-v10.md](sandbox-orders-v10.md). Preserve bancos existentes e use banco novo para o saldo inicial de três créditos. Não habilite integrações externas para realizar esse percurso demonstrativo.

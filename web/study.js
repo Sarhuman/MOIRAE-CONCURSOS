@@ -36,27 +36,28 @@ function setAuthMode(mode,focus=false){
   $('#registration-consents').hidden=!register;for(const id of ['#register-terms','#register-adult']){$(id).disabled=!register;$(id).required=register;}
   $('#login-help').hidden=register;$('#auth-submit').textContent=register?'Criar minha conta Free':'Entrar na minha conta';message('');if(focus)$('#email').focus();
 }
-function showPending(me){
+function showPending(me,moveFocus=false){
   $('#auth-panel').hidden=true;$('#practice-panel').hidden=true;$('#onboarding-panel').hidden=false;$('#logout').hidden=false;$('#study-plan').textContent='Conta · confirmação pendente';
   $('#onboarding-title').textContent=me.policy_accepted?'Confirme seu e-mail para começar.':'Revise os termos para continuar.';
   $('#onboarding-description').textContent=me.policy_accepted?'Seu cadastro foi salvo. Em Minha conta você pode solicitar um novo link. No piloto local, o responsável pelo servidor acessa a caixa de saída privada para abrir a confirmação. Não é necessário contratar um plano.':'Seu cadastro está preservado. Confira as políticas e a confirmação do e-mail em Minha conta; as questões ficam bloqueadas até concluir essa etapa.';
+  if(moveFocus)$('#onboarding-title').focus();
 }
-async function openAccount(){
+async function openAccount(moveFocus=false){
   const me=await api('/auth/me');csrf=me.csrf;
-  if(!me.email_verified||!me.policy_accepted){showPending(me);return false;}
-  await resume();return true;
+  if(!me.email_verified||!me.policy_accepted){showPending(me,moveFocus);return false;}
+  await resume(moveFocus);return true;
 }
 function officialStarts(hidden) {
   for(const id of ['#official-start','#official-second','#official-third','#official-fourth','#official-fifth'])$(id).hidden=hidden;
 }
-function render(value) {
+function render(value,moveFocus=false) {
   session=value; pending=null;
   $('#answer-feedback').hidden=true; $('#next').hidden=true; $('#complete').hidden=true;
   $('#start').hidden=Boolean(value);
   officialStarts(value?.status==='active');
   $('#question-panel').hidden=!value || !value.question;
   if (!value) return;
-  if(value.status==='completed') { $('#question-panel').hidden=true; $('#complete').hidden=false; $('#summary').textContent=value.summary?`Você acertou ${value.summary.correct} de ${value.summary.total} questões nesta atividade. Escolha outra atividade para continuar.`:`Atividade concluída: ${value.answered} de ${value.total} questões respondidas. Escolha Fazer outra atividade para iniciar um novo bloco.`; return; }
+  if(value.status==='completed') { $('#question-panel').hidden=true; $('#complete').hidden=false; $('#summary').textContent=value.summary?`Você acertou ${value.summary.correct} de ${value.summary.total} questões nesta atividade. Escolha outra atividade para continuar.`:`Atividade concluída: ${value.answered} de ${value.total} questões respondidas. Escolha Fazer outra atividade para iniciar um novo bloco.`; if(moveFocus)$('#complete').focus(); return; }
   quota(value.quota);
   if (!value.question) { $('#complete').hidden=false; return; }
   const q=value.question;
@@ -68,29 +69,30 @@ function render(value) {
   $('#answer-form button').hidden=false;
   const options=q.options.map(option=>{const label=document.createElement('label');const input=document.createElement('input');input.type='radio';input.name='choice';input.value=option.id;input.required=true;label.append(input,document.createTextNode(option.id.toUpperCase()+'. '+option.text));return label;});
   $('#options').replaceChildren(...options);
+  if(moveFocus)$('#question-title').focus();
 }
-async function resume() { const result=await api('/practice/current');showPractice();quota(result.quota);render(result.session || result.completed); }
+async function resume(moveFocus=false) { const result=await api('/practice/current');showPractice();quota(result.quota);const value=result.session || result.completed;render(value,moveFocus);if(moveFocus&&!value)$('#member-title').focus(); }
 async function action(work) { if(busy)return;lock(true);message('');try{await work();}catch(error){message(error.message || 'Não foi possível concluir. Tente novamente.');$('#status').focus();}finally{lock(false);} }
 $('#auth-login-mode').addEventListener('click',()=>setAuthMode('login',true));
 $('#auth-register-mode').addEventListener('click',()=>setAuthMode('register',true));
-$('#check-access').addEventListener('click',()=>action(openAccount));
+$('#check-access').addEventListener('click',()=>action(()=>openAccount(true)));
 $('#auth-form').addEventListener('submit',event=>{
   event.preventDefault();const mode=authMode;
   if(mode==='register'&&(!$('#register-terms').checked||!$('#register-adult').checked)){message('Para criar a conta Free do piloto, aceite os termos e confirme que tem 18 anos ou mais.');$('#status').focus();return;}
   action(async()=>{
     const result=await api('/auth/'+mode,{email:$('#email').value,password:$('#password').value,...(mode==='register'?{accept_terms:$('#register-terms').checked,adult_pilot:$('#register-adult').checked}:{})});
     csrf=result.csrf;$('#password').value='';
-    const ready=await openAccount();message(mode==='register'?'Conta Free criada. Confirme seu e-mail para começar.':ready?'Você entrou. Seu próximo passo está abaixo.':'Você entrou. Conclua a confirmação da conta para acessar as questões.');
+    const ready=await openAccount(true);message(mode==='register'?'Conta Free criada. Confirme seu e-mail para começar.':ready?'Você entrou. Seu próximo passo está abaixo.':'Você entrou. Conclua a confirmação da conta para acessar as questões.');
   });
 });
-$('#logout').addEventListener('click',()=>action(async()=>{await api('/auth/logout',{});showAuth();message('Você saiu da conta.');}));
-async function start() { await action(async()=>{render(await api('/practice/start',{}));}); }
-$('#refresh').addEventListener('click',()=>action(resume));
-$('#official-fifth').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/batch-5/start',{}));}));
-$('#official-fourth').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/batch-4/start',{}));}));
-$('#official-third').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/batch-3/start',{}));}));
-$('#official-second').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/batch-2/start',{}));}));
-$('#official-start').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/start',{}));}));
+$('#logout').addEventListener('click',()=>action(async()=>{await api('/auth/logout',{});showAuth();message('Você saiu da conta.');$('#email').focus();}));
+async function start() { await action(async()=>{render(await api('/practice/start',{}),true);}); }
+$('#refresh').addEventListener('click',()=>action(()=>resume(true)));
+$('#official-fifth').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/batch-5/start',{}),true);}));
+$('#official-fourth').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/batch-4/start',{}),true);}));
+$('#official-third').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/batch-3/start',{}),true);}));
+$('#official-second').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/batch-2/start',{}),true);}));
+$('#official-start').addEventListener('click',()=>action(async()=>{render(await api('/practice/enem-2025/start',{}),true);}));
 $('#start').addEventListener('click',start);$('#again').addEventListener('click',start);
 $('#answer-form').addEventListener('submit',event=>{event.preventDefault();action(async()=>{
   if(!session?.question)return;
@@ -110,7 +112,7 @@ $('#answer-form').addEventListener('submit',event=>{event.preventDefault();actio
   $('#next').hidden=session.status==='completed';
   if(session.status==='completed'){officialStarts(false);$('#choices').hidden=true;$('#complete').hidden=false;$('#summary').textContent=`Você acertou ${result.summary.correct} de ${result.summary.total} questões nesta atividade. Se este foi seu diagnóstico, consulte o resultado no link acima.`;}
 });});
-$('#next').addEventListener('click',()=>{render(session);$('#question-title').scrollIntoView({block:'center'});});
+$('#next').addEventListener('click',()=>{render(session,true);});
 setAuthMode(new URLSearchParams(location.search).get('cadastro')==='1'?'register':'login');
 action(async()=>{try{await openAccount();}catch(error){showAuth();if(!error.message.includes('Entre na sua conta'))throw error;}});
 

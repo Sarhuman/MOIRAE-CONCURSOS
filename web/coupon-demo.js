@@ -58,9 +58,9 @@
         angle=Math.floor(Math.random()*360);
         message='Demonstração concluída. Nenhum cupom foi emitido e nenhum preço foi alterado.';
       }
-      rotation+=1800+angle;wheel.style.transform=`rotate(${rotation}deg)`;
       const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      window.setTimeout(()=>{result.textContent=message;spin.textContent=mode==='sandbox'?'Resultado recebido':'Testar novamente';busy=false;availability();},reduced?0:1850);
+      const finish=()=>{result.textContent=message;spin.textContent=mode==='sandbox'?'Resultado recebido':'Testar novamente';busy=false;availability();};
+      if(reduced){finish();}else{rotation+=1800+angle;wheel.style.transform=`rotate(${rotation}deg)`;window.setTimeout(finish,1850);}
     }catch(e){result.textContent=e.message;busy=false;availability();}
   });
 })();

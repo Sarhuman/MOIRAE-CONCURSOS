@@ -2,6 +2,7 @@ name: MVP checks
 on:
   push:
   pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -9,7 +10,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            summary: backend-ubuntu
+          - os: windows-latest
+            summary: backend-windows
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -17,8 +22,16 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -r requirements-dev.lock
-      - run: python -m pytest -q
-      - run: python -m compileall -q backend
+      - id: tests
+        run: python -m pytest -q --junitxml=var/validation/backend.xml
+      - id: compile
+        run: python -m compileall -q backend
+      - name: Resumo de validação
+        if: always()
+        env:
+          VALIDATION_TEST_OUTCOME: ${{ steps.tests.outcome }}
+          VALIDATION_COMPILE_OUTCOME: ${{ steps.compile.outcome }}
+        run: python scripts/validation_summary.py --junit var/validation/backend.xml --label ${{ matrix.summary }}
   frontend:
     runs-on: ubuntu-latest
     steps:
@@ -26,5 +39,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: node -e "const fs=require('node:fs'),cp=require('node:child_process');for(const f of fs.readdirSync('web').filter(f=>f.endsWith('.js')))cp.execFileSync(process.execPath,['--check','web/'+f],{stdio:'inherit'});"
-      - run: node --test tests/*.test.cjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - id: syntax
+        run: node -e "const fs=require('node:fs'),cp=require('node:child_process');for(const f of fs.readdirSync('web').filter(f=>f.endsWith('.js')))cp.execFileSync(process.execPath,['--check','web/'+f],{stdio:'inherit'});"
+      - name: Pasta temporária de relatório
+        run: node -e "require('node:fs').mkdirSync('var/validation',{recursive:true})"
+      - id: tests
+        run: node --test --test-reporter=junit --test-reporter-destination=var/validation/frontend.xml tests/*.test.cjs
+      - name: Resumo de validação
+        if: always()
+        env:
+          VALIDATION_TEST_OUTCOME: ${{ steps.tests.outcome }}
+          VALIDATION_SYNTAX_OUTCOME: ${{ steps.syntax.outcome }}
+        run: python scripts/validation_summary.py --junit var/validation/frontend.xml --label frontend

@@ -4,6 +4,8 @@ Este índice separa o estado atual dos registros de entregas anteriores. O pilot
 
 ## Começar e testar
 
+[Pacote de validação pelo GitHub](validation-package.md): relatórios automáticos, checklist manual e formulário de problemas, sem comandos no PC do trabalho.
+
 | Documento | Finalidade |
 | --- | --- |
 | [README principal](../README.md) | Estado do produto, preços, instalação Windows e limites |

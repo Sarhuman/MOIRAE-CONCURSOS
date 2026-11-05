@@ -52,6 +52,10 @@ Pacotes de 5/10/30 créditos têm preços de produto de R$ 27,50/R$ 49,50/R$ 132
 
 A política é versionada e testada. **Nenhuma campanha operacional foi criada:** datas e limite global ainda dependem de definição. Sem campanha configurada, a roleta é demonstrativa. [Política detalhada](docs/coupon-policy-v8.md).
 
+## Acompanhar a validação pelo GitHub
+
+No PC do trabalho, você pode ler os resultados da CI e organizar a conferência manual pelo navegador, sem instalar ou executar ferramentas. Consulte o [pacote de validação](docs/validation-package.md), com checklist e formulário de problemas. O pacote não executa QA visual nem ativa serviços comerciais.
+
 ## Executar no Windows — PowerShell, sem WSL
 
 Requer Python instalado no Windows (CI em 3.12; validação local anterior também em 3.13) e Node.js para os testes web (CI em 24). Use uma pasta do usuário, fora de `C:\Windows\System32`.
@@ -105,7 +109,7 @@ node --test (Get-ChildItem tests\*.test.cjs | ForEach-Object FullName)
 .\.venv-win\Scripts\python.exe -m compileall -q backend
 ```
 
-A base consolidada contém **245 testes Python e 16 JavaScript**, com CI em Windows/Ubuntu e frontend. As execuções dos mesmos testes em plataformas diferentes não são somadas. O aviso conhecido TestClient/HTTPX continua documentado, sem supressão pelo lockfile.
+A consolidação inicial foi validada com **245 testes Python e 16 JavaScript**, com CI em Windows/Ubuntu e frontend. Para a contagem do HEAD atual, consulte os resultados e resumos da CI; novos testes podem ampliar a suíte. As execuções dos mesmos testes em plataformas diferentes não são somadas. O aviso conhecido TestClient/HTTPX continua documentado, sem supressão pelo lockfile.
 
 **Validação visual real permanece pendente** pelo bloqueio da plataforma de automação usado na rodada anterior. TestClient e capturas antigas com fixtures não substituem navegação autenticada, celular físico, teclado, zoom 200% ou movimento reduzido. [Roteiro e limites](docs/sandbox-orders-v10.md).
 

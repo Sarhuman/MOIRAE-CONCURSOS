@@ -1,0 +1,72 @@
+name: Problema encontrado na validação
+description: Registrar um problema real do piloto sem dados pessoais ou segredos.
+title: "[Validação] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use dados sintéticos. Não publique senhas, tokens, e-mails reais, redações de alunos, códigos de cupom ou relatórios financeiros. Capturas devem corresponder à navegação real; identifique claramente emulação e fixtures.
+  - type: input
+    id: commit
+    attributes:
+      label: Commit ou execução conferida
+      placeholder: SHA ou link da execução no GitHub
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - Página pública
+        - Conta e login
+        - Estudo e diagnóstico
+        - Revisões e simulados
+        - Carteira e oficina
+        - Planos e roleta
+        - Outro
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Ambiente de reprodução
+      description: Navegador, sistema, largura e zoom. Diga se é celular físico ou emulação.
+      placeholder: Chrome, Windows, desktop; ou 390 px emulado, zoom 200%.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      placeholder: Liste as ações com uma conta sintética, sem credenciais.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Resultado observado
+    validations:
+      required: true
+  - type: dropdown
+    id: evidence_type
+    attributes:
+      label: Evidência
+      options:
+        - Navegação real com captura
+        - Navegação real sem captura
+        - Reprodução automática por teste
+        - Inspeção de código ou fixture; não é QA visual real
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Capturas ou resultado de teste
+      description: Anexe somente evidência sem dados pessoais. Se o navegador foi bloqueado, descreva o bloqueio; não contorne proteções.

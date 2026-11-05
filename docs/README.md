@@ -2,6 +2,8 @@
 
 Este índice separa o estado atual dos registros de entregas anteriores. O piloto integrado à `main` continua local/sandbox; páginas históricas podem mencionar branches, preços ou limitações já substituídos.
 
+Registro mais recente: [revisão da main, correções e evidências reais v12](review-continuation-v12.md).
+
 ## Começar e testar
 
 [Pacote de validação pelo GitHub](validation-package.md): relatórios automáticos, checklist manual e formulário de problemas, sem comandos no PC do trabalho.

@@ -111,7 +111,7 @@ node --test (Get-ChildItem tests\*.test.cjs | ForEach-Object FullName)
 
 A consolidação inicial foi validada com **245 testes Python e 16 JavaScript**, com CI em Windows/Ubuntu e frontend. Para a contagem do HEAD atual, consulte os resultados e resumos da CI; novos testes podem ampliar a suíte. As execuções dos mesmos testes em plataformas diferentes não são somadas. O aviso conhecido TestClient/HTTPX continua documentado, sem supressão pelo lockfile.
 
-**Validação visual real permanece pendente** pelo bloqueio da plataforma de automação usado na rodada anterior. TestClient e capturas antigas com fixtures não substituem navegação autenticada, celular físico, teclado, zoom 200% ou movimento reduzido. [Roteiro e limites](docs/sandbox-orders-v10.md).
+**Validação visual parcial realizada em 05/11/2026:** navegador integrado com backend real e banco sintético, cinco questões no desktop/360 px, recarga/reinício, carteira/oficina e medidas em desktop/360/390/430 px. [Evidências e limites atuais](docs/review-continuation-v12.md). Celular físico, zoom 200%, movimento reduzido e auditoria completa de acessibilidade continuam pendentes. TestClient e fixtures não substituem essas verificações.
 
 ## Arquitetura e limites
 

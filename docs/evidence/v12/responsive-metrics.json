@@ -1,0 +1,182 @@
+[
+  {
+    "client": 345,
+    "page": "/planos",
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "client": 375,
+    "page": "/planos",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "client": 415,
+    "page": "/planos",
+    "scroll": 415,
+    "width": 430
+  },
+  {
+    "client": 345,
+    "page": "/",
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "client": 375,
+    "page": "/",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "client": 415,
+    "page": "/",
+    "scroll": 415,
+    "width": 430
+  },
+  {
+    "client": 345,
+    "page": "/conta",
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "client": 375,
+    "page": "/conta",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "client": 415,
+    "page": "/conta",
+    "scroll": 415,
+    "width": 430
+  },
+  {
+    "balance": "2",
+    "client": 345,
+    "consumed": "1",
+    "page": "/carteira",
+    "reserved": "0",
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "balance": "2",
+    "client": 375,
+    "consumed": "1",
+    "page": "/carteira",
+    "reserved": "0",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "balance": "2",
+    "client": 415,
+    "consumed": "1",
+    "page": "/carteira",
+    "reserved": "0",
+    "scroll": 415,
+    "width": 430
+  },
+  {
+    "client": 345,
+    "page": "/redacoes",
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "client": 375,
+    "page": "/redacoes",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "client": 415,
+    "page": "/redacoes",
+    "scroll": 415,
+    "width": 430
+  },
+  {
+    "client": 345,
+    "page": "/diagnostico",
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "client": 375,
+    "page": "/diagnostico",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "client": 415,
+    "page": "/diagnostico",
+    "scroll": 415,
+    "width": 430
+  },
+  {
+    "client": 1265,
+    "page": "/conta",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "client": 1265,
+    "page": "/planos",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "client": 1265,
+    "page": "/carteira",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "client": 1265,
+    "page": "/redacoes",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "client": 1265,
+    "page": "/estudar",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "client": 1265,
+    "page": "/diagnostico",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "client": 1265,
+    "page": "/",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "client": 360,
+    "page": "/estudar",
+    "scroll": 360,
+    "summary": "Você acertou 0 de 5 questões nesta atividade. Escolha outra atividade para continuar.",
+    "width": 360
+  },
+  {
+    "client": 375,
+    "page": "/estudar",
+    "scroll": 375,
+    "summary": "Você acertou 0 de 5 questões nesta atividade. Escolha outra atividade para continuar.",
+    "width": 390
+  },
+  {
+    "client": 415,
+    "page": "/estudar",
+    "scroll": 415,
+    "summary": "Você acertou 0 de 5 questões nesta atividade. Escolha outra atividade para continuar.",
+    "width": 430
+  }
+]

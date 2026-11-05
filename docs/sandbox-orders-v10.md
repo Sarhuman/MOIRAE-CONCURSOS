@@ -61,3 +61,7 @@ Leituras e cancelamento são do titular. Exportação inclui contratos/holds, al
 - Aviso conhecido de depreciação TestClient/HTTPX permanece, sem falha. Não foi alterado o lockfile para suprimi-lo.
 - Validação visual real: **pendente**, capturas novas: **nenhuma**. Homologação financeira externa: **pendente**.
 - Suíte local completa iniciada no código `e364c4e`, Windows/Python 3.13.14: **235 aprovados em 790,75 s (13min10s)**. O complemento final `c586381` foi validado localmente no teste específico (6,03 s) e na suíte completa da CI, 235 em cada sistema. Execuções parciais interrompidas durante ajustes não são contadas como suítes aprovadas. Logs consolidados em `outputs/moirae-sandbox-v10-2026-11-04` no workspace; não contêm capturas visuais.
+
+## Continuidade operacional v11
+
+A triagem local `python -m backend.moirae.order_review` inventaria casos sem escrever no banco ou consultar o provedor. Consulte [order-review-v11.md](order-review-v11.md) para motivos, evidências, comandos PowerShell e limites. Não implementa aprovação, concessão ou estorno; todas as pendências monetárias e de homologação desta rodada continuam válidas.

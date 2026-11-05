@@ -127,11 +127,13 @@ A etapa 3 pode usar direitos de acesso de teste; não vender assinaturas antes d
 
 ## Decisões pendentes
 
+Estado financeiro mais recente: [sandbox v10](docs/sandbox-orders-v10.md). A [triagem operacional somente leitura](docs/order-review-v11.md) inventaria pedidos em análise sem decidir concessão ou estorno.
+
 - Operação do piloto FastAPI/SQLite de instância única; reaproveitamento adicional exige auditoria.
 - Seleção e avaliação do modelo OpenAI; custo, prazo e rubrica versionada.
 - Catálogo versionado implementado no sandbox; validar custos por aluno antes da venda.
 - Tamanho dos simulados e regras para interrupção e repetição.
-- Provedor de cobrança e regras para mudanças de plano.
+- Homologação externa do Mercado Pago e regras operacionais para mudanças de plano.
 - Política de privacidade, retenção e operação com menores.
 - Catálogo inicial e direitos de uso dos materiais.
 
@@ -155,7 +157,7 @@ Veja [o contrato da oficina](docs/essay-workshop.md) para separar os recursos de
 
 ## Conteúdo oficial do ENEM
 
-Importador offline preparado para ENEM 2025 regular, cadernos azuis dos dois dias. O Inep retornou HTTP 503 nos downloads em 03/11/2026; **nenhuma questão oficial foi importada ainda**. O catálogo do aluno permanece autoral. Consulte [docs/inep-import.md](docs/inep-import.md) para coleta, extração em rascunho e conferência editorial. O processo não publica questões automaticamente.
+O catálogo integra **20 questões de Matemática do ENEM 2025**, com transcrição, origem e revisão registradas em `data/inep/enem-2025-validated.json`, além dos itens autorais introdutórios. O acervo histórico de PDFs é separado das questões interativas; a disponibilidade local depende da instalação, com fallback para a fonte oficial. Consulte [docs/inep-import.md](docs/inep-import.md). A extração de rascunhos não publica novos itens automaticamente.
 
 
 ## Cota mensal e simulado cronometrado

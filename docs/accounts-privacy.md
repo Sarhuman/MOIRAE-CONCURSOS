@@ -12,11 +12,13 @@
 
 ## E-mails neste ambiente
 
-Não há envio de mensagens pela rede. Em HTTP local, os links são gravados ao lado do banco, em var/mail-outbox, diretório 0700 e arquivos 0600, fora da pasta pública e ignorados pelo Git. Os arquivos contêm destinatário e link secreto de teste: não publicar, compartilhar, versionar ou incluir em logs.
+No modo HTTP local, os links são gravados ao lado do banco, em var/mail-outbox, diretório 0700 e arquivos 0600, fora da pasta pública e ignorados pelo Git. Os arquivos contêm destinatário e link secreto de teste: não publicar, compartilhar, versionar ou incluir em logs.
 
 Fluxo local: criar conta, abrir o arquivo mais recente referente à conta no servidor, copiar o link para o mesmo navegador e confirmar. A URL usa fragmento #token, removido pela tela ao abrir; o token não vai na URL da requisição HTTP. Verificação e recuperação enviam o token no corpo do POST.
 
-Em HTTPS sem adaptador de e-mail configurado, o cadastro retorna 503 e não cria conta. Não existe fallback que libere acesso sem confirmar e-mail. O adaptador injetável LocalMail atende somente ao piloto/testes; a implantação de um provedor real com fila, tratamento de falhas e monitoração está pendente. Não configurar a caixa de saída local em produção para contornar esse bloqueio.
+Em HTTPS, o cadastro depende de um adaptador de e-mail. Para homologar com Resend, verifique o domínio no painel, configure o remetente desse domínio e mantenha o rastreamento de cliques e aberturas desativado. Configure `MOIRAE_EMAIL_PROVIDER=resend`, `MOIRAE_EMAIL_FROM`, `RESEND_API_KEY` nos segredos do backend, origem HTTPS e cookie Secure.
+
+O envio é síncrono com timeout, sem fila. Se a entrega falhar após o cadastro, a conta fica pendente. O aluno pode entrar e solicitar outro link na área Minha conta. O Resend recebe o endereço e o conteúdo da mensagem, incluindo o link temporário. A exclusão local não remove registros do provedor. A entrega real ainda precisa ser homologada.
 
 ## Dados antigos e migração
 

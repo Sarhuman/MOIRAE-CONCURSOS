@@ -17,7 +17,7 @@ class Accounts:
             profile=db.execute('SELECT * FROM user_profiles WHERE user_id=?',(user_id,)).fetchone()
             return dict(email=row['email'],email_verified=bool(profile and profile['email_verified']),
                         policy_accepted=bool(profile and profile['policy_version']==POLICY_VERSION and profile['adult_pilot']),
-                        policy_version=POLICY_VERSION,mail_mode='local_outbox' if hasattr(self.mailer,'directory') else 'unavailable')
+                        policy_version=POLICY_VERSION,mail_mode='local_outbox' if hasattr(self.mailer,'directory') else getattr(self.mailer, 'mode', 'unavailable'))
 
     def accept(self,user_id):
         with self.store.connect(write=True) as db:

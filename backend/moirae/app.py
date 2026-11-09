@@ -18,7 +18,7 @@ from .service import Practice
 from .middleware import BodyLimit
 from .exams import Exams
 from .accounts import Accounts
-from .mail import LocalMail, MailUnavailable
+from .mail import MailUnavailable, ResendMail, configured_mail
 from .billing import Billing
 from .mercadopago import MercadoPagoSandbox, verify_signature
 from .sandbox_wallet import SandboxWallet
@@ -188,7 +188,7 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
     if origin.startswith('https://') and not secure:
         raise ValueError('HTTPS exige cookie Secure.')
     store=Store(db_path or os.getenv('MOIRAE_DB',str(ROOT/'var'/'moirae.sqlite3')))
-    mailer=mailer or (LocalMail(Path(store.path).parent/'mail-outbox') if not secure else MailUnavailable())
+    mailer=mailer if mailer is not None else configured_mail(origin, secure, store.path)
     accounts=Accounts(store,mailer,origin)
     if os.getenv('MOIRAE_MP_SANDBOX','false').lower()=='true' and billing_provider is None:
         token=os.getenv('MOIRAE_MP_ACCESS_TOKEN','')
@@ -301,7 +301,12 @@ def create_app(db_path=None,origin=None,secure=None,mailer=None,billing_provider
         except sqlite3.IntegrityError:
             raise HTTPException(409,'Não foi possível criar a conta com esses dados. Se já tem conta, tente entrar.')
         accounts.accept(uid)
-        accounts.issue(uid,'verify')
+        try:
+            accounts.issue(uid,'verify')
+        except HTTPException as error:
+            if not isinstance(mailer, ResendMail) or error.status_code != 503:
+                raise
+            raise HTTPException(503, 'Conta criada. Entre com sua senha e solicite o reenvio da confirmação na área Minha conta.') from None
         return issue(response,uid)
 
     @app.post('/api/auth/login')
